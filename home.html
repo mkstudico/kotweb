@@ -8,62 +8,59 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        body { background-color: #f4f4f4; font-family: 'Arial', sans-serif; }
-        .header { background-color: #0077b5; color: white; padding: 1.5rem; text-align: center; position: relative; }
-        .header h1 { margin: 0; font-size: 2rem; }
-        .header p { margin: 0.5rem 0 0; font-size: 1rem; color: #e6f0fa; }
-        .settings-icon { position: absolute; top: 1.5rem; right: 1.5rem; color: white; font-size: 1.5rem; cursor: pointer; }
-        .profile-section { max-width: 600px; margin: 2rem auto; padding: 1rem; background-color: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
-        .profile-section h2 { margin: 0 0 1rem; font-size: 1.5rem; color: #0077b5; }
-        .profile-section p { margin: 0.5rem 0; }
-        .role-description { color: #666; font-size: 0.9rem; }
-        .search-bar { margin: 2rem auto; max-width: 600px; padding: 0 1rem; }
-        .search-bar input { width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; }
-        .exam-list { max-width: 600px; margin: 0 auto; padding: 0 1rem; }
-        .exam-item { background-color: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
-        footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
+        body { background-color: #f4f4f4; font-family: 'Arial', sans-serif; margin: 0; }
+        .header { background-color: #0077b5; color: white; padding: 1rem; text-align: center; position: relative; }
+        .header h1 { margin: 0; font-size: 1.8rem; }
+        .header p { margin: 0.3rem 0 0; font-size: 0.9rem; color: #e6f0fa; }
+        .settings-icon, .logout-button { position: absolute; top: 1rem; color: white; font-size: 1.2rem; cursor: pointer; transition: color 0.3s; }
+        .settings-icon:hover, .logout-button:hover { color: #e6f0fa; }
+        .settings-icon { right: 3rem; }
+        .logout-button { right: 1rem; background-color: #dc3545; border: none; padding: 0.5rem; border-radius: 4px; }
+        .logout-button:hover { background-color: #c82333; }
+        .content { padding: 1.5rem; margin: 1.5rem; background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        .stories-strip { display: flex; overflow-x: auto; gap: 1rem; padding: 1rem 0; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        .story-card { flex: 0 0 100px; height: 150px; background-color: #f9f9f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: transform 0.3s; position: relative; overflow: hidden; }
+        .story-card:hover { transform: scale(1.05); }
+        .story-card p { margin: 0; font-size: 0.9rem; color: #333; padding: 0.5rem; }
+        .story-card .new-label { position: absolute; top: 0.5rem; left: 0.5rem; background-color: #0077b5; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; }
+        .exams-list { margin-top: 2rem; }
+        .exam-item { background-color: #f9f9f9; padding: 1rem; border-radius: 4px; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .exam-item p { margin: 0.3rem 0; }
+        .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; font-size: 0.9rem; }
         .loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
-        .loader::after { content: ''; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 5px solid #0077b5; border-top: 5px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; transform: translate(-50%, -50%); }
+        .loader::after { content: ''; position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; border: 4px solid #0077b5; border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; transform: translate(-50%, -50%); }
         @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
         @media (max-width: 640px) {
-            .search-bar, .exam-list, .profile-section { padding: 0 0.5rem; }
+            .content { margin: 1rem; padding: 1rem; }
+            .story-card { flex: 0 0 80px; height: 120px; }
+            .story-card p { font-size: 0.8rem; }
+            .settings-icon, .logout-button { font-size: 1rem; }
+            .header { padding: 2rem 1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="grid-container">
-        <div class="header">
-            <h1>Inkota Web</h1>
-            <p>Join the Learning Community</p>
-            <a href="settings.html" class="settings-icon"><i class="bi bi-gear"></i></a>
-        </div>
-        <div class="profile-section" id="profile-section">
-            <h2>Welcome, <span id="user-name">User</span>!</h2>
-            <p><strong>Role:</strong> <span id="user-role">Loading...</span></p>
-            <p id="role-description" class="role-description"></p>
-            <p><strong>School:</strong> <span id="user-school">N/A</span></p>
-            <p><strong>Registration Number:</strong> <span id="user-regno">N/A</span></p>
-            <p><strong>Class:</strong> <span id="user-class">N/A</span></p>
-            <p><strong>Combination:</strong> <span id="user-combination">N/A</span></p>
-            <p><strong>Referral Code:</strong> <span id="user-referral">N/A</span></p>
-        </div>
-        <div class="search-bar">
-            <input type="text" id="search" placeholder="Search exams (e.g., Doll)">
-        </div>
-        <div class="exam-list" id="exam-list">
-            <!-- Populated by JavaScript -->
-        </div>
-        <footer>
-            <p>Made by btem@fficial</p>
-        </footer>
-        <div id="loader" class="loader"></div>
+    <div class="header">
+        <h1>Inkota Web</h1>
+        <p>Explore Exams</p>
+        <i class="bi bi-gear settings-icon" id="settings-icon" title="Settings"></i>
+        <button class="logout-button" id="logout-button" title="Log Out"><i class="bi bi-box-arrow-right"></i></button>
     </div>
+    <div class="content">
+        <div class="stories-strip" id="stories-strip"></div>
+        <div class="exams-list" id="exams-list"></div>
+        <p id="status-message" class="status-message"></p>
+    </div>
+    <footer>
+        <p>Made by btem@fficial</p>
+    </footer>
+    <div id="loader" class="loader"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -81,44 +78,34 @@
             window.auth = getAuth(app);
             window.db = getFirestore(app);
             window.collection = collection;
-            window.doc = doc;
-            window.getDoc = getDoc;
             window.getDocs = getDocs;
+            window.query = query;
+            window.orderBy = orderBy;
+            window.signOut = signOut;
             window.onAuthStateChanged = onAuthStateChanged;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
+            document.getElementById('status-message').textContent = 'Error initializing Firebase. Check console.';
         }
-
-        const roleDescriptions = {
-            Sponsor: 'Support the platform financially to help it grow.',
-            User: 'Engage with exams and content on the platform.',
-            Provider: 'Upload exams and resources for others to use.'
-        };
+    </script>
+    <script>
+        const storiesStrip = document.getElementById('stories-strip');
+        const examsList = document.getElementById('exams-list');
+        const statusMessage = document.getElementById('status-message');
+        const loader = document.getElementById('loader');
 
         window.onAuthStateChanged(window.auth, async (user) => {
-            const loader = document.getElementById('loader');
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
             loader.style.display = 'block';
             try {
-                const userDoc = await window.getDoc(window.doc(window.db, 'users', user.uid));
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    document.getElementById('user-name').textContent = data.fullNames || 'User';
-                    document.getElementById('user-role').textContent = data.role || 'N/A';
-                    document.getElementById('role-description').textContent = roleDescriptions[data.role] || '';
-                    document.getElementById('user-school').textContent = data.schoolName || 'N/A';
-                    document.getElementById('user-regno').textContent = data.regNo || 'N/A';
-                    document.getElementById('user-class').textContent = data.class || 'N/A';
-                    document.getElementById('user-combination').textContent = data.combination || 'N/A';
-                    document.getElementById('user-referral').textContent = data.referralCode || 'N/A';
-                }
                 await loadExams();
             } catch (error) {
-                console.error("Error loading user data:", error);
+                console.error("Error loading exams:", error);
+                statusMessage.textContent = 'Error loading exams.';
             } finally {
                 loader.style.display = 'none';
             }
@@ -126,28 +113,64 @@
 
         async function loadExams() {
             try {
-                const examList = document.getElementById('exam-list');
-                const examsRef = window.collection(window.db, 'exams');
+                const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                const examsRef = window.query(window.collection(window.db, 'exams'), window.orderBy('createdAt', 'desc'));
                 const querySnapshot = await window.getDocs(examsRef);
-                querySnapshot.forEach((doc) => {
+                storiesStrip.innerHTML = '';
+                examsList.innerHTML = '';
+                
+                querySnapshot.forEach(doc => {
                     const data = doc.data();
+                    const createdAt = data.createdAt ? new Date(data.createdAt.seconds * 1000) : new Date();
+                    const isNew = createdAt >= oneWeekAgo;
+
+                    // Stories strip (recent exams)
+                    const storyCard = document.createElement('div');
+                    storyCard.className = 'story-card';
+                    storyCard.innerHTML = `<p>${data.title || 'Untitled Exam'}</p>` + (isNew ? '<span class="new-label">New</span>' : '');
+                    storyCard.onclick = () => window.open(data.fileUrl, '_blank');
+                    storiesStrip.appendChild(storyCard);
+
+                    // Full exams list
                     const examItem = document.createElement('div');
                     examItem.className = 'exam-item';
                     examItem.innerHTML = `
-                        <h3>${data.title}</h3>
-                        <p>Subject: ${data.subject}</p>
-                        <p>Class: ${data.class}</p>
-                        <p>Uploaded by: ${data.uploader}</p>
-                        <p>Date: ${data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</p>
+                        <p><strong>Title:</strong> ${data.title || 'N/A'}</p>
+                        <p><strong>Subject:</strong> ${data.subject || 'N/A'}</p>
+                        <p><strong>Class:</strong> ${data.class || 'N/A'}</p>
+                        <p><strong>Views:</strong> ${data.views || 0}</p>
+                        <p><strong>Downloads:</strong> ${data.downloads || 0}</p>
                     `;
-                    examList.appendChild(examItem);
+                    examItem.onclick = () => window.open(data.fileUrl, '_blank');
+                    examsList.appendChild(examItem);
                 });
+
+                if (querySnapshot.empty) {
+                    statusMessage.textContent = 'No exams available.';
+                }
             } catch (error) {
-                console.error("Error loading exams:", error);
+                console.error('Error fetching exams:', error);
+                statusMessage.textContent = 'Error fetching exams.';
             }
         }
-    </script>
-    <script>
+
+        document.getElementById('settings-icon').addEventListener('click', () => {
+            window.location.href = 'settings.html';
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            loader.style.display = 'block';
+            try {
+                await window.signOut(window.auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                statusMessage.textContent = `Error: ${error.message}`;
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
         let timeout;
         function resetTimeout() {
             clearTimeout(timeout);
