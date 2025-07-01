@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkota Web - Contract & Referral</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #f4f4f4; font-family: 'Arial', sans-serif; }
+        .header { background-color: #0077b5; color: white; padding: 1.5rem; text-align: center; }
+        .header h1 { margin: 0; font-size: 2rem; }
+        .header p { margin: 0.5rem 0 0; font-size: 1rem; color: #e6f0fa; }
+        .signup-section { background-color: white; border-radius: 8px; padding: 1.5rem; margin: 2rem auto; max-width: 600px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; gap: 1rem; }
+        .contract-box { max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 1rem; border-radius: 4px; background-color: #f9f9f9; margin-bottom: 1rem; }
+        .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-field label { font-weight: bold; color: #333; display: flex; align-items: center; }
+        .form-field label i { margin-right: 0.5rem; }
+        .form-field input { width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; transition: border-color 0.3s; }
+        .form-field input:focus { border-color: #0077b5; outline: none; }
+        .signature-pad { border: 1px solid #ddd; border-radius: 4px; background-color: #fff; width: 100%; height: 150px; }
+        .button { background-color: #0077b5; color: white; border: none; padding: 0.75rem; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
+        .button:hover { background-color: #005f8c; }
+        .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; }
+        footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
+        @media (max-width: 640px) {
+            .signup-section { max-width: 100%; margin: 1rem; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="header">
+            <h1>Inkota Web</h1>
+            <p>Join the Learning Community</p>
+        </div>
+        <div class="signup-section">
+            <form id="contract-form" novalidate>
+                <div class="contract-box">
+                    <p><strong>Welcome, fellow student!</strong></p>
+                    <p>I'm happy to welcome you to the official Inkota website (Made by btem@fficial). You’ve been introduced to the purpose of this platform by your referrer, and your continued use confirms your understanding.</p>
+                    <p>Here, you have three main opportunities:</p>
+                    <ul>
+                        <li>Read and win exams/tests,</li>
+                        <li>Share and earn, or</li>
+                        <li>Sponsor the project to help it grow.</li>
+                    </ul>
+                    <p>For your safety, our automatic security system will reset the session to the homepage if there's no activity for 30 seconds. From there, you can search for "Doll" to return to your previous location.</p>
+                    <p>You're encouraged to refer and share this platform with other students—but never in the presence of teachers or adults.</p>
+                    <p><strong>Please note:</strong></p>
+                    <p>Once you complete secondary school, your account will be permanently deleted to avoid future distractions.</p>
+                    <p>By signing this agreement, you confirm the following:</p>
+                    <ul>
+                        <li>You will not share any information or data from this platform with adults or in public.</li>
+                        <li>You are currently a secondary school student.</li>
+                        <li>All the information you have provided is true and accurate.</li>
+                    </ul>
+                </div>
+                <div class="form-field">
+                    <label for="signature"><i class="bi bi-pen"></i>E-Signature *</label>
+                    <canvas id="signature-pad" class="signature-pad"></canvas>
+                </div>
+                <div class="form-field">
+                    <label for="referralCode"><i class="bi bi-code"></i>Referral Code (Enter "No code" if none)</label>
+                    <input type="text" id="referralCode" name="referralCode" placeholder="No code">
+                </div>
+                <div class="form-field" style="display: flex; justify-content: space-between; gap: 1rem;">
+                    <button type="button" class="button" onclick="window.location.href='SchoolInfo.html'"><i class="bi bi-arrow-left"></i> Back</button>
+                    <button type="submit" class="button"><i class="bi bi-check-circle"></i> Submit</button>
+                </div>
+            </form>
+            <p id="status-message" class="status-message"></p>
+        </div>
+        <footer>
+            <p>Made by btem@fficial</p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
+            authDomain: "inkota-web.firebaseapp.com",
+            databaseURL: "https://inkota-web-default-rtdb.firebaseio.com",
+            projectId: "inkota-web",
+            storageBucket: "inkota-web.firebasestorage.app",
+            messagingSenderId: "390667774435",
+            appId: "1:390667774435:web:e4d33a5439cf62829dd8d6",
+            measurementId: "G-HDM9EZEB8W"
+        };
+
+        try {
+            window.app = initializeApp(firebaseConfig);
+            window.auth = getAuth(app);
+            window.db = getFirestore(app);
+            window.serverTimestamp = serverTimestamp;
+            window.query = query;
+            window.where = where;
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+            document.getElementById('status-message').textContent = 'Error initializing Firebase. Check console.';
+        }
+    </script>
+    <script>
+        const form = document.getElementById('contract-form');
+        const statusMessage = document.getElementById('status-message');
+        let agreedContract = false;
+
+        function generateReferralCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        async function validateReferralCode(code) {
+            if (code === '' || code.toLowerCase() === 'no code') return true;
+            try {
+                const q = window.query(collection(window.db, 'referrals'), window.where('referralCode', '==', code));
+                const querySnapshot = await getDocs(q);
+                return !querySnapshot.empty;
+            } catch (error) {
+                console.error('Error validating referral code:', error);
+                statusMessage.textContent = 'Error validating referral code.';
+                return false;
+            }
+        }
+
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return [
+                (e.clientX - rect.left) * scaleX,
+                (e.clientY - rect.top) * scaleY
+            ];
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = getMousePos(e);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const [x, y] = getMousePos(e);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            [lastX, lastY] = [x, y];
+            agreedContract = true;
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            isDrawing = false;
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isDrawing = true;
+            [lastX, lastY] = getMousePos(e.touches[0]);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const [x, y] = getMousePos(e.touches[0]);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            [lastX, lastY] = [x, y];
+            agreedContract = true;
+        });
+
+        canvas.addEventListener('touchend', () => {
+            isDrawing = false;
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusMessage.textContent = '';
+
+            if (!agreedContract) {
+                statusMessage.textContent = 'Please sign the contract.';
+                return;
+            }
+            const referralCode = document.getElementById('referralCode').value;
+            if (referralCode.toLowerCase() !== 'no code' && !(await validateReferralCode(referralCode))) {
+                statusMessage.textContent = 'Invalid referral code. Use "No code" or a valid code.';
+                return;
+            }
+
+            try {
+                const user = await new Promise((resolve, reject) => {
+                    onAuthStateChanged(window.auth, (user) => {
+                        if (user) resolve(user);
+                        else reject(new Error('User not authenticated'));
+                    });
+                });
+
+                const tempDoc = await getDoc(doc(window.db, 'temp_users', user.uid));
+                if (!tempDoc.exists()) {
+                    statusMessage.textContent = 'Error: User data not found. Please start over.';
+                    return;
+                }
+                const tempData = tempDoc.data();
+
+                const newReferralCode = generateReferralCode();
+                await setDoc(doc(window.db, 'users', user.uid), {
+                    ...tempData,
+                    agreedContract: true,
+                    referralCode: newReferralCode,
+                    createdAt: window.serverTimestamp()
+                });
+
+                await setDoc(doc(window.db, 'referrals', newReferralCode), {
+                    referralCode: newReferralCode,
+                    userId: user.uid,
+                    usedBy: referralCode && referralCode.toLowerCase() !== 'no code' ? [user.uid] : [],
+                    createdAt: window.serverTimestamp()
+                });
+
+                if (referralCode && referralCode.toLowerCase() !== 'no code') {
+                    const q = window.query(collection(window.db, 'referrals'), window.where('referralCode', '==', referralCode));
+                    const querySnapshot = await getDocs(q);
+                    for (const docSnap of querySnapshot.docs) {
+                        await setDoc(doc(window.db, 'referrals', docSnap.id), {
+                            ...docSnap.data(),
+                            usedBy: [...docSnap.data().usedBy, user.uid]
+                        }, { merge: true });
+                    }
+                }
+
+                statusMessage.textContent = 'Sign-up successful! Redirecting to homepage...';
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 2000);
+            } catch (error) {
+                console.error('Submission error:', error);
+                statusMessage.textContent = `Error: ${error.message}`;
+            }
+        });
+
+        let timeout;
+        function resetTimeout() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 30000);
+        }
+
+        window.addEventListener('mousemove', resetTimeout);
+        window.addEventListener('keypress', resetTimeout);
+        window.addEventListener('touchstart', resetTimeout);
+        resetTimeout();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"></script>
+    <script>
+        try {
+            $(document).foundation();
+            console.log("Foundation initialized successfully");
+        } catch (error) {
+            console.error("Foundation initialization failed:", error);
+        }
+    </script>
+</body>
+</html>
