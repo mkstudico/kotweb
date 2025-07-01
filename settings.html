@@ -8,12 +8,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        body { background-color: #f4f4f4; font-family: 'Arial', sans-serif; }
+        body { background-color: #f4f4f4; font-family: 'Arial', sans-serif; margin: 0; }
         .header { background-color: #0077b5; color: white; padding: 1.5rem; text-align: center; }
         .header h1 { margin: 0; font-size: 2rem; }
         .header p { margin: 0.5rem 0 0; font-size: 1rem; color: #e6f0fa; }
-        .settings-section { background-color: white; border-radius: 8px; padding: 1.5rem; margin: 2rem auto; max-width: 600px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; gap: 1rem; }
-        .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
+        .container { display: flex; min-height: calc(100vh - 120px); }
+        .sidebar { background-color: #333; color: white; width: 250px; padding: 1rem; }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar li { padding: 1rem; cursor: pointer; transition: background-color 0.3s; }
+        .sidebar li:hover, .sidebar li.active { background-color: #0077b5; }
+        .sidebar li i { margin-right: 0.5rem; }
+        .content { flex-grow: 1; padding: 2rem; background-color: white; margin: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        .form-field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
         .form-field label { font-weight: bold; color: #333; display: flex; align-items: center; }
         .form-field label i { margin-right: 0.5rem; }
         .form-field input, .form-field select { width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; transition: border-color 0.3s; }
@@ -23,107 +29,189 @@
         .button:hover { background-color: #005f8c; }
         .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; }
         .profile-picture { max-width: 100px; border-radius: 4px; margin-top: 0.5rem; }
-        footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
+        .referral-section p { margin: 0.5rem 0; }
+        .dashboard-section, .accounts-section { margin-bottom: 1rem; }
+        .analytics { margin-top: 1rem; }
+        .analytics h3 { color: #0077b5; }
+        .search-bar input { width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; }
+        .user-list { margin-top: 1rem; }
+        .user-item { background-color: #f9f9f9; padding: 1rem; border-radius: 4px; margin-bottom: 0.5rem; }
         .loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
         .loader::after { content: ''; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 5px solid #0077b5; border-top: 5px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; transform: translate(-50%, -50%); }
         @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
         @media (max-width: 640px) {
-            .settings-section { max-width: 100%; margin: 1rem; padding: 1rem; }
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .content { margin: 1rem; padding: 1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="grid-container">
-        <div class="header">
-            <h1>Inkota Web</h1>
-            <p>Manage Your Profile</p>
-        </div>
-        <div class="settings-section">
-            <form id="settings-form" novalidate>
-                <div class="form-field">
-                    <label for="fullNames"><i class="bi bi-person"></i>Full Names *</label>
-                    <input type="text" id="fullNames" name="fullNames" required placeholder="Enter your full names">
-                </div>
-                <div class="form-field">
-                    <label for="loginName"><i class="bi bi-envelope"></i>Login Name *</label>
-                    <input type="text" id="loginName" name="loginName" required placeholder="Enter login name" disabled>
-                </div>
-                <div class="form-field">
-                    <label for="gender"><i class="bi bi-gender-ambiguous"></i>Gender *</label>
-                    <select id="gender" name="gender" required>
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label for="location"><i class="bi bi-geo-alt"></i>Location *</label>
-                    <input type="text" id="location" name="location" required placeholder="Enter your location">
-                </div>
-                <div class="form-field">
-                    <label for="profilePicture"><i class="bi bi-image"></i>Profile Picture</label>
-                    <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
-                    <img id="profilePicturePreview" class="profile-picture" style="display: none;" alt="Profile Picture">
-                </div>
-                <div class="form-field">
-                    <label for="schoolName"><i class="bi bi-building"></i>School Name *</label>
-                    <input type="text" id="schoolName" name="schoolName" required placeholder="Enter your school name">
-                </div>
-                <div class="form-field">
-                    <label for="regNo"><i class="bi bi-card-text"></i>Registration Number *</label>
-                    <input type="text" id="regNo" name="regNo" required placeholder="Enter your registration number">
-                </div>
-                <div class="form-field">
-                    <label for="class"><i class="bi bi-book"></i>Class *</label>
-                    <select id="class" name="class" required>
-                        <option value="">Select Class</option>
-                        <option value="S1">S1</option>
-                        <option value="S2">S2</option>
-                        <option value="S3">S3</option>
-                        <option value="S4">S4</option>
-                        <option value="S5">S5</option>
-                        <option value="S6">S6</option>
-                    </select>
-                </div>
-                <div class="form-field" id="combination-field" style="display: none;">
-                    <label for="combination"><i class="bi bi-collection"></i>Combination *</label>
-                    <select id="combination" name="combination">
-                        <option value="">Select Combination</option>
-                        <option value="PCM">PCM</option>
-                        <option value="PCB">PCB</option>
-                        <option value="MCB">MCB</option>
-                        <option value="MEG">MEG</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label for="role"><i class="bi bi-person-check"></i>Role *</label>
-                    <select id="role" name="role" required>
-                        <option value="">Select a Role</option>
-                        <option value="Sponsor">Sponsor</option>
-                        <option value="User">User</option>
-                        <option value="Provider">Provider</option>
-                    </select>
-                    <p id="role-description" class="role-description"></p>
-                </div>
-                <div class="form-field" style="display: flex; justify-content: space-between; gap: 1rem;">
-                    <button type="button" class="button" onclick="window.location.href='home.html'"><i class="bi bi-arrow-left"></i> Back</button>
-                    <button type="submit" class="button"><i class="bi bi-save"></i> Save Changes</button>
-                </div>
-            </form>
-            <p id="status-message" class="status-message"></p>
-        </div>
-        <footer>
-            <p>Made by btem@fficial</p>
-        </footer>
-        <div id="loader" class="loader"></div>
+    <div class="header">
+        <h1>Inkota Web</h1>
+        <p>Manage Your Settings</p>
     </div>
+    <div class="container">
+        <div class="sidebar">
+            <ul id="sidebar-nav"></ul>
+        </div>
+        <div class="content" id="content">
+            <div id="profile-section">
+                <h2>Profile</h2>
+                <p><strong>Full Names:</strong> <span id="profile-fullNames">Loading...</span></p>
+                <p><strong>Login Name:</strong> <span id="profile-loginName">Loading...</span></p>
+                <p><strong>Gender:</strong> <span id="profile-gender">Loading...</span></p>
+                <p><strong>Location:</strong> <span id="profile-location">Loading...</span></p>
+                <p><strong>School Name:</strong> <span id="profile-schoolName">Loading...</span></p>
+                <p><strong>Registration Number:</strong> <span id="profile-regNo">Loading...</span></p>
+                <p><strong>Class:</strong> <span id="profile-class">Loading...</span></p>
+                <p><strong>Combination:</strong> <span id="profile-combination">Loading...</span></p>
+                <p><strong>Role:</strong> <span id="profile-role">Loading...</span></p>
+                <p><strong>Referral Code:</strong> <span id="profile-referral">Loading...</span></p>
+                <button class="button" id="edit-profile-btn"><i class="bi bi-pencil"></i> Edit Profile</button>
+            </div>
+            <div id="edit-profile-section" style="display: none;">
+                <h2>Edit Profile</h2>
+                <form id="edit-profile-form" novalidate>
+                    <div class="form-field">
+                        <label for="fullNames"><i class="bi bi-person"></i>Full Names *</label>
+                        <input type="text" id="fullNames" name="fullNames" required placeholder="Enter your full names">
+                    </div>
+                    <div class="form-field">
+                        <label for="loginName"><i class="bi bi-envelope"></i>Login Name *</label>
+                        <input type="text" id="loginName" name="loginName" required placeholder="Enter login name" disabled>
+                    </div>
+                    <div class="form-field">
+                        <label for="gender"><i class="bi bi-gender-ambiguous"></i>Gender *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="location"><i class="bi bi-geo-alt"></i>Location *</label>
+                        <input type="text" id="location" name="location" required placeholder="Enter your location">
+                    </div>
+                    <div class="form-field">
+                        <label for="profilePicture"><i class="bi bi-image"></i>Profile Picture</label>
+                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+                        <img id="profilePicturePreview" class="profile-picture" style="display: none;" alt="Profile Picture">
+                    </div>
+                    <div class="form-field">
+                        <label for="schoolName"><i class="bi bi-building"></i>School Name *</label>
+                        <input type="text" id="schoolName" name="schoolName" required placeholder="Enter your school name">
+                    </div>
+                    <div class="form-field">
+                        <label for="regNo"><i class="bi bi-card-text"></i>Registration Number *</label>
+                        <input type="text" id="regNo" name="regNo" required placeholder="Enter your registration number">
+                    </div>
+                    <div class="form-field">
+                        <label for="class"><i class="bi bi-book"></i>Class *</label>
+                        <select id="class" name="class" required>
+                            <option value="">Select Class</option>
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                            <option value="S4">S4</option>
+                            <option value="S5">S5</option>
+                            <option value="S6">S6</option>
+                        </select>
+                    </div>
+                    <div class="form-field" id="combination-field" style="display: none;">
+                        <label for="combination"><i class="bi bi-collection"></i>Combination *</label>
+                        <select id="combination" name="combination">
+                            <option value="">Select Combination</option>
+                            <option value="PCM">PCM</option>
+                            <option value="PCB">PCB</option>
+                            <option value="MCB">MCB</option>
+                            <option value="MEG">MEG</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="role"><i class="bi bi-person-check"></i>Role *</label>
+                        <select id="role" name="role" required>
+                            <option value="">Select a Role</option>
+                            <option value="Sponsor">Sponsor</option>
+                            <option value="User">User</option>
+                            <option value="Provider">Provider</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="display: flex; gap: 1rem;">
+                        <button type="button" class="button" id="cancel-edit-btn"><i class="bi bi-x"></i> Cancel</button>
+                        <button type="submit" class="button"><i class="bi bi-save"></i> Save Changes</button>
+                    </div>
+                </form>
+                <p id="status-message" class="status-message"></p>
+            </div>
+            <div id="referral-section" style="display: none;">
+                <h2>Referral</h2>
+                <div id="referral-content"></div>
+            </div>
+            <div id="dashboard-section" style="display: none;">
+                <h2>Dashboard</h2>
+                <div id="dashboard-content"></div>
+            </div>
+            <div id="add-section" style="display: none;">
+                <h2>Add Exam</h2>
+                <form id="add-exam-form" novalidate>
+                    <div class="form-field">
+                        <label for="examTitle"><i class="bi bi-file-text"></i>Exam Title *</label>
+                        <input type="text" id="examTitle" name="examTitle" required placeholder="Enter exam title">
+                    </div>
+                    <div class="form-field">
+                        <label for="examSubject"><i class="bi bi-book"></i>Subject *</label>
+                        <select id="examSubject" name="examSubject" required>
+                            <option value="">Select Subject</option>
+                            <option value="Math">Math</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Kinyarwanda">Kinyarwanda</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="examClass"><i class="bi bi-book"></i>Class *</label>
+                        <select id="examClass" name="examClass" required>
+                            <option value="">Select Class</option>
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                            <option value="S4">S4</option>
+                            <option value="S5">S5</option>
+                            <option value="S6">S6</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="examFile"><i class="bi bi-upload"></i>Exam File (Image, PDF, DOC) *</label>
+                        <input type="file" id="examFile" name="examFile" accept="image/*,.pdf,.doc,.docx" required>
+                    </div>
+                    <div class="form-field">
+                        <button type="submit" class="button"><i class="bi bi-plus-circle"></i> Upload Exam</button>
+                    </div>
+                </form>
+                <p id="add-status-message" class="status-message"></p>
+            </div>
+            <div id="accounts-section" style="display: none;">
+                <h2>Accounts</h2>
+                <div class="search-bar">
+                    <input type="text" id="account-search" placeholder="Search by login name">
+                </div>
+                <div id="user-list" class="user-list"></div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Made by btem@fficial</p>
+    </footer>
+    <div id="loader" class="loader"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -143,12 +231,41 @@
             window.doc = doc;
             window.getDoc = getDoc;
             window.setDoc = setDoc;
+            window.collection = collection;
+            window.getDocs = getDocs;
+            window.addDoc = addDoc;
+            window.query = query;
+            window.where = where;
+            window.serverTimestamp = serverTimestamp;
+            window.signOut = signOut;
             window.onAuthStateChanged = onAuthStateChanged;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
             document.getElementById('status-message').textContent = 'Error initializing Firebase. Check console.';
         }
+
+        const roleNavItems = {
+            User: [
+                { id: 'profile', label: 'Profile', icon: 'bi-person' },
+                { id: 'referral', label: 'Referral', icon: 'bi-code' },
+                { id: 'logout', label: 'Log Out', icon: 'bi-box-arrow-right' }
+            ],
+            Provider: [
+                { id: 'profile', label: 'Profile', icon: 'bi-person' },
+                { id: 'referral', label: 'Referral', icon: 'bi-code' },
+                { id: 'dashboard', label: 'Dashboard', icon: 'bi-bar-chart' },
+                { id: 'add', label: 'Add Exam', icon: 'bi-upload' },
+                { id: 'logout', label: 'Log Out', icon: 'bi-box-arrow-right' }
+            ],
+            Sponsor: [
+                { id: 'profile', label: 'Profile', icon: 'bi-person' },
+                { id: 'referral', label: 'Referral', icon: 'bi-code' },
+                { id: 'dashboard', label: 'Dashboard', icon: 'bi-bar-chart' },
+                { id: 'accounts', label: 'Accounts', icon: 'bi-people' },
+                { id: 'logout', label: 'Log Out', icon: 'bi-box-arrow-right' }
+            ]
+        };
 
         const roleDescriptions = {
             Sponsor: 'Support the platform financially to help it grow.',
@@ -167,27 +284,10 @@
                 const userDoc = await window.getDoc(window.doc(window.db, 'users', user.uid));
                 if (userDoc.exists()) {
                     const data = userDoc.data();
-                    document.getElementById('fullNames').value = data.fullNames || '';
-                    document.getElementById('loginName').value = data.loginName || '';
-                    document.getElementById('gender').value = data.gender || '';
-                    document.getElementById('location').value = data.location || '';
-                    document.getElementById('schoolName').value = data.schoolName || '';
-                    document.getElementById('regNo').value = data.regNo || '';
-                    document.getElementById('class').value = data.class || '';
-                    document.getElementById('combination').value = data.combination || 'None';
-                    document.getElementById('role').value = data.role || '';
-                    document.getElementById('role-description').textContent = roleDescriptions[data.role] || '';
-                    if (data.profilePicture) {
-                        document.getElementById('profilePicturePreview').src = data.profilePicture;
-                        document.getElementById('profilePicturePreview').style.display = 'block';
-                    }
-                    if (['S1', 'S2', 'S3'].includes(data.class)) {
-                        document.getElementById('combination-field').style.display = 'none';
-                        document.getElementById('combination').removeAttribute('required');
-                    } else {
-                        document.getElementById('combination-field').style.display = 'block';
-                        document.getElementById('combination').setAttribute('required', 'required');
-                    }
+                    window.currentUser = { uid: user.uid, role: data.role, referralCode: data.referralCode };
+                    populateSidebar(data.role);
+                    await loadProfile(data);
+                    showSection('profile');
                 }
             } catch (error) {
                 console.error("Error loading user data:", error);
@@ -196,31 +296,272 @@
                 loader.style.display = 'none';
             }
         });
-    </script>
-    <script>
-        const form = document.getElementById('settings-form');
-        const statusMessage = document.getElementById('status-message');
-        const loader = document.getElementById('loader');
-        const classSelect = document.getElementById('class');
-        const combinationField = document.getElementById('combination-field');
-        const combinationSelect = document.getElementById('combination');
-        const roleSelect = document.getElementById('role');
-        const roleDescription = document.getElementById('role-description');
 
-        roleSelect.addEventListener('change', (e) => {
-            const selectedRole = e.target.value;
-            roleDescription.textContent = roleDescriptions[selectedRole] || '';
-        });
+        function populateSidebar(role) {
+            const nav = document.getElementById('sidebar-nav');
+            nav.innerHTML = '';
+            roleNavItems[role].forEach(item => {
+                const li = document.createElement('li');
+                li.id = `nav-${item.id}`;
+                li.innerHTML = `<i class="bi ${item.icon}"></i>${item.label}`;
+                li.onclick = () => showSection(item.id);
+                nav.appendChild(li);
+            });
+        }
 
-        classSelect.addEventListener('change', () => {
-            const classValue = classSelect.value;
-            if (['S1', 'S2', 'S3'].includes(classValue)) {
-                combinationField.style.display = 'none';
-                combinationSelect.value = 'None';
-                combinationSelect.removeAttribute('required');
+        async function loadProfile(data) {
+            document.getElementById('profile-fullNames').textContent = data.fullNames || 'N/A';
+            document.getElementById('profile-loginName').textContent = data.loginName || 'N/A';
+            document.getElementById('profile-gender').textContent = data.gender || 'N/A';
+            document.getElementById('profile-location').textContent = data.location || 'N/A';
+            document.getElementById('profile-schoolName').textContent = data.schoolName || 'N/A';
+            document.getElementById('profile-regNo').textContent = data.regNo || 'N/A';
+            document.getElementById('profile-class').textContent = data.class || 'N/A';
+            document.getElementById('profile-combination').textContent = data.combination || 'N/A';
+            document.getElementById('profile-role').textContent = data.role || 'N/A';
+            document.getElementById('profile-referral').textContent = data.referralCode || 'N/A';
+            document.getElementById('fullNames').value = data.fullNames || '';
+            document.getElementById('loginName').value = data.loginName || '';
+            document.getElementById('gender').value = data.gender || '';
+            document.getElementById('location').value = data.location || '';
+            document.getElementById('schoolName').value = data.schoolName || '';
+            document.getElementById('regNo').value = data.regNo || '';
+            document.getElementById('class').value = data.class || '';
+            document.getElementById('combination').value = data.combination || 'None';
+            document.getElementById('role').value = data.role || '';
+            if (data.profilePicture) {
+                document.getElementById('profilePicturePreview').src = data.profilePicture;
+                document.getElementById('profilePicturePreview').style.display = 'block';
+            }
+            if (['S1', 'S2', 'S3'].includes(data.class)) {
+                document.getElementById('combination-field').style.display = 'none';
+                document.getElementById('combination').removeAttribute('required');
             } else {
-                combinationField.style.display = 'block';
-                combinationSelect.setAttribute('required', 'required');
+                document.getElementById('combination-field').style.display = 'block';
+                document.getElementById('combination').setAttribute('required', 'required');
+            }
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content > div').forEach(div => div.style.display = 'none');
+            document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+            document.getElementById(`${sectionId}-section`).style.display = 'block';
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            if (sectionId === 'referral') loadReferral();
+            if (sectionId === 'dashboard') loadDashboard();
+            if (sectionId === 'accounts') loadAccounts();
+        }
+
+        async function loadReferral() {
+            const referralContent = document.getElementById('referral-content');
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            try {
+                if (window.currentUser.referralCode) {
+                    referralContent.innerHTML = `
+                        <p><strong>Your Referral Code:</strong> ${window.currentUser.referralCode}</p>
+                        <button class="button" onclick="copyReferralCode()"><i class="bi bi-clipboard"></i> Copy Code</button>
+                    `;
+                } else {
+                    const referralCodesRef = window.collection(window.db, 'referrals');
+                    const querySnapshot = await window.getDocs(referralCodesRef);
+                    let availableCode = null;
+                    querySnapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.usedBy.length < 5 && !availableCode) {
+                            availableCode = data.referralCode;
+                        }
+                    });
+                    if (availableCode) {
+                        referralContent.innerHTML = `
+                            <button class="button" id="request-code-btn"><i class="bi bi-code"></i> Request Referral Code</button>
+                        `;
+                        document.getElementById('request-code-btn').onclick = async () => {
+                            loader.style.display = 'block';
+                            try {
+                                await window.setDoc(window.doc(window.db, 'users', window.currentUser.uid), {
+                                    referralCode: availableCode
+                                }, { merge: true });
+                                await window.setDoc(window.doc(window.db, 'referrals', availableCode), {
+                                    usedBy: window.firebase.firestore.FieldValue.arrayUnion(window.currentUser.uid)
+                                }, { merge: true });
+                                window.currentUser.referralCode = availableCode;
+                                loadReferral();
+                            } catch (error) {
+                                console.error('Error requesting referral code:', error);
+                                referralContent.innerHTML = '<p class="status-message">Error requesting code.</p>';
+                            } finally {
+                                loader.style.display = 'none';
+                            }
+                        };
+                    } else {
+                        referralContent.innerHTML = '<p class="status-message">All referral codes are used up. Please wait for new codes.</p>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading referral:', error);
+                referralContent.innerHTML = '<p class="status-message">Error loading referral data.</p>';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        async function copyReferralCode() {
+            try {
+                await navigator.clipboard.writeText(window.currentUser.referralCode);
+                document.getElementById('referral-content').innerHTML += '<p class="status-message">Code copied!</p>';
+                setTimeout(() => {
+                    document.querySelector('#referral-content .status-message').remove();
+                }, 2000);
+            } catch (error) {
+                console.error('Error copying code:', error);
+            }
+        }
+
+        async function loadDashboard() {
+            const dashboardContent = document.getElementById('dashboard-content');
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            try {
+                if (window.currentUser.role === 'Provider') {
+                    const examsRef = window.query(window.collection(window.db, 'exams'), window.where('uploader', '==', window.currentUser.uid));
+                    const querySnapshot = await window.getDocs(examsRef);
+                    let totalViews = 0, totalDownloads = 0;
+                    querySnapshot.forEach(doc => {
+                        const data = doc.data();
+                        totalViews += data.views || 0;
+                        totalDownloads += data.downloads || 0;
+                    });
+                    const earnings = (totalViews * 0.01 + totalDownloads * 0.01).toFixed(2);
+                    dashboardContent.innerHTML = `
+                        <div class="analytics">
+                            <h3>Your Analytics</h3>
+                            <p>Total Views: ${totalViews}</p>
+                            <p>Total Downloads: ${totalDownloads}</p>
+                            <p>Estimated Earnings: $${earnings}</p>
+                        </div>
+                    `;
+                } else if (window.currentUser.role === 'Sponsor') {
+                    const usersRef = window.collection(window.db, 'users');
+                    const examsRef = window.collection(window.db, 'exams');
+                    const usersSnapshot = await window.getDocs(usersRef);
+                    const examsSnapshot = await window.getDocs(examsRef);
+                    let totalUsers = 0, totalProviders = 0, totalExams = 0;
+                    const weeklyUsers = { thisWeek: 0, lastWeek: 0 };
+                    const weeklyExams = { thisWeek: 0, lastWeek: 0 };
+                    const now = new Date();
+                    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+
+                    usersSnapshot.forEach(doc => {
+                        const data = doc.data();
+                        totalUsers++;
+                        if (data.role === 'Provider') totalProviders++;
+                        if (data.createdAt) {
+                            const createdAt = new Date(data.createdAt.seconds * 1000);
+                            if (createdAt >= oneWeekAgo) weeklyUsers.thisWeek++;
+                            else if (createdAt >= twoWeeksAgo) weeklyUsers.lastWeek++;
+                        }
+                    });
+                    examsSnapshot.forEach(doc => {
+                        totalExams++;
+                        if (doc.data().createdAt) {
+                            const createdAt = new Date(doc.data().createdAt.seconds * 1000);
+                            if (createdAt >= oneWeekAgo) weeklyExams.thisWeek++;
+                            else if (createdAt >= twoWeeksAgo) weeklyExams.lastWeek++;
+                        }
+                    });
+
+                    dashboardContent.innerHTML = `
+                        <div class="analytics">
+                            <h3>Site Analytics</h3>
+                            <p>Total Users: ${totalUsers}</p>
+                            <p>Total Providers: ${totalProviders}</p>
+                            <p>Total Exams: ${totalExams}</p>
+                            <h3>Weekly Insights</h3>
+                            <p>New Users (This Week): ${weeklyUsers.thisWeek}</p>
+                            <p>New Users (Last Week): ${weeklyUsers.lastWeek}</p>
+                            <p>New Exams (This Week): ${weeklyExams.thisWeek}</p>
+                            <p>New Exams (Last Week): ${weeklyExams.lastWeek}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                dashboardContent.innerHTML = '<p class="status-message">Error loading dashboard data.</p>';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        async function loadAccounts() {
+            const userList = document.getElementById('user-list');
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            try {
+                const usersRef = window.query(window.collection(window.db, 'users'), window.where('role', 'in', ['User', 'Provider']));
+                const querySnapshot = await window.getDocs(usersRef);
+                userList.innerHTML = '';
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const earnings = (data.views || 0) * 0.01 + (data.downloads || 0) * 0.01;
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <p><strong>Login Name:</strong> ${data.loginName || 'N/A'}</p>
+                        <p><strong>Full Names:</strong> ${data.fullNames || 'N/A'}</p>
+                        <p><strong>Role:</strong> ${data.role || 'N/A'}</p>
+                        <p><strong>School Name:</strong> ${data.schoolName || 'N/A'}</p>
+                        <p><strong>Registration Number:</strong> ${data.regNo || 'N/A'}</p>
+                        <p><strong>Class:</strong> ${data.class || 'N/A'}</p>
+                        <p><strong>Combination:</strong> ${data.combination || 'N/A'}</p>
+                        <p><strong>Referral Code:</strong> ${data.referralCode || 'N/A'}</p>
+                        <p><strong>Earnings:</strong> $${earnings.toFixed(2)}</p>
+                    `;
+                    userList.appendChild(userItem);
+                });
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+                userList.innerHTML = '<p class="status-message">Error loading accounts.</p>';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        document.getElementById('account-search').addEventListener('input', async (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const userList = document.getElementById('user-list');
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            try {
+                const usersRef = window.query(window.collection(window.db, 'users'), window.where('role', 'in', ['User', 'Provider']));
+                const querySnapshot = await window.getDocs(usersRef);
+                userList.innerHTML = '';
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.loginName.toLowerCase().includes(searchTerm)) {
+                        const earnings = (data.views || 0) * 0.01 + (data.downloads || 0) * 0.01;
+                        const userItem = document.createElement('div');
+                        userItem.className = 'user-item';
+                        userItem.innerHTML = `
+                            <p><strong>Login Name:</strong> ${data.loginName || 'N/A'}</p>
+                            <p><strong>Full Names:</strong> ${data.fullNames || 'N/A'}</p>
+                            <p><strong>Role:</strong> ${data.role || 'N/A'}</p>
+                            <p><strong>School Name:</strong> ${data.schoolName || 'N/A'}</p>
+                            <p><strong>Registration Number:</strong> ${data.regNo || 'N/A'}</p>
+                            <p><strong>Class:</strong> ${data.class || 'N/A'}</p>
+                            <p><strong>Combination:</strong> ${data.combination || 'N/A'}</p>
+                            <p><strong>Referral Code:</strong> ${data.referralCode || 'N/A'}</p>
+                            <p><strong>Earnings:</strong> $${earnings.toFixed(2)}</p>
+                        `;
+                        userList.appendChild(userItem);
+                    }
+                });
+            } catch (error) {
+                console.error('Error searching accounts:', error);
+                userList.innerHTML = '<p class="status-message">Error searching accounts.</p>';
+            } finally {
+                loader.style.display = 'none';
             }
         });
 
@@ -245,9 +586,21 @@
             }
         }
 
-        form.addEventListener('submit', async (e) => {
+        document.getElementById('edit-profile-btn').addEventListener('click', () => {
+            document.getElementById('profile-section').style.display = 'none';
+            document.getElementById('edit-profile-section').style.display = 'block';
+        });
+
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+            document.getElementById('edit-profile-section').style.display = 'none';
+            document.getElementById('profile-section').style.display = 'block';
+            document.getElementById('status-message').textContent = '';
+        });
+
+        document.getElementById('edit-profile-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            statusMessage.textContent = '';
+            const statusMessage = document.getElementById('status-message');
+            const loader = document.getElementById('loader');
             loader.style.display = 'block';
 
             const fullNames = document.getElementById('fullNames').value;
@@ -272,16 +625,8 @@
             }
 
             try {
-                const user = await new Promise((resolve, reject) => {
-                    window.onAuthStateChanged(window.auth, (user) => {
-                        if (user) resolve(user);
-                        else reject(new Error('User not authenticated'));
-                    });
-                });
-
                 const profilePictureUrl = await uploadImage(profilePicture);
-
-                await window.setDoc(window.doc(window.db, 'users', user.uid), {
+                await window.setDoc(window.doc(window.db, 'users', window.currentUser.uid), {
                     fullNames,
                     gender,
                     location,
@@ -294,13 +639,79 @@
                     updatedAt: window.serverTimestamp()
                 }, { merge: true });
 
-                statusMessage.textContent = 'Profile updated successfully! Redirecting to homepage...';
-                setTimeout(() => {
-                    window.location.href = 'home.html';
-                }, 2000);
+                statusMessage.textContent = 'Profile updated successfully!';
+                await loadProfile({ fullNames, gender, location, profilePicture: profilePictureUrl, schoolName, regNo, class: classValue, combination: combination || 'None', role, referralCode: window.currentUser.referralCode });
+                document.getElementById('edit-profile-section').style.display = 'none';
+                document.getElementById('profile-section').style.display = 'block';
             } catch (error) {
                 console.error('Update error:', error);
                 statusMessage.textContent = `Error: ${error.message}`;
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        document.getElementById('class').addEventListener('change', () => {
+            const classValue = document.getElementById('class').value;
+            if (['S1', 'S2', 'S3'].includes(classValue)) {
+                document.getElementById('combination-field').style.display = 'none';
+                document.getElementById('combination').value = 'None';
+                document.getElementById('combination').removeAttribute('required');
+            } else {
+                document.getElementById('combination-field').style.display = 'block';
+                document.getElementById('combination').setAttribute('required', 'required');
+            }
+        });
+
+        document.getElementById('add-exam-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const addStatusMessage = document.getElementById('add-status-message');
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+
+            const examTitle = document.getElementById('examTitle').value;
+            const examSubject = document.getElementById('examSubject').value;
+            const examClass = document.getElementById('examClass').value;
+            const examFile = document.getElementById('examFile').files[0];
+
+            if (!examTitle || !examSubject || !examClass || !examFile) {
+                addStatusMessage.textContent = 'Please fill all required fields.';
+                loader.style.display = 'none';
+                return;
+            }
+
+            try {
+                const fileUrl = await uploadImage(examFile);
+                if (!fileUrl) throw new Error('File upload failed');
+                await window.addDoc(window.collection(window.db, 'exams'), {
+                    title: examTitle,
+                    subject: examSubject,
+                    class: examClass,
+                    uploader: window.currentUser.uid,
+                    fileUrl,
+                    views: 0,
+                    downloads: 0,
+                    createdAt: window.serverTimestamp()
+                });
+                addStatusMessage.textContent = 'Exam uploaded successfully!';
+                document.getElementById('add-exam-form').reset();
+            } catch (error) {
+                console.error('Upload error:', error);
+                addStatusMessage.textContent = `Error: ${error.message}`;
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        document.getElementById('nav-logout') && document.getElementById('nav-logout').addEventListener('click', async () => {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            try {
+                await window.signOut(window.auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                document.getElementById('status-message').textContent = `Error: ${error.message}`;
             } finally {
                 loader.style.display = 'none';
             }
