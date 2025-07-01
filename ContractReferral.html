@@ -79,9 +79,9 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -99,6 +99,10 @@
             window.auth = getAuth(app);
             window.db = getFirestore(app);
             window.collection = collection;
+            window.doc = doc;
+            window.setDoc = setDoc;
+            window.getDoc = getDoc;
+            window.getDocs = getDocs;
             window.query = query;
             window.where = where;
             window.serverTimestamp = serverTimestamp;
@@ -131,11 +135,11 @@
                 return false;
             }
             try {
-                if (!window.collection || !window.query || !window.where) {
+                if (!window.collection || !window.getDocs || !window.query || !window.where) {
                     throw new Error("Firebase functions not initialized");
                 }
                 const q = window.query(window.collection(window.db, 'referrals'), window.where('referralCode', '==', code));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await window.getDocs(q);
                 return !querySnapshot.empty;
             } catch (error) {
                 console.error('Error validating referral code:', error);
@@ -231,7 +235,7 @@
                     });
                 });
 
-                const tempDoc = await getDoc(doc(window.db, 'temp_users', user.uid));
+                const tempDoc = await window.getDoc(window.doc(window.db, 'temp_users', user.uid));
                 if (!tempDoc.exists()) {
                     statusMessage.textContent = 'Error: User data not found. Please start over.';
                     return;
@@ -239,14 +243,14 @@
                 const tempData = tempDoc.data();
 
                 const newReferralCode = generateReferralCode();
-                await setDoc(doc(window.db, 'users', user.uid), {
+                await window.setDoc(window.doc(window.db, 'users', user.uid), {
                     ...tempData,
                     agreedContract: true,
                     referralCode: newReferralCode,
                     createdAt: window.serverTimestamp()
                 });
 
-                await setDoc(doc(window.db, 'referrals', newReferralCode), {
+                await window.setDoc(window.doc(window.db, 'referrals', newReferralCode), {
                     referralCode: newReferralCode,
                     userId: user.uid,
                     usedBy: [user.uid],
@@ -254,9 +258,9 @@
                 });
 
                 const q = window.query(window.collection(window.db, 'referrals'), window.where('referralCode', '==', referralCode));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await window.getDocs(q);
                 for (const docSnap of querySnapshot.docs) {
-                    await setDoc(doc(window.db, 'referrals', docSnap.id), {
+                    await window.setDoc(window.doc(window.db, 'referrals', docSnap.id), {
                         ...docSnap.data(),
                         usedBy: [...docSnap.data().usedBy, user.uid]
                     }, { merge: true });
