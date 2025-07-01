@@ -100,9 +100,10 @@
             window.app = initializeApp(firebaseConfig);
             window.auth = getAuth(app);
             window.db = getFirestore(app);
-            window.serverTimestamp = serverTimestamp;
+            window.collection = collection;
             window.query = query;
             window.where = where;
+            window.serverTimestamp = serverTimestamp;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
@@ -120,10 +121,10 @@
 
         async function checkLoginNameUnique(loginName) {
             try {
-                if (!window.query || !window.where || !window.db) {
-                    throw new Error("Firebase query functions not initialized");
+                if (!window.collection || !window.query || !window.where || !window.db) {
+                    throw new Error("Firebase functions not initialized");
                 }
-                const q = window.query(collection(window.db, 'users'), window.where('loginName', '==', loginName));
+                const q = window.query(window.collection(window.db, 'users'), window.where('loginName', '==', loginName));
                 const querySnapshot = await getDocs(q);
                 return querySnapshot.empty;
             } catch (error) {
