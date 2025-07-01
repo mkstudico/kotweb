@@ -81,9 +81,9 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -101,6 +101,7 @@
             window.auth = getAuth(app);
             window.db = getFirestore(app);
             window.collection = collection;
+            window.getDocs = getDocs;
             window.query = query;
             window.where = where;
             window.serverTimestamp = serverTimestamp;
@@ -121,11 +122,11 @@
 
         async function checkLoginNameUnique(loginName) {
             try {
-                if (!window.collection || !window.query || !window.where || !window.db) {
+                if (!window.collection || !window.getDocs || !window.query || !window.where || !window.db) {
                     throw new Error("Firebase functions not initialized");
                 }
                 const q = window.query(window.collection(window.db, 'users'), window.where('loginName', '==', loginName));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await window.getDocs(q);
                 return querySnapshot.empty;
             } catch (error) {
                 console.error('Error checking login name:', error);
@@ -202,7 +203,7 @@
                 const userCredential = await createUserWithEmailAndPassword(window.auth, email, formData.password);
                 const user = userCredential.user;
 
-                await setDoc(doc(window.db, 'temp_users', user.uid), {
+                await window.setDoc(window.doc(window.db, 'temp_users', user.uid), {
                     fullNames: formData.fullNames,
                     loginName: formData.loginName,
                     gender: formData.gender,
