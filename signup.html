@@ -277,27 +277,28 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Firebase SDK -->
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
+            authDomain: "inkota-web.firebaseapp.com",
+            databaseURL: "https://inkota-web-default-rtdb.firebaseio.com",
+            projectId: "inkota-web",
+            storageBucket: "inkota-web.firebasestorage.app",
+            messagingSenderId: "390667774435",
+            appId: "1:390667774435:web:e4d33a5439cf62829dd8d6",
+            measurementId: "G-HDM9EZEB8W"
+        };
+
         try {
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-            import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-            import { getFirestore, collection, doc, setDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
-
-            // Firebase Configuration
-            const firebaseConfig = {
-                apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
-                authDomain: "inkota-web.firebaseapp.com",
-                databaseURL: "https://inkota-web-default-rtdb.firebaseio.com",
-                projectId: "inkota-web",
-                storageBucket: "inkota-web.firebasestorage.app",
-                messagingSenderId: "390667774435",
-                appId: "1:390667774435:web:e4d33a5439cf62829dd8d6",
-                measurementId: "G-HDM9EZEB8W"
-            };
-
             // Initialize Firebase
             window.app = initializeApp(firebaseConfig);
             window.auth = getAuth(app);
             window.db = getFirestore(app);
+            window.serverTimestamp = serverTimestamp;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
@@ -476,6 +477,7 @@
             const classLevel = e.target.value;
             const requiredText = document.getElementById('combination-required');
             requiredText.textContent = (classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) ? '*' : '';
+            document.getElementById('combination').required = requiredText.textContent === '*';
         });
 
         // Form submission
@@ -483,77 +485,77 @@
             e.preventDefault();
             statusMessage.textContent = '';
 
-            if (currentStep === 1) {
-                const fullNames = document.getElementById('fullNames').value;
-                const loginName = document.getElementById('loginName').value;
-                const password = document.getElementById('password').value;
-                const gender = document.getElementById('gender').value;
-                const location = document.getElementById('location').value;
+            try {
+                if (currentStep === 1) {
+                    const fullNames = document.getElementById('fullNames').value;
+                    const loginName = document.getElementById('loginName').value;
+                    const password = document.getElementById('password').value;
+                    const gender = document.getElementById('gender').value;
+                    const location = document.getElementById('location').value;
 
-                if (!fullNames || !loginName || !password || !gender || !location) {
-                    statusMessage.textContent = 'Please fill in all required fields.';
-                    return;
-                }
-                if (!validateLoginName(loginName)) {
-                    statusMessage.textContent = 'Login name must be one word, letters only.';
-                    return;
-                }
-                if (password.length < 6) {
-                    statusMessage.textContent = 'Password must be at least 6 characters long.';
-                    return;
-                }
-                const isUnique = await checkLoginNameUnique(loginName);
-                if (!isUnique) {
-                    statusMessage.textContent = 'Login name is already taken.';
-                    return;
-                }
-                currentStep = 2;
-                updateStepper();
-            } else if (currentStep === 2) {
-                const schoolName = document.getElementById('schoolName').value;
-                const regNo = document.getElementById('regNo').value;
-                const classLevel = document.getElementById('class').value;
-                const combination = document.getElementById('combination').value;
-
-                if (!schoolName || !regNo || !classLevel) {
-                    statusMessage.textContent = 'Please fill in all required fields.';
-                    return;
-                }
-                if (classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) {
-                    if (!combination || combination === 'None') {
-                        statusMessage.textContent = 'Please select a combination for S4–S6.';
+                    if (!fullNames || !loginName || !password || !gender || !location) {
+                        statusMessage.textContent = 'Please fill in all required fields.';
                         return;
                     }
-                }
-                currentStep = 3;
-                updateStepper();
-            } else if (currentStep === 3) {
-                if (!agreedContract) {
-                    statusMessage.textContent = 'Please sign the contract.';
-                    return;
-                }
-                const referralCode = document.getElementById('referralCode').value;
-                if (referralCode.toLowerCase() !== 'no code' && !(await validateReferralCode(referralCode))) {
-                    statusMessage.textContent = 'Invalid referral code. Use "No code" or a valid code.';
-                    return;
-                }
+                    if (!validateLoginName(loginName)) {
+                        statusMessage.textContent = 'Login name must be one word, letters only.';
+                        return;
+                    }
+                    if (password.length < 6) {
+                        statusMessage.textContent = 'Password must be at least 6 characters long.';
+                        return;
+                    }
+                    const isUnique = await checkLoginNameUnique(loginName);
+                    if (!isUnique) {
+                        statusMessage.textContent = 'Login name is already taken.';
+                        return;
+                    }
+                    currentStep = 2;
+                    updateStepper();
+                } else if (currentStep === 2) {
+                    const schoolName = document.getElementById('schoolName').value;
+                    const regNo = document.getElementById('regNo').value;
+                    const classLevel = document.getElementById('class').value;
+                    const combination = document.getElementById('combination').value;
 
-                // Collect all form data
-                const formData = {
-                    fullNames: document.getElementById('fullNames').value,
-                    loginName: document.getElementById('loginName').value,
-                    password: document.getElementById('password').value,
-                    gender: document.getElementById('gender').value,
-                    location: document.getElementById('location').value,
-                    profilePicture: document.getElementById('profilePicture').files[0],
-                    schoolName: document.getElementById('schoolName').value,
-                    regNo: document.getElementById('regNo').value,
-                    class: document.getElementById('class').value,
-                    combination: document.getElementById('combination').value,
-                    referralCode: referralCode
-                };
+                    if (!schoolName || !regNo || !classLevel) {
+                        statusMessage.textContent = 'Please fill in all required fields.';
+                        return;
+                    }
+                    if (classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) {
+                        if (!combination || combination === 'None') {
+                            statusMessage.textContent = 'Please select a combination for S4–S6.';
+                            return;
+                        }
+                    }
+                    currentStep = 3;
+                    updateStepper();
+                } else if (currentStep === 3) {
+                    if (!agreedContract) {
+                        statusMessage.textContent = 'Please sign the contract.';
+                        return;
+                    }
+                    const referralCode = document.getElementById('referralCode').value;
+                    if (referralCode.toLowerCase() !== 'no code' && !(await validateReferralCode(referralCode))) {
+                        statusMessage.textContent = 'Invalid referral code. Use "No code" or a valid code.';
+                        return;
+                    }
 
-                try {
+                    // Collect all form data
+                    const formData = {
+                        fullNames: document.getElementById('fullNames').value,
+                        loginName: document.getElementById('loginName').value,
+                        password: document.getElementById('password').value,
+                        gender: document.getElementById('gender').value,
+                        location: document.getElementById('location').value,
+                        profilePicture: document.getElementById('profilePicture').files[0],
+                        schoolName: document.getElementById('schoolName').value,
+                        regNo: document.getElementById('regNo').value,
+                        class: document.getElementById('class').value,
+                        combination: document.getElementById('combination').value,
+                        referralCode: referralCode
+                    };
+
                     // Upload profile picture
                     const profilePictureUrl = await uploadImageToImgBB(formData.profilePicture);
 
@@ -578,7 +580,7 @@
                         combination: formData.combination || 'None',
                         agreedContract: true,
                         referralCode: newReferralCode,
-                        createdAt: window.firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: window.serverTimestamp()
                     });
 
                     // Store referral code
@@ -586,29 +588,29 @@
                         referralCode: newReferralCode,
                         userId: user.uid,
                         usedBy: referralCode && referralCode.toLowerCase() !== 'no code' ? [user.uid] : [],
-                        createdAt: window.firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: window.serverTimestamp()
                     });
 
                     // Update referrer's usedBy array
                     if (referralCode && referralCode.toLowerCase() !== 'no code') {
                         const q = query(collection(window.db, 'referrals'), where('referralCode', '==', referralCode));
                         const querySnapshot = await getDocs(q);
-                        querySnapshot.forEach(async (docSnap) => {
+                        for (const docSnap of querySnapshot.docs) {
                             await setDoc(doc(window.db, 'referrals', docSnap.id), {
                                 ...docSnap.data(),
                                 usedBy: [...docSnap.data().usedBy, user.uid]
                             }, { merge: true });
-                        });
+                        }
                     }
 
                     statusMessage.textContent = 'Sign-up successful! Redirecting to homepage...';
                     setTimeout(() => {
                         window.location.href = 'home.html';
                     }, 2000);
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    statusMessage.textContent = `Sign-up failed: ${error.message}`;
                 }
+            } catch (error) {
+                console.error('Submission error:', error);
+                statusMessage.textContent = `Sign-up failed: ${error.message}`;
             }
         });
 
