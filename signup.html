@@ -101,10 +101,13 @@
             window.auth = getAuth(app);
             window.db = getFirestore(app);
             window.collection = collection;
+            window.doc = doc;
+            window.setDoc = setDoc;
             window.getDocs = getDocs;
             window.query = query;
             window.where = where;
             window.serverTimestamp = serverTimestamp;
+            window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
@@ -199,8 +202,8 @@
 
             try {
                 const profilePictureUrl = await uploadImageToImgBB(formData.profilePicture);
-                const email = `${formData.loginName.toLowerCase()}@inkota.web`;
-                const userCredential = await createUserWithEmailAndPassword(window.auth, email, formData.password);
+                const email = `${formData.loginName.toLowerCase()}@gmail.com`;
+                const userCredential = await window.createUserWithEmailAndPassword(window.auth, email, formData.password);
                 const user = userCredential.user;
 
                 await window.setDoc(window.doc(window.db, 'temp_users', user.uid), {
