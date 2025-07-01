@@ -62,8 +62,8 @@
                     <canvas id="signature-pad" class="signature-pad"></canvas>
                 </div>
                 <div class="form-field">
-                    <label for="referralCode"><i class="bi bi-code"></i>Referral Code (Enter "No code" if none)</label>
-                    <input type="text" id="referralCode" name="referralCode" placeholder="No code">
+                    <label for="referralCode"><i class="bi bi-code"></i>Referral Code *</label>
+                    <input type="text" id="referralCode" name="referralCode" required placeholder="Enter valid referral code">
                 </div>
                 <div class="form-field" style="display: flex; justify-content: space-between; gap: 1rem;">
                     <button type="button" class="button" onclick="window.location.href='SchoolInfo.html'"><i class="bi bi-arrow-left"></i> Back</button>
@@ -98,9 +98,10 @@
             window.app = initializeApp(firebaseConfig);
             window.auth = getAuth(app);
             window.db = getFirestore(app);
-            window.serverTimestamp = serverTimestamp;
+            window.collection = collection;
             window.query = query;
             window.where = where;
+            window.serverTimestamp = serverTimestamp;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
@@ -122,9 +123,18 @@
         }
 
         async function validateReferralCode(code) {
-            if (code === '' || code.toLowerCase() === 'no code') return true;
+            if (!code || code.toLowerCase() === 'no code') {
+                statusMessage.textContent = 'A valid referral code is required. Redirecting to index...';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return false;
+            }
             try {
-                const q = window.query(collection(window.db, 'referrals'), window.where('referralCode', '==', code));
+                if (!window.collection || !window.query || !window.where) {
+                    throw new Error("Firebase functions not initialized");
+                }
+                const q = window.query(window.collection(window.db, 'referrals'), window.where('referralCode', '==', code));
                 const querySnapshot = await getDocs(q);
                 return !querySnapshot.empty;
             } catch (error) {
@@ -209,8 +219,7 @@
                 return;
             }
             const referralCode = document.getElementById('referralCode').value;
-            if (referralCode.toLowerCase() !== 'no code' && !(await validateReferralCode(referralCode))) {
-                statusMessage.textContent = 'Invalid referral code. Use "No code" or a valid code.';
+            if (!(await validateReferralCode(referralCode))) {
                 return;
             }
 
@@ -240,19 +249,17 @@
                 await setDoc(doc(window.db, 'referrals', newReferralCode), {
                     referralCode: newReferralCode,
                     userId: user.uid,
-                    usedBy: referralCode && referralCode.toLowerCase() !== 'no code' ? [user.uid] : [],
+                    usedBy: [user.uid],
                     createdAt: window.serverTimestamp()
                 });
 
-                if (referralCode && referralCode.toLowerCase() !== 'no code') {
-                    const q = window.query(collection(window.db, 'referrals'), window.where('referralCode', '==', referralCode));
-                    const querySnapshot = await getDocs(q);
-                    for (const docSnap of querySnapshot.docs) {
-                        await setDoc(doc(window.db, 'referrals', docSnap.id), {
-                            ...docSnap.data(),
-                            usedBy: [...docSnap.data().usedBy, user.uid]
-                        }, { merge: true });
-                    }
+                const q = window.query(window.collection(window.db, 'referrals'), window.where('referralCode', '==', referralCode));
+                const querySnapshot = await getDocs(q);
+                for (const docSnap of querySnapshot.docs) {
+                    await setDoc(doc(window.db, 'referrals', docSnap.id), {
+                        ...docSnap.data(),
+                        usedBy: [...docSnap.data().usedBy, user.uid]
+                    }, { merge: true });
                 }
 
                 statusMessage.textContent = 'Sign-up successful! Redirecting to homepage...';
