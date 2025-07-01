@@ -81,7 +81,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -103,8 +103,6 @@
             window.setDoc = setDoc;
             window.getDoc = getDoc;
             window.getDocs = getDocs;
-            window.query = query;
-            window.where = where;
             window.serverTimestamp = serverTimestamp;
             window.onAuthStateChanged = onAuthStateChanged;
             console.log("Firebase initialized successfully");
@@ -133,7 +131,7 @@
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 2000);
-                return false;
+                return { isValid: false, docId: null };
             }
             try {
                 if (!window.collection || !window.getDocs) {
@@ -142,10 +140,12 @@
                 const referralCodeRef = window.collection(window.db, 'referralCode');
                 const querySnapshot = await window.getDocs(referralCodeRef);
                 let isValid = false;
+                let matchedDocId = null;
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    if (data.newReferralCode === code) {
+                    if (data.newReferralCode && data.newReferralCode === code) {
                         isValid = true;
+                        matchedDocId = doc.id;
                     }
                 });
                 if (!isValid) {
@@ -154,11 +154,11 @@
                         window.location.href = 'index.html';
                     }, 2000);
                 }
-                return isValid;
+                return { isValid, docId: matchedDocId };
             } catch (error) {
                 console.error('Error validating referral code:', error);
                 statusMessage.textContent = 'Error validating referral code.';
-                return false;
+                return { isValid: false, docId: null };
             }
         }
 
@@ -237,7 +237,8 @@
                 return;
             }
             const referralCode = document.getElementById('referralCode').value;
-            if (!(await validateReferralCode(referralCode))) {
+            const { isValid, docId } = await validateReferralCode(referralCode);
+            if (!isValid) {
                 return;
             }
 
@@ -271,12 +272,12 @@
                     createdAt: window.serverTimestamp()
                 });
 
-                const q = window.query(window.collection(window.db, 'referralCode'), window.where('newReferralCode', '==', referralCode));
-                const querySnapshot = await window.getDocs(q);
-                for (const docSnap of querySnapshot.docs) {
-                    await window.setDoc(window.doc(window.db, 'referralCode', docSnap.id), {
-                        ...docSnap.data(),
-                        usedBy: [...(docSnap.data().usedBy || []), user.uid]
+                if (docId) {
+                    const referralDocRef = window.doc(window.db, 'referralCode', docId);
+                    const referralDoc = await window.getDoc(referralDocRef);
+                    await window.setDoc(referralDocRef, {
+                        ...referralDoc.data(),
+                        usedBy: [...(referralDoc.data().usedBy || []), user.uid]
                     }, { merge: true });
                 }
 
