@@ -163,7 +163,7 @@
                 <div class="step" id="step-2">2. School Info</div>
                 <div class="step" id="step-3">3. Contract & Referral</div>
             </div>
-            <form id="signup-form">
+            <form id="signup-form" novalidate>
                 <div id="step1-content">
                     <div class="form-field">
                         <label for="fullNames"><i class="bi bi-person"></i>Full Names *</label>
@@ -480,6 +480,56 @@
             document.getElementById('combination').required = requiredText.textContent === '*';
         });
 
+        // Step-specific validation
+        function validateStep1() {
+            const fullNames = document.getElementById('fullNames').value;
+            const loginName = document.getElementById('loginName').value;
+            const password = document.getElementById('password').value;
+            const gender = document.getElementById('gender').value;
+            const location = document.getElementById('location').value;
+
+            if (!fullNames || !loginName || !password || !gender || !location) {
+                statusMessage.textContent = 'Please fill in all required fields.';
+                return false;
+            }
+            if (!validateLoginName(loginName)) {
+                statusMessage.textContent = 'Login name must be one word, letters only.';
+                return false;
+            }
+            if (password.length < 6) {
+                statusMessage.textContent = 'Password must be at least 6 characters long.';
+                return false;
+            }
+            return true;
+        }
+
+        async function validateStep2() {
+            const schoolName = document.getElementById('schoolName').value;
+            const regNo = document.getElementById('regNo').value;
+            const classLevel = document.getElementById('class').value;
+            const combination = document.getElementById('combination').value;
+
+            if (!schoolName || !regNo || !classLevel) {
+                statusMessage.textContent = 'Please fill in all required fields.';
+                return false;
+            }
+            if (classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) {
+                if (!combination || combination === 'None') {
+                    statusMessage.textContent = 'Please select a combination for S4–S6.';
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function validateStep3() {
+            if (!agreedContract) {
+                statusMessage.textContent = 'Please sign the contract.';
+                return false;
+            }
+            return true;
+        }
+
         // Form submission
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -487,24 +537,8 @@
 
             try {
                 if (currentStep === 1) {
-                    const fullNames = document.getElementById('fullNames').value;
+                    if (!validateStep1()) return;
                     const loginName = document.getElementById('loginName').value;
-                    const password = document.getElementById('password').value;
-                    const gender = document.getElementById('gender').value;
-                    const location = document.getElementById('location').value;
-
-                    if (!fullNames || !loginName || !password || !gender || !location) {
-                        statusMessage.textContent = 'Please fill in all required fields.';
-                        return;
-                    }
-                    if (!validateLoginName(loginName)) {
-                        statusMessage.textContent = 'Login name must be one word, letters only.';
-                        return;
-                    }
-                    if (password.length < 6) {
-                        statusMessage.textContent = 'Password must be at least 6 characters long.';
-                        return;
-                    }
                     const isUnique = await checkLoginNameUnique(loginName);
                     if (!isUnique) {
                         statusMessage.textContent = 'Login name is already taken.';
@@ -513,28 +547,11 @@
                     currentStep = 2;
                     updateStepper();
                 } else if (currentStep === 2) {
-                    const schoolName = document.getElementById('schoolName').value;
-                    const regNo = document.getElementById('regNo').value;
-                    const classLevel = document.getElementById('class').value;
-                    const combination = document.getElementById('combination').value;
-
-                    if (!schoolName || !regNo || !classLevel) {
-                        statusMessage.textContent = 'Please fill in all required fields.';
-                        return;
-                    }
-                    if (classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) {
-                        if (!combination || combination === 'None') {
-                            statusMessage.textContent = 'Please select a combination for S4–S6.';
-                            return;
-                        }
-                    }
+                    if (!(await validateStep2())) return;
                     currentStep = 3;
                     updateStepper();
                 } else if (currentStep === 3) {
-                    if (!agreedContract) {
-                        statusMessage.textContent = 'Please sign the contract.';
-                        return;
-                    }
+                    if (!validateStep3()) return;
                     const referralCode = document.getElementById('referralCode').value;
                     if (referralCode.toLowerCase() !== 'no code' && !(await validateReferralCode(referralCode))) {
                         statusMessage.textContent = 'Invalid referral code. Use "No code" or a valid code.';
