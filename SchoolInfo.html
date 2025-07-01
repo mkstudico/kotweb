@@ -21,10 +21,8 @@
         .button { background-color: #0077b5; color: white; border: none; padding: 0.75rem; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
         .button:hover { background-color: #005f8c; }
         .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; }
-        .login-link { text-align: center; margin-top: 1rem; }
-        .login-link a { color: #0077b5; text-decoration: underline; }
-        .login-link a:hover { color: #005f8c; }
         footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
+        .hidden { display: none; }
         @media (max-width: 640px) {
             .signup-section { max-width: 100%; margin: 1rem; padding: 1rem; }
         }
@@ -58,10 +56,10 @@
                         <option value="S6">S6</option>
                     </select>
                 </div>
-                <div class="form-field">
-                    <label for="combination"><i class="bi bi-list-task"></i>Combination <span id="combination-required"></span></label>
+                <div class="form-field hidden" id="combination-field">
+                    <label for="combination"><i class="bi bi-list-task"></i>Combination *</label>
                     <select id="combination" name="combination">
-                        <option value="None">None</option>
+                        <option value="">Select Combination</option>
                         <option value="MCB">MCB</option>
                         <option value="MCE">MCE</option>
                         <option value="PCB">PCB</option>
@@ -88,7 +86,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -114,12 +112,20 @@
     <script>
         const form = document.getElementById('school-form');
         const statusMessage = document.getElementById('status-message');
+        const classSelect = document.getElementById('class');
+        const combinationField = document.getElementById('combination-field');
+        const combinationSelect = document.getElementById('combination');
 
-        document.getElementById('class').addEventListener('change', (e) => {
+        classSelect.addEventListener('change', (e) => {
             const classLevel = e.target.value;
-            const requiredText = document.getElementById('combination-required');
-            requiredText.textContent = (classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) ? '*' : '';
-            document.getElementById('combination').required = requiredText.textContent === '*';
+            const isSenior = classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6');
+            combinationField.classList.toggle('hidden', !isSenior);
+            combinationSelect.required = isSenior;
+            if (!isSenior) {
+                combinationSelect.value = 'None';
+            } else {
+                combinationSelect.value = '';
+            }
         });
 
         form.addEventListener('submit', async (e) => {
@@ -135,11 +141,9 @@
                 statusMessage.textContent = 'Please fill in all required fields.';
                 return;
             }
-            if (classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) {
-                if (!combination || combination === 'None') {
-                    statusMessage.textContent = 'Please select a combination for S4–S6.';
-                    return;
-                }
+            if ((classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) && (!combination || combination === '')) {
+                statusMessage.textContent = 'Please select a combination for S4–S6.';
+                return;
             }
 
             try {
