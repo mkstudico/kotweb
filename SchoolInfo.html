@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inkota Web - School Info</title>
+    <title>Inkota Web - School Information</title>
     <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -22,7 +22,9 @@
         .button:hover { background-color: #005f8c; }
         .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; }
         footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
-        .hidden { display: none; }
+        .loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
+        .loader::after { content: ''; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 5px solid #0077b5; border-top: 5px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; transform: translate(-50%, -50%); }
+        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
         @media (max-width: 640px) {
             .signup-section { max-width: 100%; margin: 1rem; padding: 1rem; }
         }
@@ -38,11 +40,11 @@
             <form id="school-form" novalidate>
                 <div class="form-field">
                     <label for="schoolName"><i class="bi bi-building"></i>School Name *</label>
-                    <input type="text" id="schoolName" name="schoolName" required>
+                    <input type="text" id="schoolName" name="schoolName" required placeholder="Enter your school name">
                 </div>
                 <div class="form-field">
                     <label for="regNo"><i class="bi bi-card-text"></i>Registration Number *</label>
-                    <input type="text" id="regNo" name="regNo" required>
+                    <input type="text" id="regNo" name="regNo" required placeholder="Enter your registration number">
                 </div>
                 <div class="form-field">
                     <label for="class"><i class="bi bi-book"></i>Class *</label>
@@ -56,23 +58,19 @@
                         <option value="S6">S6</option>
                     </select>
                 </div>
-                <div class="form-field hidden" id="combination-field">
-                    <label for="combination"><i class="bi bi-list-task"></i>Combination *</label>
+                <div class="form-field" id="combination-field" style="display: none;">
+                    <label for="combination"><i class="bi bi-collection"></i>Combination *</label>
                     <select id="combination" name="combination">
                         <option value="">Select Combination</option>
-                        <option value="MCB">MCB</option>
-                        <option value="MCE">MCE</option>
-                        <option value="PCB">PCB</option>
                         <option value="PCM">PCM</option>
-                        <option value="LFK">LFK</option>
-                        <option value="HGL">HGL</option>
-                        <option value="MPC">MPC</option>
+                        <option value="PCB">PCB</option>
+                        <option value="MCB">MCB</option>
                         <option value="MEG">MEG</option>
                     </select>
                 </div>
                 <div class="form-field" style="display: flex; justify-content: space-between; gap: 1rem;">
                     <button type="button" class="button" onclick="window.location.href='signup.html'"><i class="bi bi-arrow-left"></i> Back</button>
-                    <button type="submit" class="button"><i class="bi bi-arrow-right"></i> Next</button>
+                    <button type="submit" class="button"><i class="bi bi-arrow-right-circle"></i> Next</button>
                 </div>
             </form>
             <p id="status-message" class="status-message"></p>
@@ -80,13 +78,14 @@
         <footer>
             <p>Made by btem@fficial</p>
         </footer>
+        <div id="loader" class="loader"></div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getFirestore, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -104,7 +103,8 @@
             window.auth = getAuth(app);
             window.db = getFirestore(app);
             window.doc = doc;
-            window.setDoc = setDoc;
+            window.updateDoc = updateDoc;
+            window.getDoc = getDoc;
             window.onAuthStateChanged = onAuthStateChanged;
             console.log("Firebase initialized successfully");
         } catch (error) {
@@ -114,38 +114,42 @@
     </script>
     <script>
         const form = document.getElementById('school-form');
-        const statusMessage = document.getElementById('status-message');
         const classSelect = document.getElementById('class');
         const combinationField = document.getElementById('combination-field');
         const combinationSelect = document.getElementById('combination');
+        const statusMessage = document.getElementById('status-message');
+        const loader = document.getElementById('loader');
 
-        classSelect.addEventListener('change', (e) => {
-            const classLevel = e.target.value;
-            const isSenior = classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6');
-            combinationField.classList.toggle('hidden', !isSenior);
-            combinationSelect.required = isSenior;
-            if (!isSenior) {
+        classSelect.addEventListener('change', () => {
+            const classValue = classSelect.value;
+            if (['S1', 'S2', 'S3'].includes(classValue)) {
+                combinationField.style.display = 'none';
                 combinationSelect.value = 'None';
+                combinationSelect.removeAttribute('required');
             } else {
-                combinationSelect.value = '';
+                combinationField.style.display = 'block';
+                combinationSelect.setAttribute('required', 'required');
             }
         });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             statusMessage.textContent = '';
+            loader.style.display = 'block';
 
             const schoolName = document.getElementById('schoolName').value;
             const regNo = document.getElementById('regNo').value;
-            const classLevel = document.getElementById('class').value;
+            const classValue = document.getElementById('class').value;
             const combination = document.getElementById('combination').value;
 
-            if (!schoolName || !regNo || !classLevel) {
-                statusMessage.textContent = 'Please fill in all required fields.';
+            if (!schoolName || !regNo || !classValue) {
+                statusMessage.textContent = 'Please fill all required fields.';
+                loader.style.display = 'none';
                 return;
             }
-            if ((classLevel.includes('S4') || classLevel.includes('S5') || classLevel.includes('S6')) && (!combination || combination === '')) {
-                statusMessage.textContent = 'Please select a combination for S4–S6.';
+            if (['S4', 'S5', 'S6'].includes(classValue) && !combination) {
+                statusMessage.textContent = 'Please select a combination.';
+                loader.style.display = 'none';
                 return;
             }
 
@@ -157,12 +161,20 @@
                     });
                 });
 
-                await window.setDoc(window.doc(window.db, 'temp_users', user.uid), {
+                const tempDocRef = window.doc(window.db, 'temp_users', user.uid);
+                const tempDoc = await window.getDoc(tempDocRef);
+                if (!tempDoc.exists()) {
+                    statusMessage.textContent = 'Error: User data not found. Please start over.';
+                    loader.style.display = 'none';
+                    return;
+                }
+
+                await window.updateDoc(tempDocRef, {
                     schoolName,
                     regNo,
-                    class: classLevel,
+                    class: classValue,
                     combination: combination || 'None'
-                }, { merge: true });
+                });
 
                 statusMessage.textContent = 'School info saved! Redirecting to contract...';
                 setTimeout(() => {
@@ -171,6 +183,8 @@
             } catch (error) {
                 console.error('Submission error:', error);
                 statusMessage.textContent = `Error: ${error.message}`;
+            } finally {
+                loader.style.display = 'none';
             }
         });
 
