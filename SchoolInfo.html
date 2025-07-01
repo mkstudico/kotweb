@@ -105,6 +105,7 @@
             window.db = getFirestore(app);
             window.doc = doc;
             window.setDoc = setDoc;
+            window.onAuthStateChanged = onAuthStateChanged;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
@@ -150,7 +151,7 @@
 
             try {
                 const user = await new Promise((resolve, reject) => {
-                    onAuthStateChanged(window.auth, (user) => {
+                    window.onAuthStateChanged(window.auth, (user) => {
                         if (user) resolve(user);
                         else reject(new Error('User not authenticated'));
                     });
