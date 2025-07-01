@@ -22,6 +22,9 @@
         .button:hover { background-color: #005f8c; }
         .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; }
         footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
+        .loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
+        .loader::after { content: ''; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 5px solid #0077b5; border-top: 5px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; transform: translate(-50%, -50%); }
+        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
         @media (max-width: 640px) {
             .form-section { max-width: 100%; margin: 1rem; padding: 1rem; }
         }
@@ -49,6 +52,7 @@
         <footer>
             <p>Made by btem@fficial</p>
         </footer>
+        <div id="loader" class="loader"></div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -93,9 +97,11 @@
     <script>
         const form = document.getElementById('referral-form');
         const statusMessage = document.getElementById('status-message');
+        const loader = document.getElementById('loader');
 
         async function isReferralCodeUnique(code) {
             try {
+                loader.style.display = 'block';
                 const referralCodeRef = window.collection(window.db, 'referralCode');
                 const querySnapshot = await window.getDocs(referralCodeRef);
                 let isUnique = true;
@@ -108,21 +114,26 @@
             } catch (error) {
                 console.error('Error checking referral code uniqueness:', error);
                 return false;
+            } finally {
+                loader.style.display = 'none';
             }
         }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             statusMessage.textContent = '';
+            loader.style.display = 'block';
 
             const referralCode = document.getElementById('referralCode').value;
             if (!referralCode.match(/^[A-Z0-9]{6}$/)) {
                 statusMessage.textContent = 'Referral code must be 6 characters (uppercase letters or numbers).';
+                loader.style.display = 'none';
                 return;
             }
 
             if (!(await isReferralCodeUnique(referralCode))) {
                 statusMessage.textContent = 'Referral code already exists. Please use a different code.';
+                loader.style.display = 'none';
                 return;
             }
 
@@ -146,6 +157,8 @@
             } catch (error) {
                 console.error('Error adding referral code:', error);
                 statusMessage.textContent = `Error: ${error.message}`;
+            } finally {
+                loader.style.display = 'none';
             }
         });
 
