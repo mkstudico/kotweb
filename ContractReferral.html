@@ -106,6 +106,7 @@
             window.query = query;
             window.where = where;
             window.serverTimestamp = serverTimestamp;
+            window.onAuthStateChanged = onAuthStateChanged;
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
@@ -229,7 +230,7 @@
 
             try {
                 const user = await new Promise((resolve, reject) => {
-                    onAuthStateChanged(window.auth, (user) => {
+                    window.onAuthStateChanged(window.auth, (user) => {
                         if (user) resolve(user);
                         else reject(new Error('User not authenticated'));
                     });
