@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kot WEB - E-commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .search-results::-webkit-scrollbar {
+            width: 5px;
+        }
+        .search-results::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .search-results::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+        .search-results::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fas fa-shopping-cart text-3xl mr-3"></i>
+                    <h1 class="text-3xl font-bold">Take risk!</h1>
+                </div>
+                
+                <div class="relative w-full md:w-1/3">
+                    <div class="flex items-center">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Search products..." 
+                            class="w-full px-4 py-2 rounded-l-full text-gray-800 focus:outline-none"
+                        >
+                        <button 
+                            id="searchButton" 
+                            class="bg-indigo-800 text-white px-4 py-2 rounded-r-full hover:bg-indigo-900 focus:outline-none"
+                        >
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div id="searchResults" class="search-results absolute w-full bg-white text-gray-800 mt-1 rounded-lg shadow-lg hidden z-50"></div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-indigo-200">
+                        <i class="fas fa-user text-xl"></i>
+                    </a>
+                    <a href="#" class="hover:text-indigo-200">
+                        <i class="fas fa-heart text-xl"></i>
+                    </a>
+                    <a href="#" class="hover:text-indigo-200 relative">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Categories -->
+    <div class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 overflow-x-auto">
+            <div class="flex space-x-6 whitespace-nowrap">
+                <a href="#" class="text-indigo-600 font-medium">All Products</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600">Electronics</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600">Fashion</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600">Home & Garden</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600">Sports</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600">Beauty</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600">Toys</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600">Books</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800">Featured Products</h2>
+            <div class="flex space-x-2">
+                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
+                    <i class="fas fa-list"></i>
+                </button>
+                <select class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none">
+                    <option>Sort by</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Newest</option>
+                    <option>Popular</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <!-- Product 1 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product1.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://i.pinimg.com/736x/0b/4c/21/0b4c211abc66631d47c8317366a2c9b2.jpg" 
+                             alt="Smartphone" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Premium Smartphone X</h3>
+                        <p class="text-gray-600 text-sm mb-2">Latest model with 128GB storage</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$699.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> New York</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product2.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Smart Watch" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Smart Watch Pro</h3>
+                        <p class="text-gray-600 text-sm mb-2">Fitness tracker & heart rate monitor</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$199.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> California</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product3.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Headphones" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Noise Cancelling Headphones</h3>
+                        <p class="text-gray-600 text-sm mb-2">Wireless Bluetooth over-ear headphones</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$249.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Texas</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product4.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Running Shoes" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Pro Running Shoes</h3>
+                        <p class="text-gray-600 text-sm mb-2">Lightweight with extra cushioning</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$129.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Florida</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product5.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Backpack" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Travel Backpack</h3>
+                        <p class="text-gray-600 text-sm mb-2">Waterproof with USB charging port</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$89.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Oregon</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product6.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Camera" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">4K Digital Camera</h3>
+                        <p class="text-gray-600 text-sm mb-2">24MP with 3-inch LCD screen</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$449.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Washington</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product7.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Perfume" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Luxury Perfume</h3>
+                        <p class="text-gray-600 text-sm mb-2">Eau de parfum 100ml</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$79.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Paris</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product8.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://i.pinimg.com/736x/63/6a/8d/636a8d6ef65df101735395780e1ee75f.jpg" 
+                             alt="Smartphone" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Budget Smartphone</h3>
+                        <p class="text-gray-600 text-sm mb-2">64GB storage with dual camera</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$299.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> China</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 9 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product9.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Watch" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Classic Leather Watch</h3>
+                        <p class="text-gray-600 text-sm mb-2">Handmade genuine leather strap</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$159.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Italy</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 10 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product10.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Sunglasses" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Polarized Sunglasses</h3>
+                        <p class="text-gray-600 text-sm mb-2">UV400 protection lenses</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$69.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> France</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 11 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product11.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Jacket" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Winter Jacket</h3>
+                        <p class="text-gray-600 text-sm mb-2">Waterproof and insulated</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$179.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Canada</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 12 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product12.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Laptop" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Ultra Slim Laptop</h3>
+                        <p class="text-gray-600 text-sm mb-2">16GB RAM, 512GB SSD</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$999.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> California</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 13 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product13.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Sneakers" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Casual Sneakers</h3>
+                        <p class="text-gray-600 text-sm mb-2">Breathable mesh upper</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$59.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Vietnam</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 14 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product14.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Headphones" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Wireless Earbuds</h3>
+                        <p class="text-gray-600 text-sm mb-2">Bluetooth 5.0 with charging case</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$129.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Japan</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 15 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product15.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Running Shoes" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Trail Running Shoes</h3>
+                        <p class="text-gray-600 text-sm mb-2">Grip sole for all terrains</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$139.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Germany</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 16 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product16.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Backpack" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Hiking Backpack</h3>
+                        <p class="text-gray-600 text-sm mb-2">50L capacity with rain cover</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$119.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Colorado</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 17 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product17.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Camera" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Action Camera</h3>
+                        <p class="text-gray-600 text-sm mb-2">4K waterproof with accessories</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$299.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Utah</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 18 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="login.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://i.pinimg.com/736x/d9/33/8c/d9338c736633755f3bb4ca34aaeedc00.jpg" 
+                             alt="Perfume" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1"> Doll </h3>
+                        <p class="text-gray-600 text-sm mb-2">Try to buy this.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$9.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> London</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 19 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product19.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://i.pinimg.com/736x/bd/b9/67/bdb9677d3269bbf3a7379b5597d5b3e1.jpg" 
+                             alt="Smartphone" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Gaming Phone</h3>
+                        <p class="text-gray-600 text-sm mb-2">High refresh rate display</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$799.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Taiwan</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 20 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product20.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Watch" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Smart Watch Lite</h3>
+                        <p class="text-gray-600 text-sm mb-2">Fitness tracking & notifications</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$149.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Hong Kong</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 21 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product21.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Sunglasses" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Aviator Sunglasses</h3>
+                        <p class="text-gray-600 text-sm mb-2">Classic metal frame</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$129.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> New York</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 22 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product22.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Jacket" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Bomber Jacket</h3>
+                        <p class="text-gray-600 text-sm mb-2">Lightweight nylon</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$89.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Los Angeles</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 23 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product23.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Laptop" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Gaming Laptop</h3>
+                        <p class="text-gray-600 text-sm mb-2">RTX graphics, 144Hz display</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$1499.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Nevada</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 24 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product24.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Sneakers" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">High-Top Sneakers</h3>
+                        <p class="text-gray-600 text-sm mb-2">Canvas upper with rubber sole</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$79.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Brazil</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 25 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product25.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Headphones" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Studio Headphones</h3>
+                        <p class="text-gray-600 text-sm mb-2">Professional audio quality</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$199.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Germany</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 26 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product26.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Running Shoes" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Marathon Shoes</h3>
+                        <p class="text-gray-600 text-sm mb-2">Lightweight racing shoes</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$169.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Kenya</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 27 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product27.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Backpack" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">School Backpack</h3>
+                        <p class="text-gray-600 text-sm mb-2">Multiple compartments</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$49.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> India</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 28 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product28.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Camera" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Vlogging Camera</h3>
+                        <p class="text-gray-600 text-sm mb-2">Flip screen with microphone</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$599.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> South Korea</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 29 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product29.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                             alt="Perfume" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Woody Perfume</h3>
+                        <p class="text-gray-600 text-sm mb-2">Masculine fragrance</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$99.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Dubai</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product 30 -->
+            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                <a href="product30.html" class="block">
+                    <div class="relative pb-2/3 h-48">
+                        <img src="https://i.pinimg.com/736x/8d/e3/e5/8de3e5fcd683c833f4bbf89f9391464e.jpg" 
+                             alt="Smartphone" 
+                             class="absolute h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Foldable Phone</h3>
+                        <p class="text-gray-600 text-sm mb-2">Innovative flexible display</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-indigo-600 font-bold">$1499.99</span>
+                            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> South Korea</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-12">
+            <nav class="flex items-center space-x-1">
+                <a href="#" class="px-3 py-1 rounded bg-indigo-600 text-white">1</a>
+                <a href="#" class="px-3 py-1 rounded hover:bg-gray-200">2</a>
+                <a href="#" class="px-3 py-1 rounded hover:bg-gray-200">3</a>
+                <a href="#" class="px-3 py-1 rounded hover:bg-gray-200">4</a>
+                <a href="#" class="px-3 py-1 rounded hover:bg-gray-200">5</a>
+                <span class="px-3 py-1">...</span>
+                <a href="#" class="px-3 py-1 rounded hover:bg-gray-200">10</a>
+                <a href="#" class="px-3 py-1 rounded hover:bg-gray-200">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">ARE YOU SURE</h3>
+                    <p class="text-gray-400">Your one-stop shop for all your needs. Quality products at affordable prices.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">All Products</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Featured</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">New Arrivals</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Sale Items</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Customer Service</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Shipping Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Returns & Refunds</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Stay Connected</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                    <p class="text-gray-400">Subscribe to our newsletter</p>
+                    <div class="mt-2 flex">
+                        <input type="email" placeholder="Your email" class="px-3 py-2 text-gray-800 rounded-l focus:outline-none w-full">
+                        <button class="bg-indigo-600 px-3 py-2 rounded-r hover:bg-indigo-700 focus:outline-none">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>Made by btem@fficial</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample product data for search functionality
+        const products = [
+            { id: 1, title: "Premium Smartphone X", price: "$699.99", location: "New York" },
+            { id: 2, title: "Smart Watch Pro", price: "$199.99", location: "California" },
+            { id: 3, title: "Noise Cancelling Headphones", price: "$249.99", location: "Texas" },
+            { id: 4, title: "Pro Running Shoes", price: "$129.99", location: "Florida" },
+            { id: 5, title: "Travel Backpack", price: "$89.99", location: "Oregon" },
+            { id: 6, title: "4K Digital Camera", price: "$449.99", location: "Washington" },
+            { id: 7, title: "Luxury Perfume", price: "$79.99", location: "Paris" },
+            { id: 8, title: "Budget Smartphone", price: "$299.99", location: "China" },
+            { id: 9, title: "Classic Leather Watch", price: "$159.99", location: "Italy" },
+            { id: 10, title: "Polarized Sunglasses", price: "$69.99", location: "France" },
+            { id: 11, title: "Winter Jacket", price: "$179.99", location: "Canada" },
+            { id: 12, title: "Ultra Slim Laptop", price: "$999.99", location: "California" },
+            { id: 13, title: "Casual Sneakers", price: "$59.99", location: "Vietnam" },
+            { id: 14, title: "Wireless Earbuds", price: "$129.99", location: "Japan" },
+            { id: 15, title: "Trail Running Shoes", price: "$139.99", location: "Germany" },
+            { id: 16, title: "Hiking Backpack", price: "$119.99", location: "Colorado" },
+            { id: 17, title: "Action Camera", price: "$299.99", location: "Utah" },
+            { id: 18, title: "Doll", price: "Join", location: "Inkota web" },
+            { id: 19, title: "Gaming Phone", price: "$799.99", location: "Taiwan" },
+            { id: 20, title: "Smart Watch Lite", price: "$149.99", location: "Hong Kong" },
+            { id: 21, title: "Aviator Sunglasses", price: "$129.99", location: "New York" },
+            { id: 22, title: "Bomber Jacket", price: "$89.99", location: "Los Angeles" },
+            { id: 23, title: "Gaming Laptop", price: "$1499.99", location: "Nevada" },
+            { id: 24, title: "High-Top Sneakers", price: "$79.99", location: "Brazil" },
+            { id: 25, title: "Studio Headphones", price: "$199.99", location: "Germany" },
+            { id: 26, title: "Marathon Shoes", price: "$169.99", location: "Kenya" },
+            { id: 27, title: "School Backpack", price: "$49.99", location: "India" },
+            { id: 28, title: "Vlogging Camera", price: "$599.99", location: "South Korea" },
+            { id: 29, title: "Woody Perfume", price: "$99.99", location: "Dubai" },
+            { id: 30, title: "Foldable Phone", price: "$1499.99", location: "South Korea" }
+        ];
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            if (searchTerm.length > 0) {
+                const filteredProducts = products.filter(product => 
+                    product.title.toLowerCase().includes(searchTerm)
+                );
+                
+                displaySearchResults(filteredProducts);
+            } else {
+                searchResults.classList.add('hidden');
+            }
+        });
+
+        searchButton.addEventListener('click', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm.length > 0) {
+                const filteredProducts = products.filter(product => 
+                    product.title.toLowerCase().includes(searchTerm)
+                );
+                
+                displaySearchResults(filteredProducts);
+            }
+        });
+
+        function displaySearchResults(results) {
+            if (results.length > 0) {
+                searchResults.innerHTML = '';
+                
+                results.forEach(product => {
+                    const resultItem = document.createElement('a');
+                    resultItem.href = `product${product.id}.html`;
+                    resultItem.className = 'block px-4 py-2 hover:bg-gray-100 border-b border-gray-200 last:border-b-0';
+                    resultItem.innerHTML = `
+                        <div class="font-medium">${product.title}</div>
+                        <div class="text-sm text-gray-600">${product.price} • ${product.location}</div>
+                    `;
+                    searchResults.appendChild(resultItem);
+                });
+                
+                searchResults.classList.remove('hidden');
+            } else {
+                searchResults.innerHTML = '<div class="px-4 py-2 text-gray-600">No products found</div>';
+                searchResults.classList.remove('hidden');
+            }
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+                searchResults.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
