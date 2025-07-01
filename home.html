@@ -12,11 +12,7 @@
         .header { background-color: #0077b5; color: white; padding: 1.5rem; text-align: center; position: relative; }
         .header h1 { margin: 0; font-size: 2rem; }
         .header p { margin: 0.5rem 0 0; font-size: 1rem; color: #e6f0fa; }
-        .menu-icon { position: absolute; top: 1.5rem; right: 1.5rem; color: white; font-size: 1.5rem; cursor: pointer; }
-        .dropdown-menu { display: none; position: absolute; top: 3rem; right: 1rem; background-color: white; border-radius: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); list-style: none; padding: 0.5rem; }
-        .dropdown-menu li { margin: 0.5rem 0; }
-        .dropdown-menu a { color: #0077b5; text-decoration: none; }
-        .dropdown-menu a:hover { color: #005f8c; }
+        .settings-icon { position: absolute; top: 1.5rem; right: 1.5rem; color: white; font-size: 1.5rem; cursor: pointer; }
         .profile-section { max-width: 600px; margin: 2rem auto; padding: 1rem; background-color: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
         .profile-section h2 { margin: 0 0 1rem; font-size: 1.5rem; color: #0077b5; }
         .profile-section p { margin: 0.5rem 0; }
@@ -39,12 +35,7 @@
         <div class="header">
             <h1>Inkota Web</h1>
             <p>Join the Learning Community</p>
-            <a href="#" class="menu-icon"><i class="bi bi-three-dots"></i></a>
-            <ul class="dropdown-menu">
-                <li><a href="login.html">Login</a></li>
-                <li><a href="signup.html">Sign Up</a></li>
-                <li><a href="addReferralCode.html">Add Referral Code</a></li>
-            </ul>
+            <a href="settings.html" class="settings-icon"><i class="bi bi-gear"></i></a>
         </div>
         <div class="profile-section" id="profile-section">
             <h2>Welcome, <span id="user-name">User</span>!</h2>
@@ -157,14 +148,6 @@
         }
     </script>
     <script>
-        const menuIcon = document.querySelector('.menu-icon');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
-
-        menuIcon.addEventListener('click', (e) => {
-            e.preventDefault();
-            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-        });
-
         let timeout;
         function resetTimeout() {
             clearTimeout(timeout);
