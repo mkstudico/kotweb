@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkota Web - Home</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #f4f4f4; font-family: 'Arial', sans-serif; }
+        .header { background-color: #0077b5; color: white; padding: 1.5rem; text-align: center; position: relative; }
+        .header h1 { margin: 0; font-size: 2rem; }
+        .header p { margin: 0.5rem 0 0; font-size: 1rem; color: #e6f0fa; }
+        .menu-icon { position: absolute; top: 1.5rem; right: 1.5rem; color: white; font-size: 1.5rem; cursor: pointer; }
+        .dropdown-menu { display: none; position: absolute; top: 3rem; right: 1rem; background-color: white; border-radius: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); list-style: none; padding: 0.5rem; }
+        .dropdown-menu li { margin: 0.5rem 0; }
+        .dropdown-menu a { color: #0077b5; text-decoration: none; }
+        .dropdown-menu a:hover { color: #005f8c; }
+        .search-bar { margin: 2rem auto; max-width: 600px; padding: 0 1rem; }
+        .search-bar input { width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; }
+        .exam-list { max-width: 600px; margin: 0 auto; padding: 0 1rem; }
+        .exam-item { background-color: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+        footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
+        @media (max-width: 640px) {
+            .search-bar, .exam-list { padding: 0 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="header">
+            <h1>Inkota Web</h1>
+            <p>Join the Learning Community</p>
+            <a href="#" class="menu-icon"><i class="bi bi-three-dots"></i></a>
+            <ul class="dropdown-menu">
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            </ul>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search exams (e.g., Doll)">
+        </div>
+        <div class="exam-list" id="exam-list">
+            <!-- Populated by JavaScript -->
+        </div>
+        <footer>
+            <p>Made by btem@fficial</p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
+            authDomain: "inkota-web.firebaseapp.com",
+            databaseURL: "https://inkota-web-default-rtdb.firebaseio.com",
+            projectId: "inkota-web",
+            storageBucket: "inkota-web.firebasestorage.app",
+            messagingSenderId: "390667774435",
+            appId: "1:390667774435:web:e4d33a5439cf62829dd8d6",
+            measurementId: "G-HDM9EZEB8W"
+        };
+
+        try {
+            window.app = initializeApp(firebaseConfig);
+            window.auth = getAuth(app);
+            window.db = getFirestore(app);
+            window.collection = collection;
+            window.getDocs = getDocs;
+            window.onAuthStateChanged = onAuthStateChanged;
+            console.log("Firebase initialized successfully");
+
+            window.onAuthStateChanged(window.auth, (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                } else {
+                    loadExams();
+                }
+            });
+
+            async function loadExams() {
+                try {
+                    const examList = document.getElementById('exam-list');
+                    const examsRef = window.collection(window.db, 'exams');
+                    const querySnapshot = await window.getDocs(examsRef);
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const examItem = document.createElement('div');
+                        examItem.className = 'exam-item';
+                        examItem.innerHTML = `
+                            <h3>${data.title}</h3>
+                            <p>Subject: ${data.subject}</p>
+                            <p>Class: ${data.class}</p>
+                            <p>Uploaded by: ${data.uploader}</p>
+                            <p>Date: ${data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</p>
+                        `;
+                        examList.appendChild(examItem);
+                    });
+                } catch (error) {
+                    console.error("Error loading exams:", error);
+                }
+            }
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+        }
+    </script>
+    <script>
+        const menuIcon = document.querySelector('.menu-icon');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        menuIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        let timeout;
+        function resetTimeout() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 30000);
+        }
+
+        window.addEventListener('mousemove', resetTimeout);
+        window.addEventListener('keypress', resetTimeout);
+        window.addEventListener('touchstart', resetTimeout);
+        resetTimeout();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"></script>
+    <script>
+        try {
+            $(document).foundation();
+            console.log("Foundation initialized successfully");
+        } catch (error) {
+            console.error("Foundation initialization failed:", error);
+        }
+    </script>
+</body>
+</html>
