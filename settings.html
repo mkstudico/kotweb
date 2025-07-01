@@ -27,6 +27,8 @@
         .form-field input:disabled { background-color: #f9f9f9; cursor: not-allowed; }
         .button { background-color: #0077b5; color: white; border: none; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; font-size: 1rem; touch-action: manipulation; }
         .button:hover { background-color: #005f8c; }
+        .logout-button { background-color: #dc3545; }
+        .logout-button:hover { background-color: #c82333; }
         .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; font-size: 0.9rem; }
         .profile-picture { max-width: 80px; border-radius: 4px; margin-top: 0.5rem; }
         .referral-section p { margin: 0.5rem 0; font-size: 0.9rem; }
@@ -132,15 +134,6 @@
                             <option value="PCB">PCB</option>
                             <option value="MCB">MCB</option>
                             <option value="MEG">MEG</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label for="role"><i class="bi bi-person-check"></i>Role *</label>
-                        <select id="role" name="role" required>
-                            <option value="">Select a Role</option>
-                            <option value="Sponsor">Sponsor</option>
-                            <option value="User">User</option>
-                            <option value="Provider">Provider</option>
                         </select>
                     </div>
                     <div class="form-field" style="display: flex; gap: 1rem;">
@@ -339,7 +332,6 @@
             document.getElementById('regNo').value = data.regNo || '';
             document.getElementById('class').value = data.class || '';
             document.getElementById('combination').value = data.combination || 'None';
-            document.getElementById('role').value = data.role || '';
             if (data.profilePicture) {
                 document.getElementById('profilePicturePreview').src = data.profilePicture;
                 document.getElementById('profilePicturePreview').style.display = 'block';
@@ -548,18 +540,16 @@
         }
 
         async function handleLogout() {
-            if (window.confirm('Are you sure you want to log out?')) {
-                const loader = document.getElementById('loader');
-                loader.style.display = 'block';
-                try {
-                    await window.signOut(window.auth);
-                    window.location.href = 'index.html';
-                } catch (error) {
-                    console.error('Logout error:', error);
-                    document.getElementById('status-message').textContent = `Error: ${error.message}`;
-                } finally {
-                    loader.style.display = 'none';
-                }
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            try {
+                await window.signOut(window.auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                document.getElementById('status-message').textContent = `Error: ${error.message}`;
+            } finally {
+                loader.style.display = 'none';
             }
         }
 
@@ -646,9 +636,8 @@
             const regNo = document.getElementById('regNo').value;
             const classValue = document.getElementById('class').value;
             const combination = document.getElementById('combination').value;
-            const role = document.getElementById('role').value;
 
-            if (!fullNames || !gender || !location || !schoolName || !regNo || !classValue || !role) {
+            if (!fullNames || !gender || !location || !schoolName || !regNo || !classValue) {
                 statusMessage.textContent = 'Please fill all required fields.';
                 loader.style.display = 'none';
                 return;
@@ -670,12 +659,22 @@
                     regNo,
                     class: classValue,
                     combination: combination || 'None',
-                    role,
                     updatedAt: window.serverTimestamp()
                 }, { merge: true });
 
                 statusMessage.textContent = 'Profile updated successfully!';
-                await loadProfile({ fullNames, gender, location, profilePicture: profilePictureUrl, schoolName, regNo, class: classValue, combination: combination || 'None', role, referralCode: window.currentUser.referralCode });
+                await loadProfile({ 
+                    fullNames, 
+                    gender, 
+                    location, 
+                    profilePicture: profilePictureUrl, 
+                    schoolName, 
+                    regNo, 
+                    class: classValue, 
+                    combination: combination || 'None', 
+                    role: window.currentUser.role, 
+                    referralCode: window.currentUser.referralCode 
+                });
                 document.getElementById('edit-profile-section').style.display = 'none';
                 document.getElementById('profile-section').style.display = 'block';
             } catch (error) {
