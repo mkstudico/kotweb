@@ -58,7 +58,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -74,21 +73,13 @@
 
         try {
             window.app = initializeApp(firebaseConfig);
-            window.auth = getAuth(app);
             window.db = getFirestore(app);
             window.collection = collection;
             window.doc = doc;
             window.setDoc = setDoc;
             window.getDocs = getDocs;
             window.serverTimestamp = serverTimestamp;
-            window.onAuthStateChanged = onAuthStateChanged;
             console.log("Firebase initialized successfully");
-
-            window.onAuthStateChanged(window.auth, (user) => {
-                if (!user) {
-                    window.location.href = 'login.html';
-                }
-            });
         } catch (error) {
             console.error("Firebase initialization failed:", error);
             document.getElementById('status-message').textContent = 'Error initializing Firebase. Check console.';
@@ -138,13 +129,6 @@
             }
 
             try {
-                const user = await new Promise((resolve, reject) => {
-                    window.onAuthStateChanged(window.auth, (user) => {
-                        if (user) resolve(user);
-                        else reject(new Error('User not authenticated'));
-                    });
-                });
-
                 const newDocRef = window.doc(window.collection(window.db, 'referralCode'));
                 await window.setDoc(newDocRef, {
                     newReferralCode: referralCode,
