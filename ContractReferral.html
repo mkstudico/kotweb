@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,30 +9,162 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        body { background-color: #f4f4f4; font-family: 'Arial', sans-serif; }
-        .header { background-color: #0077b5; color: white; padding: 1.5rem; text-align: center; }
-        .header h1 { margin: 0; font-size: 2rem; }
-        .header p { margin: 0.5rem 0 0; font-size: 1rem; color: #e6f0fa; }
-        .signup-section { background-color: white; border-radius: 8px; padding: 1.5rem; margin: 2rem auto; max-width: 600px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; gap: 1rem; }
-        .contract-box { max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 1rem; border-radius: 4px; background-color: #f9f9f9; margin-bottom: 1rem; }
-        .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-field label { font-weight: bold; color: #333; display: flex; align-items: center; }
-        .form-field label i { margin-right: 0.5rem; }
-        .form-field input { width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; transition: border-color 0.3s; }
-        .form-field input:focus { border-color: #0077b5; outline: none; }
-        .signature-pad { border: 1px solid #ddd; border-radius: 4px; background-color: #fff; width: 100%; height: 150px; }
-        .button { background-color: #0077b5; color: white; border: none; padding: 0.75rem; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
-        .button:hover { background-color: #005f8c; }
-        .status-message { color: #0077b5; text-align: center; font-weight: bold; margin-top: 1rem; }
-        footer { text-align: center; padding: 1rem; color: #666; font-size: 0.9rem; }
-        .loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
-        .loader::after { content: ''; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 5px solid #0077b5; border-top: 5px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; transform: translate(-50%, -50%); }
-        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header {
+            background-color: #0077b5;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .header p {
+            margin: 0.5rem 0 0;
+            font-size: 1rem;
+            color: #e6f0fa;
+        }
+
+        .signup-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contract-box {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            margin-bottom: 1rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-field label {
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-field label i {
+            margin-right: 0.5rem;
+        }
+
+        .form-field input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s;
+        }
+
+        .form-field input:focus {
+            border-color: #0077b5;
+            outline: none;
+        }
+
+        .signature-pad {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            width: 100%;
+            height: 150px;
+        }
+
+        .button {
+            background-color: #0077b5;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #005f8c;
+        }
+
+        .status-message {
+            color: #0077b5;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .loader::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            border: 5px solid #0077b5;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
         @media (max-width: 640px) {
-            .signup-section { max-width: 100%; margin: 1rem; padding: 1rem; }
+            .signup-section {
+                max-width: 100%;
+                margin: 1rem;
+                padding: 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="grid-container">
         <div class="header">
@@ -42,17 +175,23 @@
             <form id="contract-form" novalidate>
                 <div class="contract-box">
                     <p><strong>Welcome, fellow student!</strong></p>
-                    <p>I'm happy to welcome you to the official Inkota website (Made by btem@fficial). You’ve been introduced to the purpose of this platform by your referrer, and your continued use confirms your understanding.</p>
+                    <p>I'm happy to welcome you to the official Inkota website (Made by btem@fficial). You’ve been
+                        introduced to the purpose of this platform by your referrer, and your continued use confirms
+                        your understanding.</p>
                     <p>Here, you have three main opportunities:</p>
                     <ul>
                         <li>Read and win exams/tests,</li>
                         <li>Share and earn, or</li>
                         <li>Sponsor the project to help it grow.</li>
                     </ul>
-                    <p>For your safety, our automatic security system will reset the session to the homepage if there's no activity for 30 seconds. From there, you can search for "Doll" to return to your previous location.</p>
-                    <p>You're encouraged to refer and share this platform with other students—but never in the presence of teachers or adults.</p>
+                    <p>For your safety, our automatic security system will reset the session to the homepage if there's
+                        no activity for 30 seconds. From there, you can search for "Doll" to return to your previous
+                        location.</p>
+                    <p>You're encouraged to refer and share this platform with other students—but never in the presence
+                        of teachers or adults.</p>
                     <p><strong>Please note:</strong></p>
-                    <p>Once you complete secondary school, your account will be permanently deleted to avoid future distractions.</p>
+                    <p>Once you complete secondary school, your account will be permanently deleted to avoid future
+                        distractions.</p>
                     <p>By signing this agreement, you confirm the following:</p>
                     <ul>
                         <li>You will not share any information or data from this platform with adults or in public.</li>
@@ -66,10 +205,12 @@
                 </div>
                 <div class="form-field">
                     <label for="referralCode"><i class="bi bi-code"></i>Referral Code *</label>
-                    <input type="text" id="referralCode" name="referralCode" required placeholder="Enter valid referral code">
+                    <input type="text" id="referralCode" name="referralCode" required
+                        placeholder="Enter 6-character code (e.g., QWEASD)" pattern="[A-Z0-9]{6}">
                 </div>
                 <div class="form-field" style="display: flex; justify-content: space-between; gap: 1rem;">
-                    <button type="button" class="button" onclick="window.location.href='SchoolInfo.html'"><i class="bi bi-arrow-left"></i> Back</button>
+                    <button type="button" class="button" onclick="window.location.href='SchoolInfo.html'"><i
+                            class="bi bi-arrow-left"></i> Back</button>
                     <button type="submit" class="button"><i class="bi bi-check-circle"></i> Submit</button>
                 </div>
             </form>
@@ -85,7 +226,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTbM-PXZZEppYl0xO0HFTj_QvR-HtK7Sg",
@@ -98,80 +239,72 @@
             measurementId: "G-HDM9EZEB8W"
         };
 
+        let app, auth, db;
         try {
-            window.app = initializeApp(firebaseConfig);
-            window.auth = getAuth(app);
-            window.db = getFirestore(app);
-            window.collection = collection;
-            window.doc = doc;
-            window.setDoc = setDoc;
-            window.getDoc = getDoc;
-            window.getDocs = getDocs;
-            window.serverTimestamp = serverTimestamp;
-            window.onAuthStateChanged = onAuthStateChanged;
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
-            document.getElementById('status-message').textContent = 'Error initializing Firebase. Check console.';
+            document.getElementById('status-message').textContent = 'Error initializing Firebase. Please try again later.';
         }
-    </script>
-    <script>
+
+        async function validateReferralCode(code, currentUserId) {
+            try {
+                const usersRef = collection(db, 'users');
+                const expiredRef = collection(db, 'expiredReferral');
+                const [usersSnapshot, expiredSnapshot] = await Promise.all([
+                    getDocs(usersRef),
+                    getDocs(expiredRef)
+                ]);
+
+                // Check if code is in expiredReferral
+                let isExpired = false;
+                expiredSnapshot.forEach((doc) => {
+                    if (doc.data().referralCode === code) {
+                        isExpired = true;
+                    }
+                });
+                if (isExpired) {
+                    return { valid: false, message: 'Referral code has expired.' };
+                }
+
+                // Find referrer with matching referral code
+                let referrerDoc = null;
+                let referrerId = null;
+                usersSnapshot.forEach((doc) => {
+                    const data = doc.data().profile?.data;
+                    if (data && data.referralCode === code && doc.id !== currentUserId) {
+                        referrerDoc = doc;
+                        referrerId = doc.id;
+                    }
+                });
+
+                if (!referrerDoc) {
+                    return { valid: false, message: 'Invalid referral code.' };
+                }
+
+                const usedBy = referrerDoc.data().profile?.data?.usedBy || [];
+                if (usedBy.length >= 5) {
+                    await setDoc(doc(collection(db, 'expiredReferral')), {
+                        referralCode: code,
+                        expiredAt: serverTimestamp()
+                    });
+                    return { valid: false, message: 'Referral code has reached its usage limit.' };
+                }
+
+                return { valid: true, referrerId: referrerId, usedBy: usedBy };
+            } catch (error) {
+                console.error('Error validating referral code:', error);
+                return { valid: false, message: 'Error validating referral code. Please try again.' };
+            }
+        }
+
         const form = document.getElementById('contract-form');
         const statusMessage = document.getElementById('status-message');
         const loader = document.getElementById('loader');
         let agreedContract = false;
-
-        function generateReferralCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return code;
-        }
-
-        async function validateReferralCode(code) {
-            if (!code || code.toLowerCase() === 'no code') {
-                statusMessage.textContent = 'A valid referral code is required. Redirecting to index...';
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
-                return { isValid: false, docId: null };
-            }
-            try {
-                if (!window.collection || !window.getDocs) {
-                    throw new Error("Firebase functions not initialized");
-                }
-                loader.style.display = 'block';
-                const referralCodeRef = window.collection(window.db, 'referralCode');
-                const querySnapshot = await window.getDocs(referralCodeRef);
-                let isValid = false;
-                let matchedDocId = null;
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if (data.newReferralCode && data.newReferralCode === code) {
-                        const usedBy = data.usedBy || [];
-                        if (usedBy.length < 5) {
-                            isValid = true;
-                            matchedDocId = doc.id;
-                        }
-                    }
-                });
-                if (!isValid) {
-                    statusMessage.textContent = 'Invalid or expired referral code. Redirecting to index...';
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                }
-                return { isValid, docId: matchedDocId };
-            } catch (error) {
-                console.error('Error validating referral code:', error);
-                statusMessage.textContent = 'Error validating referral code.';
-                return { isValid: false, docId: null };
-            } finally {
-                loader.style.display = 'none';
-            }
-        }
 
         const canvas = document.getElementById('signature-pad');
         const ctx = canvas.getContext('2d');
@@ -239,6 +372,15 @@
             isDrawing = false;
         });
 
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                statusMessage.textContent = 'Please log in to continue.';
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        });
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             statusMessage.textContent = '';
@@ -249,54 +391,40 @@
                 loader.style.display = 'none';
                 return;
             }
+
             const referralCode = document.getElementById('referralCode').value;
-            const { isValid, docId } = await validateReferralCode(referralCode);
-            if (!isValid) {
+            if (!/^[A-Z0-9]{6}$/.test(referralCode)) {
+                statusMessage.textContent = 'Referral code must be 6 characters (uppercase letters or numbers).';
                 loader.style.display = 'none';
                 return;
             }
 
             try {
-                const user = await new Promise((resolve, reject) => {
-                    window.onAuthStateChanged(window.auth, (user) => {
-                        if (user) resolve(user);
-                        else reject(new Error('User not authenticated'));
-                    });
-                });
+                const user = auth.currentUser;
+                if (!user) throw new Error('No user is signed in.');
+                const validation = await validateReferralCode(referralCode, user.uid);
 
-                const tempDoc = await window.getDoc(window.doc(window.db, 'temp_users', user.uid));
-                if (!tempDoc.exists()) {
-                    statusMessage.textContent = 'Error: User data not found. Please start over.';
+                if (!validation.valid) {
+                    statusMessage.textContent = validation.message;
                     loader.style.display = 'none';
                     return;
                 }
-                const tempData = tempDoc.data();
 
-                const newReferralCode = generateReferralCode();
-                await window.setDoc(window.doc(window.db, 'users', user.uid), {
-                    ...tempData,
-                    agreedContract: true,
-                    referralCode: newReferralCode,
-                    createdAt: window.serverTimestamp()
+                // Update referrer's usedBy array
+                const referrerProfileRef = doc(db, 'users', validation.referrerId, 'profile', 'data');
+                await updateDoc(referrerProfileRef, {
+                    usedBy: [...validation.usedBy, user.uid]
                 });
 
-                await window.setDoc(window.doc(window.db, 'referrals', newReferralCode), {
-                    referralCode: newReferralCode,
-                    userId: user.uid,
-                    usedBy: [user.uid],
-                    createdAt: window.serverTimestamp()
-                });
+                // Save e-signature to user's profile
+                const userProfileRef = doc(db, 'users', user.uid, 'profile', 'data');
+                await setDoc(userProfileRef, {
+                    eSignature: 'Signed', // Canvas-based signature saved as boolean
+                    referralCode: '', // Set in addReferralCode.html
+                    usedBy: []
+                }, { merge: true });
 
-                if (docId) {
-                    const referralDocRef = window.doc(window.db, 'referralCode', docId);
-                    const referralDoc = await window.getDoc(referralDocRef);
-                    await window.setDoc(referralDocRef, {
-                        ...referralDoc.data(),
-                        usedBy: [...(referralDoc.data().usedBy || []), user.uid]
-                    }, { merge: true });
-                }
-
-                statusMessage.textContent = 'Sign-up successful! Redirecting to role selection...';
+                statusMessage.textContent = 'Contract signed successfully! Redirecting to role selection...';
                 setTimeout(() => {
                     window.location.href = 'role.html';
                 }, 2000);
@@ -331,4 +459,5 @@
         }
     </script>
 </body>
+
 </html>
