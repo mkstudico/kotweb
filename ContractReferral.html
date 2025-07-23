@@ -61,6 +61,17 @@
         .form-field label i {
             margin-right: 0.5rem;
         }
+        .form-field input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s;
+        }
+        .form-field input:focus {
+            border-color: #0077b5;
+            outline: none;
+        }
         .signature-pad {
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -164,6 +175,10 @@
                     <label for="signature"><i class="bi bi-pen"></i>E-Signature *</label>
                     <canvas id="signature-pad" class="signature-pad"></canvas>
                 </div>
+                <div class="form-field">
+                    <label for="referralCode"><i class="bi bi-code"></i>Referral Code *</label>
+                    <input type="text" id="referralCode" name="referralCode" required placeholder="Enter 6-character code (e.g., QWEASD)" pattern="[A-Z0-9]{6}">
+                </div>
                 <div class="form-field" style="display: flex; justify-content: space-between; gap: 1rem;">
                     <button type="button" class="button" onclick="window.location.href='SchoolInfo.html'"><i class="bi bi-arrow-left"></i> Back</button>
                     <button type="submit" id="submit-button" class="button"><i class="bi bi-check-circle"></i> Submit</button>
@@ -206,26 +221,37 @@
             document.getElementById('loader').style.display = 'none';
         }
 
-        async function checkAvailableReferralCode() {
+        async function validateReferralCode(code, currentUserId) {
             try {
                 const referralRef = collection(db, 'referralCode');
                 const referralSnapshot = await getDocs(referralRef);
 
+                let referrerDoc = null;
+                let referrerId = null;
                 let hasFreeReferral = false;
                 referralSnapshot.forEach((doc) => {
-                    if (doc.data().usedBy.length === 0) {
+                    const data = doc.data();
+                    if (data.newReferralCode === code && data.usedBy.length === 0) {
+                        referrerDoc = doc;
+                        referrerId = doc.id;
+                    }
+                    if (data.usedBy.length === 0) {
                         hasFreeReferral = true;
                     }
                 });
+
+                if (!referrerDoc) {
+                    return { valid: false, message: 'Invalid or already used referral code.' };
+                }
 
                 if (!hasFreeReferral) {
                     return { valid: false, message: 'Thank you for your willing to participate, but you can’t access the site now.' };
                 }
 
-                return { valid: true };
+                return { valid: true, referrerId: referrerId, usedBy: referrerDoc.data().usedBy };
             } catch (error) {
-                console.error('Error checking referral codes:', error);
-                return { valid: false, message: 'Error checking referral codes. Please try again.' };
+                console.error('Error validating referral code:', error);
+                return { valid: false, message: 'Error validating referral code. Please try again.' };
             }
         }
 
@@ -238,7 +264,7 @@
                 let newReferralId = null;
                 referralSnapshot.forEach((doc) => {
                     const data = doc.data();
-                    if (data.usedBy.length === 0 && !newReferralDoc) {
+                    if (data.usedBy.length === 0 && !newReferralDoc && data.newReferralCode !== document.getElementById('referralCode').value.trim()) {
                         newReferralDoc = doc;
                         newReferralId = doc.id;
                     }
@@ -353,10 +379,18 @@
                 return;
             }
 
+            const referralCode = document.getElementById('referralCode').value.trim();
+            if (!/^[A-Z0-9]{6}$/.test(referralCode)) {
+                statusMessage.textContent = 'Referral code must be exactly 6 uppercase letters or numbers.';
+                loader.style.display = 'none';
+                submitButton.disabled = false;
+                return;
+            }
+
             try {
                 const user = auth.currentUser;
                 if (!user) throw new Error('No user is signed in.');
-                const validation = await checkAvailableReferralCode();
+                const validation = await validateReferralCode(referralCode, user.uid);
 
                 if (!validation.valid) {
                     statusMessage.textContent = validation.message;
@@ -364,6 +398,11 @@
                     submitButton.disabled = false;
                     return;
                 }
+
+                const referrerDocRef = doc(db, 'referralCode', validation.referrerId);
+                await updateDoc(referrerDocRef, {
+                    usedBy: [...validation.usedBy, user.uid]
+                });
 
                 const newReferral = await assignNewReferralCode(user.uid);
                 if (!newReferral.success) {
