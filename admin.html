@@ -25,26 +25,10 @@
             text-align: center;
             border-radius: 8px 8px 0 0;
             margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         .header h1 {
             margin: 0;
             font-size: 2rem;
-        }
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .header-actions button {
-            background-color: white;
-            color: #0077b5;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
         }
         .user-card {
             background-color: white;
@@ -91,7 +75,6 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
-            flex-wrap: wrap;
         }
         .btn {
             padding: 10px 15px;
@@ -113,14 +96,6 @@
             background-color: #6c757d;
             color: white;
         }
-        .btn-email {
-            background-color: #17a2b8;
-            color: white;
-        }
-        .btn-role {
-            background-color: #6f42c1;
-            color: white;
-        }
         .btn:hover {
             opacity: 0.9;
         }
@@ -139,7 +114,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .form-field input, .form-field select {
+        .form-field input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -165,109 +140,29 @@
             border-radius: 4px;
             margin-bottom: 15px;
         }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .email-template {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            border-left: 4px solid #0077b5;
-            white-space: pre-wrap;
-            font-family: monospace;
-        }
-        .passcode-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .passcode-modal-content {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .passcode-list {
-            margin-top: 15px;
-        }
-        .passcode-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>Inkota Web Admin Panel</h1>
-            <div class="header-actions">
-                <button id="view-passcodes">View Passcodes</button>
-            </div>
+            <p>Pending User Verifications</p>
         </div>
 
         <div id="pending-users-container">
+            <!-- Pending users will be loaded here -->
             <div class="no-pending">
                 <p>Loading pending users...</p>
             </div>
         </div>
     </div>
 
-    <!-- Passcode Modal -->
-    <div class="passcode-modal" id="passcode-modal">
-        <div class="passcode-modal-content">
-            <h2>Registered Users and Passcodes</h2>
-            <div class="passcode-list" id="passcode-list">
-                Loading passcodes...
-            </div>
-            <button class="btn btn-secondary" id="close-passcode-modal" style="margin-top: 20px;">Close</button>
-        </div>
-    </div>
-
     <script type="module">
+        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            query, 
-            where, 
-            getDocs, 
-            doc, 
-            updateDoc, 
-            deleteDoc, 
-            setDoc 
-        } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDuCfPGsvZr7GbEBCR6WUOuThyfD9OU_cs",
             authDomain: "inkotaweb.firebaseapp.com",
@@ -278,50 +173,9 @@
             measurementId: "G-C70ZEECY48"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        // DOM elements
-        const viewPasscodesBtn = document.getElementById('view-passcodes');
-        const passcodeModal = document.getElementById('passcode-modal');
-        const passcodeList = document.getElementById('passcode-list');
-        const closePasscodeModal = document.getElementById('close-passcode-modal');
-
-        // Load all users with passcodes
-        async function loadAllUsers() {
-            passcodeList.innerHTML = 'Loading passcodes...';
-            
-            try {
-                const q = query(collection(db, "users"));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    passcodeList.innerHTML = '<p>No users found</p>';
-                    return;
-                }
-
-                let html = '';
-                querySnapshot.forEach((doc) => {
-                    const user = doc.data();
-                    html += `
-                        <div class="passcode-item">
-                            <div>
-                                <strong>${user.fullName || 'Unknown'}</strong>
-                                <div>Email: ${user.email}</div>
-                            </div>
-                            <div>
-                                <code>${user.sentenceCode || 'No passcode'}</code>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                passcodeList.innerHTML = html;
-            } catch (error) {
-                console.error("Error loading users:", error);
-                passcodeList.innerHTML = '<p>Error loading passcodes</p>';
-            }
-        }
 
         // Load pending users
         async function loadPendingUsers() {
@@ -399,12 +253,8 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-role" data-userid="${userId}">Set Role</button>
                     <button class="btn btn-approve" data-userid="${userId}">Approve</button>
                     <button class="btn btn-reject" data-userid="${userId}">Reject</button>
-                    <button class="btn btn-email" data-emailtype="accept" data-userid="${userId}">Send Accept Email</button>
-                    <button class="btn btn-email" data-emailtype="decline" data-userid="${userId}">Send Decline Email</button>
-                    <button class="btn btn-email" data-emailtype="done" data-userid="${userId}">Send All Done Email</button>
                 </div>
                 
                 <div id="approve-panel-${userId}" class="verification-panel hidden">
@@ -425,33 +275,9 @@
                         <input type="text" id="sentence-code-${userId}" placeholder="Create a sentence code for this user">
                         <div class="error-message" id="sentence-error-${userId}"></div>
                     </div>
-                    <div class="form-field">
-                        <label for="user-role-${userId}">User Role *</label>
-                        <select id="user-role-${userId}">
-                            <option value="user">Normal User</option>
-                            <option value="provider">Content Provider</option>
-                            <option value="shareholder">Shareholder</option>
-                        </select>
-                    </div>
                     <div class="action-buttons">
                         <button class="btn btn-secondary" id="cancel-approve-${userId}">Cancel</button>
                         <button class="btn btn-approve" id="confirm-approve-${userId}">Confirm Approval</button>
-                    </div>
-                </div>
-                
-                <div id="role-panel-${userId}" class="verification-panel hidden">
-                    <h3>Set User Role</h3>
-                    <div class="form-field">
-                        <label for="set-role-${userId}">Select Role *</label>
-                        <select id="set-role-${userId}">
-                            <option value="user">Normal User</option>
-                            <option value="provider">Content Provider</option>
-                            <option value="shareholder">Shareholder</option>
-                        </select>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn btn-secondary" id="cancel-role-${userId}">Cancel</button>
-                        <button class="btn btn-role" id="save-role-${userId}">Save Role</button>
                     </div>
                 </div>
             `;
@@ -463,38 +289,18 @@
                 document.getElementById(`approve-panel-${userId}`).classList.remove('hidden');
             });
             
-            document.querySelector(`.btn-role[data-userid="${userId}"]`).addEventListener('click', () => {
-                document.getElementById(`role-panel-${userId}`).classList.remove('hidden');
-            });
-            
             document.querySelector(`.btn-reject[data-userid="${userId}"]`).addEventListener('click', () => {
                 if (confirm(`Are you sure you want to reject ${userData.fullName}'s application?`)) {
                     rejectUser(userId);
                 }
             });
             
-            // Email buttons
-            document.querySelectorAll(`.btn-email[data-userid="${userId}"]`).forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const emailType = btn.dataset.emailtype;
-                    sendEmailTemplate(userData, emailType);
-                });
-            });
-            
             document.getElementById(`cancel-approve-${userId}`).addEventListener('click', () => {
                 document.getElementById(`approve-panel-${userId}`).classList.add('hidden');
             });
             
-            document.getElementById(`cancel-role-${userId}`).addEventListener('click', () => {
-                document.getElementById(`role-panel-${userId}`).classList.add('hidden');
-            });
-            
             document.getElementById(`confirm-approve-${userId}`).addEventListener('click', () => {
                 approveUser(userId, userData);
-            });
-            
-            document.getElementById(`save-role-${userId}`).addEventListener('click', () => {
-                updateUserRole(userId, userData);
             });
             
             // Sentence code validation
@@ -546,7 +352,6 @@
         async function approveUser(userId, userData) {
             const sentenceCodeInput = document.getElementById(`sentence-code-${userId}`);
             const sentenceCode = sentenceCodeInput.value.trim().toLowerCase().replace(/\s+/g, '-');
-            const userRole = document.getElementById(`user-role-${userId}`).value;
             
             // Validate sentence code
             if (!validateSentenceCode(sentenceCode, userId)) {
@@ -569,16 +374,15 @@
                 return;
             }
             
-            if (confirm(`Approve ${userData.fullName} with this sentence code and role?\n\nCode: ${sentenceCode}\nRole: ${userRole}`)) {
+            if (confirm(`Approve ${userData.fullName} with this sentence code?\n\n${sentenceCode}`)) {
                 try {
                     // Add to approved users
                     await setDoc(doc(db, "users", userData.email), {
                         ...userData,
                         sentenceCode: sentenceCode,
-                        role: userRole,
                         status: "active",
                         approvedAt: new Date(),
-                        approvedBy: "admin"
+                        approvedBy: "admin" // You might want to replace this with actual admin ID
                     });
                     
                     // Remove from pending
@@ -587,8 +391,8 @@
                     // Remove from UI
                     document.getElementById(`user-${userId}`).remove();
                     
-                    // Show success message
-                    alert(`User approved successfully with role: ${userRole}`);
+                    // TODO: Send email to user with their sentence code
+                    alert(`User approved successfully! Send this sentence code to the user:\n\n${sentenceCode}`);
                     
                     // Check if any pending users left
                     const container = document.getElementById('pending-users-container');
@@ -599,24 +403,6 @@
                     console.error("Error approving user:", error);
                     alert('Error approving user. Please try again.');
                 }
-            }
-        }
-
-        // Update user role
-        async function updateUserRole(userId, userData) {
-            const roleSelect = document.getElementById(`set-role-${userId}`);
-            const newRole = roleSelect.value;
-            
-            try {
-                await updateDoc(doc(db, "pending_users", userId), {
-                    role: newRole
-                });
-                
-                document.getElementById(`role-panel-${userId}`).classList.add('hidden');
-                alert(`Role updated to ${newRole} for ${userData.fullName}`);
-            } catch (error) {
-                console.error("Error updating role:", error);
-                alert('Error updating role. Please try again.');
             }
         }
 
@@ -645,98 +431,9 @@
             }
         }
 
-        // Send email template
-        function sendEmailTemplate(userData, emailType) {
-            let subject = "🚨 INKOTA WEB 🚨";
-            let body = "";
-            
-            switch(emailType) {
-                case "accept":
-                    body = `Hey ${userData.fullName}
-
-Your request was reviewed and successfully approved.
-
-You need to approve your role or contribution your are going to give to Inkotaweb.
-Their are three roles and each with a cost.
-
-ROLE No 1:
- User - This is a normal person you would be allowed to read and see sent exams
-        You can send messages and receive from the private and public chat.
-     Cost: 10.00 USD
-
-ROLE No 2:
- Provider - You will be like a user but addittionally you will be able to post
-            exams and with interactions with other users you will earn from them
-            you will earn but in order to prevent fraud you must invest.
-     Cost: 5.00 USD
-     Caution: If you post few times or post fake exams, your account will be banned
-              and you will receive no income.
-
-ROLE No 3:
- Sponsor - You may buy real shares, access everything as an admin, Block,add people
-           or even remove irregular content. Each share is bought 20.75USD
-     Cost: 20.75USD
-     Note: As you buy many shares, as more access you get.
-
-Thank you so pleaze, ${userData.fullName} reply to this email to choose your ROLE and 
-proceed to the payments, unless in 3 days your details may be deleted.
-
-Official 2025 Inkota Web - https://kotweb.vercel.app`;
-                    break;
-                
-                case "decline":
-                    body = `Hey ${userData.fullName} 
-
-Your request was reviewed and successfully Denied.
-
-Due to your submitted information we are sorry to announce to you that your 
-details were denied and your account Banned.
-
-Thank you so pleaze, ${userData.fullName} Don't try to reply to this email
-It will be eventually ignored.
-
-Official 2025 Inkota Web - https://kotweb.vercel.app`;
-                    break;
-                
-                case "done":
-                    body = `Hey ${userData.fullName} 
-
-Congartulations Your payments were approved and you are know officially to join
-Inkota web.
-
-Your role is to ${userData.role || '[ROLE NOT SET]'}
-Your Passcode you will use to login into your account is (${userData.sentenceCode || '[PASSCODE NOT SET]'})
-
-Thank you and goodluck, And don't trust anyone to provide your real names and address.
-
-Official 2025 Inkota Web - https://kotweb.vercel.app`;
-                    break;
-            }
-            
-            const mailtoLink = `mailto:${userData.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.open(mailtoLink, '_blank');
-        }
-
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             loadPendingUsers();
-            
-            // Passcode modal handlers
-            viewPasscodesBtn.addEventListener('click', () => {
-                passcodeModal.style.display = 'flex';
-                loadAllUsers();
-            });
-            
-            closePasscodeModal.addEventListener('click', () => {
-                passcodeModal.style.display = 'none';
-            });
-            
-            // Close modal when clicking outside
-            passcodeModal.addEventListener('click', (e) => {
-                if (e.target === passcodeModal) {
-                    passcodeModal.style.display = 'none';
-                }
-            });
         });
     </script>
 </body>
