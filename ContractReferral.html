@@ -228,15 +228,15 @@
 
                 let referrerDoc = null;
                 let referrerId = null;
-                let hasFreeReferral = false;
+                let freeReferralCount = 0;
                 referralSnapshot.forEach((doc) => {
                     const data = doc.data();
                     if (data.newReferralCode === code && data.usedBy.length === 0) {
                         referrerDoc = doc;
                         referrerId = doc.id;
                     }
-                    if (data.usedBy.length === 0) {
-                        hasFreeReferral = true;
+                    if (data.usedBy.length === 0 && data.newReferralCode !== code) {
+                        freeReferralCount++;
                     }
                 });
 
@@ -244,7 +244,7 @@
                     return { valid: false, message: 'Invalid or already used referral code.' };
                 }
 
-                if (!hasFreeReferral) {
+                if (freeReferralCount === 0) {
                     return { valid: false, message: 'Thank you for your willing to participate, but you can’t access the site now.' };
                 }
 
@@ -255,7 +255,7 @@
             }
         }
 
-        async function assignNewReferralCode(userId) {
+        async function assignNewReferralCode(userId, enteredCode) {
             try {
                 const referralRef = collection(db, 'referralCode');
                 const referralSnapshot = await getDocs(referralRef);
@@ -264,7 +264,7 @@
                 let newReferralId = null;
                 referralSnapshot.forEach((doc) => {
                     const data = doc.data();
-                    if (data.usedBy.length === 0 && !newReferralDoc && data.newReferralCode !== document.getElementById('referralCode').value.trim()) {
+                    if (data.usedBy.length === 0 && !newReferralDoc && data.newReferralCode !== enteredCode) {
                         newReferralDoc = doc;
                         newReferralId = doc.id;
                     }
@@ -404,7 +404,7 @@
                     usedBy: [...validation.usedBy, user.uid]
                 });
 
-                const newReferral = await assignNewReferralCode(user.uid);
+                const newReferral = await assignNewReferralCode(user.uid, referralCode);
                 if (!newReferral.success) {
                     statusMessage.textContent = newReferral.message;
                     loader.style.display = 'none';
