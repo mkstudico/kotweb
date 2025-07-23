@@ -117,17 +117,75 @@
             text-align: center;
             display: none;
         }
-        .signup-link {
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
             text-align: center;
-            margin-top: 20px;
+            margin-bottom: 1.5rem;
         }
-        .signup-link a {
+        .modal-header h2 {
             color: #0077b5;
-            text-decoration: none;
-            font-weight: bold;
+            margin: 0 0 0.5rem;
         }
-        .signup-link a:hover {
-            text-decoration: underline;
+        .role-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .role-card {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .role-card:hover {
+            border-color: #0077b5;
+            transform: translateY(-5px);
+        }
+        .role-card.selected {
+            border-color: #0077b5;
+            background-color: #e7f5ff;
+        }
+        .role-card i {
+            font-size: 2.5rem;
+            color: #0077b5;
+            margin-bottom: 1rem;
+        }
+        .role-card h3 {
+            margin: 0 0 0.5rem;
+            color: #333;
+        }
+        .role-card p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .modal-footer {
+            text-align: center;
+        }
+        .modal-footer .btn {
+            max-width: 200px;
         }
     </style>
 </head>
@@ -160,9 +218,38 @@
                 
                 <div class="error-message" id="error-message"></div>
             </form>
+        </div>
+    </div>
+
+    <div class="modal" id="role-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Choose Your Role</h2>
+                <p>Select how you want to participate in Inkota Web</p>
+            </div>
             
-            <div class="signup-link">
-                <p>Don't have an account? <a href="signup.html">Create one</a></p>
+            <div class="role-options">
+                <div class="role-card" data-role="user">
+                    <i class="bi bi-person"></i>
+                    <h3>Normal User</h3>
+                    <p>Read posted content, take exams, and learn from the community</p>
+                </div>
+                
+                <div class="role-card" data-role="provider">
+                    <i class="bi bi-upload"></i>
+                    <h3>Content Provider</h3>
+                    <p>Post educational content across the web and earn rewards</p>
+                </div>
+                
+                <div class="role-card" data-role="shareholder">
+                    <i class="bi bi-graph-up"></i>
+                    <h3>Shareholder</h3>
+                    <p>Buy shares with pure agreements and participate in platform growth</p>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn" id="confirm-role">Confirm Selection</button>
             </div>
         </div>
     </div>
@@ -174,11 +261,14 @@
             collection, 
             query, 
             where, 
-            getDocs
+            getDocs, 
+            doc, 
+            updateDoc 
         } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { 
             getAuth, 
             signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
             setPersistence,
             browserSessionPersistence
         } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
@@ -206,8 +296,23 @@
         const loginForm = document.getElementById('login-form');
         const sentenceCodeInput = document.getElementById('sentence-code');
         const errorMessage = document.getElementById('error-message');
+        const roleModal = document.getElementById('role-modal');
+        const roleCards = document.querySelectorAll('.role-card');
+        const confirmRoleBtn = document.getElementById('confirm-role');
         const loginBtn = document.getElementById('login-btn');
         
+        let selectedRole = null;
+        let currentUserId = null;
+        let userData = null;
+
+        roleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                roleCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedRole = card.dataset.role;
+            });
+        });
+
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
@@ -216,6 +321,7 @@
         function showLoading(button, isLoading) {
             button.disabled = isLoading;
             button.classList.toggle('loading', isLoading);
+            button.textContent = isLoading ? 'Processing...' : (button.id === 'login-btn' ? 'Login' : 'Confirm Selection');
         }
 
         function validateSentenceCode(code) {
@@ -243,34 +349,113 @@
             }
             
             try {
+                console.log('Querying Firestore for sentence code:', sentenceCode);
                 const usersRef = collection(db, "users");
                 const q = query(usersRef, where("sentenceCode", "==", sentenceCode));
                 const querySnapshot = await getDocs(q);
                 
                 if (querySnapshot.empty) {
+                    console.log('No user found with sentence code:', sentenceCode);
                     showError('Invalid sentence code. Please try again.');
                     showLoading(loginBtn, false);
                     return;
                 }
                 
                 const userDoc = querySnapshot.docs[0];
-                const userData = userDoc.data();
+                userData = userDoc.data();
+                currentUserId = userDoc.id;
+                console.log('User found:', userData.email, 'Role:', userData.role);
                 
                 const email = userData.email;
                 const password = sentenceCode;
                 
                 try {
+                    console.log('Attempting to sign in with email:', email);
                     await signInWithEmailAndPassword(auth, email, password);
-                    window.location.href = 'home.html';
+                    console.log('Sign-in successful, checking role...');
+                    if (userData.role) {
+                        console.log('User has role, redirecting to home.html');
+                        window.location.href = 'home.html';
+                    } else {
+                        console.log('No role assigned, showing role modal');
+                        roleModal.style.display = 'flex';
+                    }
                 } catch (authError) {
-                    console.error('Authentication error:', authError);
-                    showError('Login failed. Please try again or contact support.');
+                    console.error('Authentication error:', authError.code, authError.message);
+                    if (authError.code === 'auth/user-not-found' || authError.code === 'auth/invalid-credential') {
+                        console.log('User not found in Firebase Auth, attempting to create user');
+                        try {
+                            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                            console.log('User created successfully:', userCredential.user.email);
+                            if (userData.role) {
+                                console.log('User has role, redirecting to home.html');
+                                window.location.href = 'home.html';
+                            } else {
+                                console.log('No role assigned, showing role modal');
+                                roleModal.style.display = 'flex';
+                            }
+                        } catch (createError) {
+                            console.error('Error creating user:', createError.code, createError.message);
+                            if (createError.code === 'auth/email-already-in-use') {
+                                showError('Account already exists with different credentials. Please contact support.');
+                            } else {
+                                showError('Failed to create authentication account. Please contact support.');
+                            }
+                            showLoading(loginBtn, false);
+                        }
+                    } else if (authError.code === 'auth/wrong-password') {
+                        showError('Incorrect sentence code. Please try again.');
+                        showLoading(loginBtn, false);
+                    } else if (authError.code === 'auth/too-many-requests') {
+                        showError('Too many failed attempts. Please try again later.');
+                        showLoading(loginBtn, false);
+                    } else {
+                        showError('Login failed. Please try again or contact support.');
+                        showLoading(loginBtn, false);
+                    }
                 }
             } catch (error) {
                 console.error('Firestore query error:', error);
                 showError('Error during login. Please try again.');
-            } finally {
                 showLoading(loginBtn, false);
+            }
+        });
+
+        confirmRoleBtn.addEventListener('click', async () => {
+            if (!selectedRole) {
+                alert('Please select a role before confirming');
+                return;
+            }
+            
+            showLoading(confirmRoleBtn, true);
+            
+            try {
+                console.log('Updating user role:', selectedRole, 'for user:', currentUserId);
+                await updateDoc(doc(db, "users", currentUserId), {
+                    role: selectedRole,
+                    roleSelectedAt: new Date()
+                });
+                console.log('Role updated successfully');
+                
+                const email = userData.email;
+                const password = userData.sentenceCode;
+                
+                console.log('Signing in after role update:', email);
+                await signInWithEmailAndPassword(auth, email, password);
+                console.log('Sign-in after role update successful');
+                
+                roleModal.style.display = 'none';
+                window.location.href = 'home.html';
+            } catch (error) {
+                console.error('Error updating role or signing in:', error);
+                alert('Error saving your role. Please try again.');
+                showLoading(confirmRoleBtn, false);
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === roleModal && selectedRole) {
+                roleModal.style.display = 'none';
             }
         });
     </script>
