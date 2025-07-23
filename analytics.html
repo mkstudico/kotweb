@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkota Web - Analytics</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary-color: #0077b5;
+            --secondary-color: #005f8c;
+            --background-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --light-text: #666666;
+            --danger-color: #dc3545;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header-left h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .header-left p {
+            margin: 0.3rem 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-right a {
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .header-right a:hover {
+            opacity: 0.8;
+        }
+        .logout-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.3s;
+            position: relative;
+        }
+        .logout-btn:hover {
+            opacity: 0.9;
+        }
+        .logout-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .logout-btn.loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .main-content {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            display: none;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--primary-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        .analytics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .analytics-table th, .analytics-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .analytics-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .analytics-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .analytics-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .formula {
+            margin: 20px 0;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--primary-color);
+        }
+        .total-earnings {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            color: var(--primary-color);
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .analytics-table {
+                font-size: 0.8rem;
+            }
+            .analytics-table th, .analytics-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>Inkota Web</h1>
+                <p id="user-uid">User Loading...</p>
+            </div>
+            <div class="header-right">
+                <a href="settings.html" title="Settings"><i class="bi bi-gear"></i></a>
+                <a href="community.html" title="Community"><i class="bi bi-people"></i></a>
+                <a href="analytics.html" title="Analytics"><i class="bi bi-graph-up"></i></a>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </div>
+        </header>
+        <main class="main-content">
+            <div class="loading-overlay" id="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+            <div class="error-message" id="error-message"></div>
+            <h2>Analytics</h2>
+            <p class="formula">Earnings Formula: (Total Time Spent in Seconds * 0.0924) + (Total Positive Likes * 0.0567) - (Total Negative Likes * 0.172) = Money Earned (USD)</p>
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Class</th>
+                        <th>Combination</th>
+                        <th>Place</th>
+                        <th>Views</th>
+                        <th>Time Spent (s)</th>
+                        <th>Downloads</th>
+                        <th>Positive Likes</th>
+                        <th>Negative Likes</th>
+                        <th>Earnings (USD)</th>
+                    </tr>
+                </thead>
+                <tbody id="analytics-body"></tbody>
+            </table>
+            <p class="total-earnings" id="total-earnings">Total Earnings: $0.00</p>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuCfPGsvZr7GbEBCR6WUOuThyfD9OU_cs",
+            authDomain: "inkotaweb.firebaseapp.com",
+            projectId: "inkotaweb",
+            storageBucket: "inkotaweb.firebasestorage.app",
+            messagingSenderId: "622144170125",
+            appId: "1:622144170125:web:e05a071186440d782f1ac4",
+            measurementId: "G-C70ZEECY48"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const userUidElement = document.getElementById('user-uid');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const errorMessageElement = document.getElementById('error-message');
+        const analyticsBody = document.getElementById('analytics-body');
+        const totalEarningsElement = document.getElementById('total-earnings');
+
+        function showLoading(isLoading) {
+            loadingOverlay.classList.toggle('active', isLoading);
+        }
+
+        function showError(message) {
+            errorMessageElement.textContent = message;
+            errorMessageElement.style.display = 'block';
+        }
+
+        function calculateEarnings(timeSpent, positiveLikes, negativeLikes) {
+            const earnings = (timeSpent * 0.0924) + (positiveLikes * 0.0567) - (negativeLikes * 0.172);
+            return Math.max(0, earnings).toFixed(2);
+        }
+
+        async function loadAnalytics() {
+            showLoading(true);
+            analyticsBody.innerHTML = '';
+            try {
+                const examsRef = collection(db, "exams");
+                const q = query(examsRef, where("uploader", "==", auth.currentUser.uid));
+                const querySnapshot = await getDocs(q);
+                let totalEarnings = 0;
+
+                querySnapshot.forEach(doc => {
+                    const exam = doc.data();
+                    const earnings = calculateEarnings(exam.timeSpent || 0, exam.positiveLikes || 0, exam.negativeLikes || 0);
+                    totalEarnings += parseFloat(earnings);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${exam.title}</td>
+                        <td>${exam.class}</td>
+                        <td>${exam.combination || 'N/A'}</td>
+                        <td>${exam.place || 'N/A'}</td>
+                        <td>${exam.views || 0}</td>
+                        <td>${exam.timeSpent || 0}</td>
+                        <td>${exam.downloads || 0}</td>
+                        <td>${exam.positiveLikes || 0}</td>
+                        <td>${exam.negativeLikes || 0}</td>
+                        <td>$${earnings}</td>
+                    `;
+                    analyticsBody.appendChild(row);
+                });
+
+                totalEarningsElement.textContent = `Total Earnings: $${totalEarnings.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                showError('Error loading analytics. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        logoutBtn.addEventListener('click', async () => {
+            logoutBtn.disabled = true;
+            logoutBtn.classList.add('loading');
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                showError('Error during logout. Please try again.');
+            } finally {
+                logoutBtn.disabled = false;
+                logoutBtn.classList.remove('loading');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userUidElement.textContent = `User ${user.uid}`;
+                    try {
+                        const usersRef = collection(db, "users");
+                        const q = query(usersRef, where("email", "==", user.email));
+                        const querySnapshot = await getDocs(q);
+                        if (querySnapshot.empty) {
+                            showError('User data not found. Redirecting to login page.');
+                            setTimeout(() => window.location.href = 'login.html', 2000);
+                            return;
+                        }
+                        const userData = querySnapshot.docs[0].data();
+                        if (userData.role !== 'provider') {
+                            showError('Access denied. Only providers can view analytics.');
+                            setTimeout(() => window.location.href = 'home.html', 2000);
+                            return;
+                        }
+                        await loadAnalytics();
+                    } catch (error) {
+                        console.error('Error checking user role:', error);
+                        showError('Error loading analytics. Please try again.');
+                    }
+                } else {
+                    showError('You are not logged in. Redirecting to login page.');
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

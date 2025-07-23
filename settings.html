@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkota Web - Settings</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary-color: #0077b5;
+            --secondary-color: #005f8c;
+            --background-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --light-text: #666666;
+            --danger-color: #dc3545;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header-left h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .header-left p {
+            margin: 0.3rem 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-right a {
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .header-right a:hover {
+            opacity: 0.8;
+        }
+        .logout-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.3s;
+            position: relative;
+        }
+        .logout-btn:hover {
+            opacity: 0.9;
+        }
+        .logout-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .logout-btn.loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .main-content {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            display: none;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--primary-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        .success-message {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        .form-group input:disabled {
+            background-color: #f9f9f9;
+            cursor: not-allowed;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .btn.loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .profile-section p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        .profile-section strong {
+            color: var(--primary-color);
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>Inkota Web</h1>
+                <p id="user-uid">User Loading...</p>
+            </div>
+            <div class="header-right">
+                <a href="settings.html" title="Settings"><i class="bi bi-gear"></i></a>
+                <a href="community.html" title="Community"><i class="bi bi-people"></i></a>
+                <a href="analytics.html" title="Analytics" id="analytics-link" style="display: none;"><i class="bi bi-graph-up"></i></a>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </div>
+        </header>
+        <main class="main-content">
+            <div class="loading-overlay" id="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+            <div id="profile-section">
+                <h2>Profile</h2>
+                <p><strong>Full Name:</strong> <span id="profile-fullName">Loading...</span></p>
+                <p><strong>Email:</strong> <span id="profile-email">Loading...</span></p>
+                <p><strong>Gender:</strong> <span id="profile-gender">Loading...</span></p>
+                <p><strong>Location:</strong> <span id="profile-location">Loading...</span></p>
+                <p><strong>School Name:</strong> <span id="profile-schoolName">Loading...</span></p>
+                <p><strong>School District:</strong> <span id="profile-schoolDistrict">Loading...</span></p>
+                <p><strong>School Province:</strong> <span id="profile-schoolProvince">Loading...</span></p>
+                <p><strong>Registration Number:</strong> <span id="profile-regNo">Loading...</span></p>
+                <p><strong>Class:</strong> <span id="profile-class">Loading...</span></p>
+                <p><strong>Combination:</strong> <span id="profile-combination">Loading...</span></p>
+                <p><strong>Role:</strong> <span id="profile-role">Loading...</span></p>
+                <button class="btn" id="edit-profile-btn"><i class="bi bi-pencil"></i> Edit Profile</button>
+            </div>
+            <div id="edit-profile-section" style="display: none;">
+                <h2>Edit Profile</h2>
+                <form id="edit-profile-form" novalidate>
+                    <div class="form-group">
+                        <label for="fullName"><i class="bi bi-person"></i> Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><i class="bi bi-envelope"></i> Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender"><i class="bi bi-gender-ambiguous"></i> Gender *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="location"><i class="bi bi-geo-alt"></i> Location *</label>
+                        <input type="text" id="location" name="location" required placeholder="Enter your location">
+                    </div>
+                    <div class="form-group">
+                        <label for="schoolName"><i class="bi bi-building"></i> School Name *</label>
+                        <input type="text" id="schoolName" name="schoolName" required placeholder="Enter your school name">
+                    </div>
+                    <div class="form-group">
+                        <label for="schoolDistrict"><i class="bi bi-map"></i> School District *</label>
+                        <input type="text" id="schoolDistrict" name="schoolDistrict" required placeholder="Enter your school district">
+                    </div>
+                    <div class="form-group">
+                        <label for="schoolProvince"><i class="bi bi-map"></i> School Province *</label>
+                        <input type="text" id="schoolProvince" name="schoolProvince" required placeholder="Enter your school province">
+                    </div>
+                    <div class="form-group">
+                        <label for="regNo"><i class="bi bi-card-text"></i> Registration Number *</label>
+                        <input type="text" id="regNo" name="regNo" required placeholder="Enter your registration number">
+                    </div>
+                    <div class="form-group">
+                        <label for="class"><i class="bi bi-book"></i> Class *</label>
+                        <select id="class" name="class" required>
+                            <option value="" disabled>Select Class</option>
+                            <option value="Senior 1">Senior 1</option>
+                            <option value="Senior 2">Senior 2</option>
+                            <option value="Senior 3">Senior 3</option>
+                            <option value="Senior 4">Senior 4</option>
+                            <option value="Senior 5">Senior 5</option>
+                            <option value="Senior 6">Senior 6</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="combination-field" style="display: none;">
+                        <label for="combination"><i class="bi bi-collection"></i> Combination *</label>
+                        <select id="combination" name="combination">
+                            <option value="" disabled>Select Combination</option>
+                            <option value="MCE">MCE</option>
+                            <option value="MEG">MEG</option>
+                            <option value="MPC">MPC</option>
+                            <option value="MPG">MPG</option>
+                            <option value="HGL">HGL</option>
+                            <option value="LFK">LFK</option>
+                            <option value="PCB">PCB</option>
+                            <option value="MCB">MCB</option>
+                            <option value="PCM">PCM</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 1rem;">
+                        <button type="button" class="btn" id="cancel-edit-btn"><i class="bi bi-x"></i> Cancel</button>
+                        <button type="submit" class="btn" id="save-profile-btn"><i class="bi bi-save"></i> Save Changes</button>
+                    </div>
+                </form>
+                <div class="error-message" id="error-message"></div>
+                <div class="success-message" id="success-message"></div>
+            </div>
+            <div id="add-exam-section" style="display: none;">
+                <h2>Add Exam</h2>
+                <form id="add-exam-form" novalidate>
+                    <div class="form-group">
+                        <label for="examTitle"><i class="bi bi-file-text"></i> Exam Title *</label>
+                        <input type="text" id="examTitle" name="examTitle" required placeholder="Enter exam title">
+                    </div>
+                    <div class="form-group">
+                        <label for="examSubject"><i class="bi bi-book"></i> Subject *</label>
+                        <select id="examSubject" name="examSubject" required>
+                            <option value="" disabled>Select Subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Kinyarwanda">Kinyarwanda</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="examClass"><i class="bi bi-book"></i> Class *</label>
+                        <select id="examClass" name="examClass" required>
+                            <option value="" disabled>Select Class</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="exam-combination-field" style="display: none;">
+                        <label for="examCombination"><i class="bi bi-collection"></i> Combination *</label>
+                        <select id="examCombination" name="examCombination">
+                            <option value="" disabled>Select Combination</option>
+                            <option value="MCE">MCE</option>
+                            <option value="MEG">MEG</option>
+                            <option value="MPC">MPC</option>
+                            <option value="MPG">MPG</option>
+                            <option value="HGL">HGL</option>
+                            <option value="LFK">LFK</option>
+                            <option value="PCB">PCB</option>
+                            <option value="MCB">MCB</option>
+                            <option value="PCM">PCM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="examFiles"><i class="bi bi-upload"></i> Exam Images (up to 30, JPEG/PNG only) *</label>
+                        <input type="file" id="examFiles" name="examFiles" accept="image/jpeg,image/png" multiple required>
+                        <p style="font-size: 0.8rem; color: var(--light-text);">Maximum 30 images per exam.</p>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn" id="upload-exam-btn"><i class="bi bi-plus-circle"></i> Upload Exam</button>
+                    </div>
+                </form>
+                <div class="error-message" id="add-error-message"></div>
+                <div class="success-message" id="add-success-message"></div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuCfPGsvZr7GbEBCR6WUOuThyfD9OU_cs",
+            authDomain: "inkotaweb.firebaseapp.com",
+            projectId: "inkotaweb",
+            storageBucket: "inkotaweb.firebasestorage.app",
+            messagingSenderId: "622144170125",
+            appId: "1:622144170125:web:e05a071186440d782f1ac4",
+            measurementId: "G-C70ZEECY48"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const IMGBB_API_KEY = "f1dfad8528c5ca0b474bd822dbf66f20";
+
+        const userUidElement = document.getElementById('user-uid');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const errorMessageElement = document.getElementById('error-message');
+        const successMessageElement = document.getElementById('success-message');
+        const profileSection = document.getElementById('profile-section');
+        const editProfileSection = document.getElementById('edit-profile-section');
+        const addExamSection = document.getElementById('add-exam-section');
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const editProfileForm = document.getElementById('edit-profile-form');
+        const classSelect = document.getElementById('class');
+        const combinationField = document.getElementById('combination-field');
+        const combinationSelect = document.getElementById('combination');
+        const addExamForm = document.getElementById('add-exam-form');
+        const uploadExamBtn = document.getElementById('upload-exam-btn');
+        const addErrorMessage = document.getElementById('add-error-message');
+        const addSuccessMessage = document.getElementById('add-success-message');
+        const examClassSelect = document.getElementById('examClass');
+        const examCombinationField = document.getElementById('exam-combination-field');
+        const examCombinationSelect = document.getElementById('examCombination');
+        const analyticsLink = document.getElementById('analytics-link');
+
+        function showLoading(isLoading) {
+            loadingOverlay.classList.toggle('active', isLoading);
+        }
+
+        function showError(message) {
+            errorMessageElement.textContent = message;
+            errorMessageElement.style.display = 'block';
+            successMessageElement.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            successMessageElement.textContent = message;
+            successMessageElement.style.display = 'block';
+            errorMessageElement.style.display = 'none';
+            setTimeout(() => {
+                successMessageElement.style.display = 'none';
+            }, 2000);
+        }
+
+        function showAddError(message) {
+            addErrorMessage.textContent = message;
+            addErrorMessage.style.display = 'block';
+            addSuccessMessage.style.display = 'none';
+        }
+
+        function showAddSuccess(message) {
+            addSuccessMessage.textContent = message;
+            addSuccessMessage.style.display = 'block';
+            addErrorMessage.style.display = 'none';
+            setTimeout(() => {
+                addSuccessMessage.style.display = 'none';
+            }, 2000);
+        }
+
+        async function populateExamClassOptions(userData) {
+            examClassSelect.innerHTML = '<option value="" disabled>Select Class</option>';
+            const userClass = userData.class;
+            const allowedClasses = ['Senior 1', 'Senior 2', 'Senior 3'];
+            if (['Senior 4', 'Senior 5', 'Senior 6'].includes(userClass)) {
+                allowedClasses.push('Senior 3', 'Senior 4', 'Senior 5', 'Senior 6');
+            } else {
+                allowedClasses.push(userClass);
+            }
+            allowedClasses.forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls;
+                option.textContent = cls;
+                examClassSelect.appendChild(option);
+            });
+        }
+
+        examClassSelect.addEventListener('change', () => {
+            const classValue = examClassSelect.value;
+            if (['Senior 4', 'Senior 5', 'Senior 6'].includes(classValue)) {
+                examCombinationField.style.display = 'block';
+                examCombinationSelect.setAttribute('required', 'required');
+            } else {
+                examCombinationField.style.display = 'none';
+                examCombinationSelect.value = '';
+                examCombinationSelect.removeAttribute('required');
+            }
+        });
+
+        async function loadProfile(user, userData, docId) {
+            userUidElement.textContent = `User ${user.uid}`;
+            document.getElementById('profile-fullName').textContent = userData.fullName || 'N/A';
+            document.getElementById('profile-email').textContent = userData.email || 'N/A';
+            document.getElementById('profile-gender').textContent = userData.gender || 'N/A';
+            document.getElementById('profile-location').textContent = userData.location || 'N/A';
+            document.getElementById('profile-schoolName').textContent = userData.schoolName || 'N/A';
+            document.getElementById('profile-schoolDistrict').textContent = userData.schoolDistrict || 'N/A';
+            document.getElementById('profile-schoolProvince').textContent = userData.schoolProvince || 'N/A';
+            document.getElementById('profile-regNo').textContent = userData.regNo || 'N/A';
+            document.getElementById('profile-class').textContent = userData.class || 'N/A';
+            document.getElementById('profile-combination').textContent = userData.combination || 'N/A';
+            document.getElementById('profile-role').textContent = userData.role || 'N/A';
+
+            document.getElementById('fullName').value = userData.fullName || '';
+            document.getElementById('email').value = userData.email || '';
+            document.getElementById('gender').value = userData.gender || '';
+            document.getElementById('location').value = userData.location || '';
+            document.getElementById('schoolName').value = userData.schoolName || '';
+            document.getElementById('schoolDistrict').value = userData.schoolDistrict || '';
+            document.getElementById('schoolProvince').value = userData.schoolProvince || '';
+            document.getElementById('regNo').value = userData.regNo || '';
+            document.getElementById('class').value = userData.class || '';
+            document.getElementById('combination').value = userData.combination || '';
+
+            if (['Senior 1', 'Senior 2', 'Senior 3'].includes(userData.class)) {
+                combinationField.style.display = 'none';
+                combinationSelect.removeAttribute('required');
+            } else {
+                combinationField.style.display = 'block';
+                combinationSelect.setAttribute('required', 'required');
+            }
+
+            if (userData.role === 'provider') {
+                addExamSection.style.display = 'block';
+                analyticsLink.style.display = 'inline-block';
+                await populateExamClassOptions(userData);
+            }
+        }
+
+        async function loadUserData() {
+            showLoading(true);
+            errorMessageElement.style.display = 'none';
+            successMessageElement.style.display = 'none';
+            const user = auth.currentUser;
+            if (!user) {
+                console.error('No authenticated user found');
+                showError('You are not logged in. Redirecting to login page.');
+                setTimeout(() => window.location.href = 'login.html', 2000);
+                return;
+            }
+
+            try {
+                console.log('Querying Firestore for user with email:', user.email);
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", user.email));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    console.error('No user document found for email:', user.email);
+                    showError('User data not found. Please re-login or contact support.');
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                    return;
+                }
+
+                const userDoc = querySnapshot.docs[0];
+                const userData = userDoc.data();
+                const docId = userDoc.id;
+                await loadProfile(user, userData, docId);
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showError('Error loading your settings. Please re-login or contact support.');
+                setTimeout(() => window.location.href = 'login.html', 2000);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        classSelect.addEventListener('change', () => {
+            const classValue = classSelect.value;
+            if (['Senior 1', 'Senior 2', 'Senior 3'].includes(classValue)) {
+                combinationField.style.display = 'none';
+                combinationSelect.value = '';
+                combinationSelect.removeAttribute('required');
+            } else {
+                combinationField.style.display = 'block';
+                combinationSelect.setAttribute('required', 'required');
+            }
+        });
+
+        editProfileBtn.addEventListener('click', () => {
+            profileSection.style.display = 'none';
+            editProfileSection.style.display = 'block';
+        });
+
+        cancelEditBtn.addEventListener('click', () => {
+            editProfileSection.style.display = 'none';
+            profileSection.style.display = 'block';
+            errorMessageElement.style.display = 'none';
+            successMessageElement.style.display = 'none';
+        });
+
+        editProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading(true);
+            const saveBtn = document.getElementById('save-profile-btn');
+            saveBtn.disabled = true;
+            saveBtn.classList.add('loading');
+
+            const fullName = document.getElementById('fullName').value;
+            const gender = document.getElementById('gender').value;
+            const location = document.getElementById('location').value;
+            const schoolName = document.getElementById('schoolName').value;
+            const schoolDistrict = document.getElementById('schoolDistrict').value;
+            const schoolProvince = document.getElementById('schoolProvince').value;
+            const regNo = document.getElementById('regNo').value;
+            const classValue = document.getElementById('class').value;
+            const combination = document.getElementById('combination').value;
+
+            if (!fullName || !gender || !location || !schoolName || !schoolDistrict || !schoolProvince || !regNo || !classValue) {
+                showError('Please fill all required fields.');
+                saveBtn.disabled = false;
+                saveBtn.classList.remove('loading');
+                showLoading(false);
+                return;
+            }
+            if (['Senior 4', 'Senior 5', 'Senior 6'].includes(classValue) && !combination) {
+                showError('Please select a combination.');
+                saveBtn.disabled = false;
+                saveBtn.classList.remove('loading');
+                showLoading(false);
+                return;
+            }
+
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", auth.currentUser.email));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    throw new Error('User document not found');
+                }
+                const userDoc = querySnapshot.docs[0];
+                const docId = userDoc.id;
+
+                const updateData = {
+                    fullName,
+                    gender,
+                    location,
+                    schoolName,
+                    schoolDistrict,
+                    schoolProvince,
+                    regNo,
+                    class: classValue,
+                    combination: combination || null,
+                    updatedAt: new Date()
+                };
+
+                await updateDoc(doc(db, "users", docId), updateData);
+                await loadProfile(auth.currentUser, updateData, docId);
+                editProfileSection.style.display = 'none';
+                profileSection.style.display = 'block';
+                showSuccess('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showError(`Error updating profile: ${error.message}`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.classList.remove('loading');
+                showLoading(false);
+            }
+        });
+
+        addExamForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading(true);
+            uploadExamBtn.disabled = true;
+            uploadExamBtn.classList.add('loading');
+
+            const examTitle = document.getElementById('examTitle').value;
+            const examSubject = document.getElementById('examSubject').value;
+            const examClass = document.getElementById('examClass').value;
+            const examCombination = document.getElementById('examCombination').value;
+            const examFiles = document.getElementById('examFiles').files;
+
+            if (!examTitle || !examSubject || !examClass || examFiles.length === 0) {
+                showAddError('Please fill all required fields and select at least one image.');
+                uploadExamBtn.disabled = false;
+                uploadExamBtn.classList.remove('loading');
+                showLoading(false);
+                return;
+            }
+
+            if (examFiles.length > 30) {
+                showAddError('You can upload a maximum of 30 images per exam.');
+                uploadExamBtn.disabled = false;
+                uploadExamBtn.classList.remove('loading');
+                showLoading(false);
+                return;
+            }
+
+            if (['Senior 4', 'Senior 5', 'Senior 6'].includes(examClass) && !examCombination) {
+                showAddError('Please select a combination for Senior 4-6.');
+                uploadExamBtn.disabled = false;
+                uploadExamBtn.classList.remove('loading');
+                showLoading(false);
+                return;
+            }
+
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", auth.currentUser.email));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    throw new Error('User document not found');
+                }
+                const userData = querySnapshot.docs[0].data();
+
+                const imageUrls = [];
+                for (const file of examFiles) {
+                    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                        showAddError('Only JPEG or PNG images are allowed.');
+                        uploadExamBtn.disabled = false;
+                        uploadExamBtn.classList.remove('loading');
+                        showLoading(false);
+                        return;
+                    }
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    if (!result.success) {
+                        throw new Error(`Image upload failed: ${result.error?.message || 'Unknown error'}`);
+                    }
+                    imageUrls.push(result.data.url);
+                }
+
+                await setDoc(doc(db, "exams", `${examTitle}_${auth.currentUser.uid}_${Date.now()}`), {
+                    title: examTitle,
+                    subject: examSubject,
+                    class: examClass,
+                    combination: examCombination || null,
+                    place: userData.schoolProvince || 'Unknown',
+                    uploader: auth.currentUser.uid,
+                    imageUrls,
+                    views: 0,
+                    timeSpent: 0,
+                    downloads: 0,
+                    positiveLikes: 0,
+                    negativeLikes: 0,
+                    createdAt: new Date()
+                });
+
+                showAddSuccess('Exam uploaded successfully!');
+                addExamForm.reset();
+                examCombinationField.style.display = 'none';
+                examCombinationSelect.removeAttribute('required');
+            } catch (error) {
+                console.error('Error uploading exam:', error);
+                showAddError(`Error uploading exam: ${error.message}`);
+            } finally {
+                uploadExamBtn.disabled = false;
+                uploadExamBtn.classList.remove('loading');
+                showLoading(false);
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            logoutBtn.disabled = true;
+            logoutBtn.classList.add('loading');
+            try {
+                console.log('Signing out user');
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                showError('Error during logout. Please try again.');
+            } finally {
+                logoutBtn.disabled = false;
+                logoutBtn.classList.remove('loading');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log('User authenticated:', user.email, 'UID:', user.uid);
+                    loadUserData();
+                } else {
+                    console.log('No user authenticated, redirecting to login.html');
+                    showError('You are not logged in. Redirecting to login page.');
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

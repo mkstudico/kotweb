@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkota Web - Sign Up</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #0077b5;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .form-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .section-title {
+            color: #0077b5;
+            border-bottom: 2px solid #0077b5;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffeeba;
+        }
+        .danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f5c6cb;
+        }
+        .form-field {
+            margin-bottom: 15px;
+        }
+        .form-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-field input, .form-field select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-field input:focus, .form-field select:focus {
+            border-color: #0077b5;
+            outline: none;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .button {
+            background-color: #0077b5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+        }
+        .button:hover {
+            background-color: #005f8c;
+        }
+        .button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .section-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-align: center;
+            border-left: 4px solid #c3e6cb;
+        }
+        #file-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            display: none;
+        }
+        .new-account-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .new-account-link a {
+            color: #0077b5;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .new-account-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inkota Web</h1>
+            <p>Create Your Account</p>
+        </div>
+
+        <form id="signup-form">
+            <!-- Personal Data Section -->
+            <div class="form-section" id="personal-data-section">
+                <h2 class="section-title">Personal Data</h2>
+                <div class="warning">
+                    <strong>Important:</strong> Your homeplace location will impact the exams you see. 
+                    Please enter your true location for accurate results.
+                </div>
+                
+                <div class="form-field">
+                    <label for="full-name">Full Name *</label>
+                    <input type="text" id="full-name" name="full-name" required>
+                </div>
+                
+                <div class="form-field">
+                    <label for="gender">Gender *</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label for="homeplace">Homeplace District *</label>
+                    <input type="text" id="homeplace" name="homeplace" required placeholder="Enter your home district">
+                </div>
+                
+                <div class="section-navigation">
+                    <button type="button" class="button" id="next-to-school">Next: School Data</button>
+                </div>
+            </div>
+
+            <!-- School Data Section -->
+            <div class="form-section hidden" id="school-data-section">
+                <h2 class="section-title">School Data</h2>
+                <div class="warning">
+                    <strong>Warning:</strong> Your responses here will determine the exams you see. 
+                    Providing false information may result in permanent account suspension.
+                </div>
+                
+                <div class="form-field">
+                    <label for="school-name">School Name *</label>
+                    <input type="text" id="school-name" name="school-name" required>
+                </div>
+                
+                <div class="form-field">
+                    <label for="school-district">School District *</label>
+                    <input type="text" id="school-district" name="school-district" required>
+                </div>
+                
+                <div class="form-field">
+                    <label for="school-province">School Province *</label>
+                    <input type="text" id="school-province" name="school-province" required>
+                </div>
+                
+                <div class="section-navigation">
+                    <button type="button" class="button" id="back-to-personal">Back</button>
+                    <button type="button" class="button" id="next-to-verification">Next: Verification</button>
+                </div>
+            </div>
+
+            <!-- Verification Section -->
+            <div class="form-section hidden" id="verification-section">
+                <h2 class="section-title">Verification</h2>
+                
+                <div class="form-field">
+                    <label for="phone">Phone Number * (Start with 07...)</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="07XXXXXXXX">
+                    <div class="error-message" id="phone-error">Phone number must start with 07 and be 10 digits</div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    <div class="error-message" id="email-error">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="student-proof">Student Proof * (Recent report card or student ID)</label>
+                    <input type="file" id="student-proof" name="student-proof" accept="image/*,.pdf" required>
+                    <div class="danger">
+                        <strong>Important:</strong> Upload a clear, recent document (current year). 
+                        Old or unclear documents will result in permanent account ban for fraud prevention.
+                    </div>
+                    <img id="file-preview" src="#" alt="Preview">
+                </div>
+                
+                <div class="section-navigation">
+                    <button type="button" class="button" id="back-to-school">Back</button>
+                    <button type="submit" class="button" id="submit-form">Submit for Review</button>
+                </div>
+            </div>
+
+            <!-- Success Message Section -->
+            <div class="form-section hidden" id="success-section">
+                <div class="success-message">
+                    <h3>Your details were sent successfully!</h3>
+                    <p>Your information is under review. You will receive a passcode to your email within 1-2 days if your information is well verified and valid. <br><i>If it took many days contact support</i></p>
+                </div>
+                <div class="new-account-link">
+                    <a href="#" id="new-account-link">Create a new account</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuCfPGsvZr7GbEBCR6WUOuThyfD9OU_cs",
+            authDomain: "inkotaweb.firebaseapp.com",
+            projectId: "inkotaweb",
+            storageBucket: "inkotaweb.firebasestorage.app",
+            messagingSenderId: "622144170125",
+            appId: "1:622144170125:web:e05a071186440d782f1ac4",
+            measurementId: "G-C70ZEECY48"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Check if user already submitted data
+        if (localStorage.getItem('accountSubmitted')) {
+            document.getElementById('personal-data-section').classList.add('hidden');
+            document.getElementById('school-data-section').classList.add('hidden');
+            document.getElementById('verification-section').classList.add('hidden');
+            document.getElementById('success-section').classList.remove('hidden');
+        }
+
+        // Form navigation
+        document.getElementById('next-to-school').addEventListener('click', () => {
+            if (validatePersonalData()) {
+                document.getElementById('personal-data-section').classList.add('hidden');
+                document.getElementById('school-data-section').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('back-to-personal').addEventListener('click', () => {
+            document.getElementById('school-data-section').classList.add('hidden');
+            document.getElementById('personal-data-section').classList.remove('hidden');
+        });
+
+        document.getElementById('next-to-verification').addEventListener('click', () => {
+            if (validateSchoolData()) {
+                document.getElementById('school-data-section').classList.add('hidden');
+                document.getElementById('verification-section').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('back-to-school').addEventListener('click', () => {
+            document.getElementById('verification-section').classList.add('hidden');
+            document.getElementById('school-data-section').classList.remove('hidden');
+        });
+
+        // File preview
+        document.getElementById('student-proof').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('file-preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Phone validation
+        document.getElementById('phone').addEventListener('input', function() {
+            const phone = this.value.trim();
+            const errorElement = document.getElementById('phone-error');
+            
+            if (!phone.startsWith('07') || phone.length !== 10 || !/^\d+$/.test(phone)) {
+                errorElement.style.display = 'block';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        });
+
+        // Email validation
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value.trim();
+            const errorElement = document.getElementById('email-error');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                errorElement.style.display = 'block';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        });
+
+        // Validation functions
+        function validatePersonalData() {
+            const fullName = document.getElementById('full-name').value.trim();
+            const gender = document.getElementById('gender').value;
+            const homeplace = document.getElementById('homeplace').value.trim();
+            
+            if (!fullName || !gender || !homeplace) {
+                alert('Please fill in all personal data fields');
+                return false;
+            }
+            return true;
+        }
+
+        function validateSchoolData() {
+            const schoolName = document.getElementById('school-name').value.trim();
+            const schoolDistrict = document.getElementById('school-district').value.trim();
+            const schoolProvince = document.getElementById('school-province').value.trim();
+            
+            if (!schoolName || !schoolDistrict || !schoolProvince) {
+                alert('Please fill in all school data fields');
+                return false;
+            }
+            return true;
+        }
+
+        function validateVerification() {
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const studentProof = document.getElementById('student-proof').files[0];
+            const phoneError = document.getElementById('phone-error');
+            const emailError = document.getElementById('email-error');
+            
+            // Trigger validation
+            document.getElementById('phone').dispatchEvent(new Event('input'));
+            document.getElementById('email').dispatchEvent(new Event('input'));
+            
+            if (phoneError.style.display === 'block' || emailError.style.display === 'block') {
+                return false;
+            }
+            
+            if (!phone || !email || !studentProof) {
+                alert('Please fill in all verification fields');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Upload image to ImgBB
+        async function uploadImageToImgBB(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=43f421e4bc3079c35d33004c110c6e0d`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                return data.data.url;
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                return null;
+            }
+        }
+
+        // Form submission
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateVerification()) return;
+            
+            const studentProofFile = document.getElementById('student-proof').files[0];
+            const proofUrl = await uploadImageToImgBB(studentProofFile);
+            
+            if (!proofUrl) {
+                alert('Error uploading student proof. Please try again.');
+                return;
+            }
+            
+            // Collect all form data
+            const userData = {
+                fullName: document.getElementById('full-name').value.trim(),
+                gender: document.getElementById('gender').value,
+                homeplace: document.getElementById('homeplace').value.trim(),
+                schoolName: document.getElementById('school-name').value.trim(),
+                schoolDistrict: document.getElementById('school-district').value.trim(),
+                schoolProvince: document.getElementById('school-province').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                studentProof: proofUrl,
+                status: 'pending',
+                submittedAt: new Date()
+            };
+            
+            try {
+                // Save to Firebase
+                await setDoc(doc(db, "pending_users", userData.email), userData);
+                
+                // Save to local storage
+                localStorage.setItem('accountSubmitted', 'true');
+                
+                // Show success message
+                document.getElementById('verification-section').classList.add('hidden');
+                document.getElementById('success-section').classList.remove('hidden');
+            } catch (error) {
+                console.error("Error saving user data:", error);
+                alert('Error submitting your information. Please try again.');
+            }
+        });
+
+        // New account link
+        document.getElementById('new-account-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('accountSubmitted');
+            location.reload();
+        });
+    </script>
+</body>
+</html>

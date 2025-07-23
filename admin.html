@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inkota Web - Admin Panel</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #0077b5;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .header-actions button {
+            background-color: white;
+            color: #0077b5;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .user-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .user-card h2 {
+            color: #0077b5;
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .user-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        .detail-item label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .detail-item span {
+            display: block;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .proof-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-reject {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-email {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn-role {
+            background-color: #6f42c1;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .verification-panel {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border-left: 4px solid #0077b5;
+        }
+        .form-field {
+            margin-bottom: 15px;
+        }
+        .form-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-field input, .form-field select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .no-pending {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        .sentence-code-rules {
+            background-color: #e7f5ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .email-template {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0077b5;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .passcode-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .passcode-modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .passcode-list {
+            margin-top: 15px;
+        }
+        .passcode-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inkota Web Admin Panel</h1>
+            <div class="header-actions">
+                <button id="view-passcodes">View Passcodes</button>
+            </div>
+        </div>
+
+        <div id="pending-users-container">
+            <div class="no-pending">
+                <p>Loading pending users...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Passcode Modal -->
+    <div class="passcode-modal" id="passcode-modal">
+        <div class="passcode-modal-content">
+            <h2>Registered Users and Passcodes</h2>
+            <div class="passcode-list" id="passcode-list">
+                Loading passcodes...
+            </div>
+            <button class="btn btn-secondary" id="close-passcode-modal" style="margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs, 
+            doc, 
+            updateDoc, 
+            deleteDoc, 
+            setDoc 
+        } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuCfPGsvZr7GbEBCR6WUOuThyfD9OU_cs",
+            authDomain: "inkotaweb.firebaseapp.com",
+            projectId: "inkotaweb",
+            storageBucket: "inkotaweb.firebasestorage.app",
+            messagingSenderId: "622144170125",
+            appId: "1:622144170125:web:e05a071186440d782f1ac4",
+            measurementId: "G-C70ZEECY48"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const viewPasscodesBtn = document.getElementById('view-passcodes');
+        const passcodeModal = document.getElementById('passcode-modal');
+        const passcodeList = document.getElementById('passcode-list');
+        const closePasscodeModal = document.getElementById('close-passcode-modal');
+
+        // Load all users with passcodes
+        async function loadAllUsers() {
+            passcodeList.innerHTML = 'Loading passcodes...';
+            
+            try {
+                const q = query(collection(db, "users"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    passcodeList.innerHTML = '<p>No users found</p>';
+                    return;
+                }
+
+                let html = '';
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    html += `
+                        <div class="passcode-item">
+                            <div>
+                                <strong>${user.fullName || 'Unknown'}</strong>
+                                <div>Email: ${user.email}</div>
+                            </div>
+                            <div>
+                                <code>${user.sentenceCode || 'No passcode'}</code>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                passcodeList.innerHTML = html;
+            } catch (error) {
+                console.error("Error loading users:", error);
+                passcodeList.innerHTML = '<p>Error loading passcodes</p>';
+            }
+        }
+
+        // Load pending users
+        async function loadPendingUsers() {
+            const container = document.getElementById('pending-users-container');
+            container.innerHTML = '<div class="no-pending"><p>Loading pending users...</p></div>';
+
+            try {
+                const q = query(collection(db, "pending_users"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<div class="no-pending"><p>No pending users to review</p></div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    createUserCard(userData, doc.id);
+                });
+            } catch (error) {
+                console.error("Error loading pending users:", error);
+                container.innerHTML = '<div class="no-pending"><p>Error loading users. Please try again.</p></div>';
+            }
+        }
+
+        // Create user card for each pending user
+        function createUserCard(userData, userId) {
+            const container = document.getElementById('pending-users-container');
+            
+            const card = document.createElement('div');
+            card.className = 'user-card';
+            card.id = `user-${userId}`;
+            
+            card.innerHTML = `
+                <h2>${userData.fullName}</h2>
+                <div class="user-details">
+                    <div class="detail-item">
+                        <label>Email</label>
+                        <span>${userData.email}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Phone</label>
+                        <span>${userData.phone}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Gender</label>
+                        <span>${userData.gender}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Homeplace</label>
+                        <span>${userData.homeplace}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>School</label>
+                        <span>${userData.schoolName}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>District</label>
+                        <span>${userData.schoolDistrict}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Province</label>
+                        <span>${userData.schoolProvince}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Submitted On</label>
+                        <span>${new Date(userData.submittedAt?.seconds * 1000 || userData.submittedAt).toLocaleString()}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <label>Student Proof</label>
+                    <img src="${userData.studentProof}" alt="Student Proof" class="proof-image">
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-role" data-userid="${userId}">Set Role</button>
+                    <button class="btn btn-approve" data-userid="${userId}">Approve</button>
+                    <button class="btn btn-reject" data-userid="${userId}">Reject</button>
+                    <button class="btn btn-email" data-emailtype="accept" data-userid="${userId}">Send Accept Email</button>
+                    <button class="btn btn-email" data-emailtype="decline" data-userid="${userId}">Send Decline Email</button>
+                    <button class="btn btn-email" data-emailtype="done" data-userid="${userId}">Send All Done Email</button>
+                </div>
+                
+                <div id="approve-panel-${userId}" class="verification-panel hidden">
+                    <h3>Create Sentence Code</h3>
+                    <div class="sentence-code-rules">
+                        <p><strong>Rules for Sentence Code:</strong></p>
+                        <ul>
+                            <li>Must be at least 10 characters long</li>
+                            <li>No spaces (use hyphens instead)</li>
+                            <li>No uppercase letters</li>
+                            <li>No numbers</li>
+                            <li>Must be unique</li>
+                        </ul>
+                        <p>Example: "my-favorite-color-is-blue"</p>
+                    </div>
+                    <div class="form-field">
+                        <label for="sentence-code-${userId}">Sentence Code *</label>
+                        <input type="text" id="sentence-code-${userId}" placeholder="Create a sentence code for this user">
+                        <div class="error-message" id="sentence-error-${userId}"></div>
+                    </div>
+                    <div class="form-field">
+                        <label for="user-role-${userId}">User Role *</label>
+                        <select id="user-role-${userId}">
+                            <option value="user">Normal User</option>
+                            <option value="provider">Content Provider</option>
+                            <option value="shareholder">Shareholder</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" id="cancel-approve-${userId}">Cancel</button>
+                        <button class="btn btn-approve" id="confirm-approve-${userId}">Confirm Approval</button>
+                    </div>
+                </div>
+                
+                <div id="role-panel-${userId}" class="verification-panel hidden">
+                    <h3>Set User Role</h3>
+                    <div class="form-field">
+                        <label for="set-role-${userId}">Select Role *</label>
+                        <select id="set-role-${userId}">
+                            <option value="user">Normal User</option>
+                            <option value="provider">Content Provider</option>
+                            <option value="shareholder">Shareholder</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" id="cancel-role-${userId}">Cancel</button>
+                        <button class="btn btn-role" id="save-role-${userId}">Save Role</button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+            
+            // Set up event listeners for this card
+            document.querySelector(`.btn-approve[data-userid="${userId}"]`).addEventListener('click', () => {
+                document.getElementById(`approve-panel-${userId}`).classList.remove('hidden');
+            });
+            
+            document.querySelector(`.btn-role[data-userid="${userId}"]`).addEventListener('click', () => {
+                document.getElementById(`role-panel-${userId}`).classList.remove('hidden');
+            });
+            
+            document.querySelector(`.btn-reject[data-userid="${userId}"]`).addEventListener('click', () => {
+                if (confirm(`Are you sure you want to reject ${userData.fullName}'s application?`)) {
+                    rejectUser(userId);
+                }
+            });
+            
+            // Email buttons
+            document.querySelectorAll(`.btn-email[data-userid="${userId}"]`).forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const emailType = btn.dataset.emailtype;
+                    sendEmailTemplate(userData, emailType);
+                });
+            });
+            
+            document.getElementById(`cancel-approve-${userId}`).addEventListener('click', () => {
+                document.getElementById(`approve-panel-${userId}`).classList.add('hidden');
+            });
+            
+            document.getElementById(`cancel-role-${userId}`).addEventListener('click', () => {
+                document.getElementById(`role-panel-${userId}`).classList.add('hidden');
+            });
+            
+            document.getElementById(`confirm-approve-${userId}`).addEventListener('click', () => {
+                approveUser(userId, userData);
+            });
+            
+            document.getElementById(`save-role-${userId}`).addEventListener('click', () => {
+                updateUserRole(userId, userData);
+            });
+            
+            // Sentence code validation
+            document.getElementById(`sentence-code-${userId}`).addEventListener('input', function() {
+                validateSentenceCode(this.value, userId);
+            });
+        }
+
+        // Validate sentence code
+        function validateSentenceCode(code, userId) {
+            const errorElement = document.getElementById(`sentence-error-${userId}`);
+            
+            // Reset error
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+            
+            // Check length
+            if (code.length < 10) {
+                errorElement.textContent = 'Sentence code must be at least 10 characters';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // Check for uppercase
+            if (/[A-Z]/.test(code)) {
+                errorElement.textContent = 'Remove uppercase letters';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // Check for numbers
+            if (/\d/.test(code)) {
+                errorElement.textContent = 'Numbers are not allowed';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // Check for spaces (should be replaced with hyphens)
+            if (/\s/.test(code)) {
+                errorElement.textContent = 'Use hyphens instead of spaces';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Approve user
+        async function approveUser(userId, userData) {
+            const sentenceCodeInput = document.getElementById(`sentence-code-${userId}`);
+            const sentenceCode = sentenceCodeInput.value.trim().toLowerCase().replace(/\s+/g, '-');
+            const userRole = document.getElementById(`user-role-${userId}`).value;
+            
+            // Validate sentence code
+            if (!validateSentenceCode(sentenceCode, userId)) {
+                return;
+            }
+            
+            // Check if sentence code is unique
+            try {
+                const q = query(collection(db, "users"), where("sentenceCode", "==", sentenceCode));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    document.getElementById(`sentence-error-${userId}`).textContent = 'This sentence code is already in use';
+                    document.getElementById(`sentence-error-${userId}`).style.display = 'block';
+                    return;
+                }
+            } catch (error) {
+                console.error("Error checking sentence code uniqueness:", error);
+                alert('Error verifying sentence code. Please try again.');
+                return;
+            }
+            
+            if (confirm(`Approve ${userData.fullName} with this sentence code and role?\n\nCode: ${sentenceCode}\nRole: ${userRole}`)) {
+                try {
+                    // Add to approved users
+                    await setDoc(doc(db, "users", userData.email), {
+                        ...userData,
+                        sentenceCode: sentenceCode,
+                        role: userRole,
+                        status: "active",
+                        approvedAt: new Date(),
+                        approvedBy: "admin"
+                    });
+                    
+                    // Remove from pending
+                    await deleteDoc(doc(db, "pending_users", userId));
+                    
+                    // Remove from UI
+                    document.getElementById(`user-${userId}`).remove();
+                    
+                    // Show success message
+                    alert(`User approved successfully with role: ${userRole}`);
+                    
+                    // Check if any pending users left
+                    const container = document.getElementById('pending-users-container');
+                    if (container.children.length === 0) {
+                        container.innerHTML = '<div class="no-pending"><p>No pending users to review</p></div>';
+                    }
+                } catch (error) {
+                    console.error("Error approving user:", error);
+                    alert('Error approving user. Please try again.');
+                }
+            }
+        }
+
+        // Update user role
+        async function updateUserRole(userId, userData) {
+            const roleSelect = document.getElementById(`set-role-${userId}`);
+            const newRole = roleSelect.value;
+            
+            try {
+                await updateDoc(doc(db, "pending_users", userId), {
+                    role: newRole
+                });
+                
+                document.getElementById(`role-panel-${userId}`).classList.add('hidden');
+                alert(`Role updated to ${newRole} for ${userData.fullName}`);
+            } catch (error) {
+                console.error("Error updating role:", error);
+                alert('Error updating role. Please try again.');
+            }
+        }
+
+        // Reject user
+        async function rejectUser(userId) {
+            try {
+                // Update status to rejected
+                await updateDoc(doc(db, "pending_users", userId), {
+                    status: "rejected",
+                    rejectedAt: new Date()
+                });
+                
+                // Remove from UI
+                document.getElementById(`user-${userId}`).remove();
+                
+                // Check if any pending users left
+                const container = document.getElementById('pending-users-container');
+                if (container.children.length === 0) {
+                    container.innerHTML = '<div class="no-pending"><p>No pending users to review</p></div>';
+                }
+                
+                alert('User rejected successfully.');
+            } catch (error) {
+                console.error("Error rejecting user:", error);
+                alert('Error rejecting user. Please try again.');
+            }
+        }
+
+        // Send email template
+        function sendEmailTemplate(userData, emailType) {
+            let subject = "🚨 INKOTA WEB 🚨";
+            let body = "";
+            
+            switch(emailType) {
+                case "accept":
+                    body = `Hey ${userData.fullName}
+
+Your request was reviewed and successfully approved.
+
+You need to approve your role or contribution your are going to give to Inkotaweb.
+Their are three roles and each with a cost.
+
+ROLE No 1:
+ User - This is a normal person you would be allowed to read and see sent exams
+        You can send messages and receive from the private and public chat.
+     Cost: 10.00 USD
+
+ROLE No 2:
+ Provider - You will be like a user but addittionally you will be able to post
+            exams and with interactions with other users you will earn from them
+            you will earn but in order to prevent fraud you must invest.
+     Cost: 5.00 USD
+     Caution: If you post few times or post fake exams, your account will be banned
+              and you will receive no income.
+
+ROLE No 3:
+ Sponsor - You may buy real shares, access everything as an admin, Block,add people
+           or even remove irregular content. Each share is bought 20.75USD
+     Cost: 20.75USD
+     Note: As you buy many shares, as more access you get.
+
+Thank you so pleaze, ${userData.fullName} reply to this email to choose your ROLE and 
+proceed to the payments, unless in 3 days your details may be deleted.
+
+Official 2025 Inkota Web - https://kotweb.vercel.app`;
+                    break;
+                
+                case "decline":
+                    body = `Hey ${userData.fullName} 
+
+Your request was reviewed and successfully Denied.
+
+Due to your submitted information we are sorry to announce to you that your 
+details were denied and your account Banned.
+
+Thank you so pleaze, ${userData.fullName} Don't try to reply to this email
+It will be eventually ignored.
+
+Official 2025 Inkota Web - https://kotweb.vercel.app`;
+                    break;
+                
+                case "done":
+                    body = `Hey ${userData.fullName} 
+
+Congartulations Your payments were approved and you are know officially to join
+Inkota web.
+
+Your role is to ${userData.role || '[ROLE NOT SET]'}
+Your Passcode you will use to login into your account is (${userData.sentenceCode || '[PASSCODE NOT SET]'})
+
+Thank you and goodluck, And don't trust anyone to provide your real names and address.
+
+Official 2025 Inkota Web - https://kotweb.vercel.app`;
+                    break;
+            }
+            
+            const mailtoLink = `mailto:${userData.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoLink, '_blank');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPendingUsers();
+            
+            // Passcode modal handlers
+            viewPasscodesBtn.addEventListener('click', () => {
+                passcodeModal.style.display = 'flex';
+                loadAllUsers();
+            });
+            
+            closePasscodeModal.addEventListener('click', () => {
+                passcodeModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            passcodeModal.addEventListener('click', (e) => {
+                if (e.target === passcodeModal) {
+                    passcodeModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
