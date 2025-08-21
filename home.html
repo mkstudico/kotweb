@@ -6,295 +6,252 @@
   <title>Kotweb - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root {
-      --bg-color: #f9f9f9;
-      --text-color: #000;
-      --post-bg: #fff;
-      --border-color: #ddd;
-      --primary-color: #007bff;
-      --secondary-color: #6c757d;
-      --accent-color: #e44d3a;
-      --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      --transition-speed: 0.3s;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
+
+    :root {
+      --bg-color: #fafafa;
+      --text-color: #262626;
+      --secondary-text: #8e8e8e;
+      --border-color: #dbdbdb;
+      --card-bg: #ffffff;
+      --primary-color: #0095f6;
+      --primary-hover: #1877f2;
+      --story-border: linear-gradient(45deg, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    }
+
     body.dark {
       --bg-color: #121212;
-      --text-color: #e4e4e4;
-      --post-bg: #1e1e1e;
-      --border-color: #333;
-      --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      --text-color: #f1f1f1;
+      --secondary-text: #a8a8a8;
+      --border-color: #333333;
+      --card-bg: #1a1a1a;
     }
-    * {
-      box-sizing: border-box;
-      transition: background-color var(--transition-speed), color var(--transition-speed);
-    }
+
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-      background: var(--bg-color);
+      background-color: var(--bg-color);
       color: var(--text-color);
-      display: flex;
-      flex-direction: column;
       min-height: 100vh;
-      position: relative;
+      padding-top: 60px;
+      padding-bottom: 60px;
     }
+
     /* Header Styles */
     header {
-      background: var(--post-bg);
-      padding: 12px 15px;
-      font-weight: bold;
-      font-size: 22px;
-      text-align: center;
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      z-index: 100;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
     }
+
     .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--text-color);
       display: flex;
       align-items: center;
       gap: 8px;
     }
+
     .logo-icon {
       color: var(--primary-color);
-      font-size: 24px;
     }
-    .right-icons {
+
+    .header-icons {
       display: flex;
-      gap: 15px;
+      gap: 20px;
     }
-    .right-icons i {
-      font-size: 20px;
+
+    .header-icons i {
+      font-size: 22px;
       cursor: pointer;
       color: var(--text-color);
-      transition: transform 0.2s;
     }
-    .right-icons i:hover {
-      transform: scale(1.1);
-    }
+
     /* Main Content */
-    main {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 60px;
+    .container {
+      max-width: 614px;
+      margin: 0 auto;
+      padding: 20px 0;
     }
+
     /* Stories */
     .stories-container {
-      background: var(--post-bg);
-      border-bottom: 1px solid var(--border-color);
-      padding: 5px 0 15px;
-    }
-    .stories-title {
-      padding: 10px 15px 5px;
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--secondary-color);
-    }
-    .stories {
-      display: flex;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
       overflow-x: auto;
-      padding: 5px 10px;
-      scrollbar-width: none;
+      white-space: nowrap;
     }
-    .stories::-webkit-scrollbar {
-      display: none;
-    }
+
     .story {
-      flex: 0 0 auto;
-      margin: 0 8px;
+      display: inline-block;
       text-align: center;
+      margin-right: 15px;
       cursor: pointer;
     }
+
     .story-avatar {
-      width: 68px;
-      height: 68px;
+      width: 66px;
+      height: 66px;
       border-radius: 50%;
       padding: 3px;
-      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-      margin-bottom: 6px;
+      background: var(--story-border);
+      margin-bottom: 8px;
     }
+
     .story-avatar.inner {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 2px solid var(--post-bg);
+      border: 3px solid var(--card-bg);
       object-fit: cover;
+      display: block;
     }
+
     .story p {
       font-size: 12px;
-      margin: 0;
       color: var(--text-color);
       max-width: 74px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .story.your-story .story-avatar {
-      background: var(--border-color);
+      background: none;
+      border: 1px solid var(--border-color);
     }
-    /* Feed */
-    .feed {
-      padding: 10px;
-    }
+
+    /* Posts */
     .post {
-      background: var(--post-bg);
-      border-radius: 12px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
       margin-bottom: 20px;
-      box-shadow: var(--card-shadow);
       overflow: hidden;
     }
+
     .post-header {
       display: flex;
       align-items: center;
-      padding: 12px;
+      padding: 14px;
     }
-    .post-header img {
-      width: 40px;
-      height: 40px;
+
+    .post-avatar {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       margin-right: 12px;
       object-fit: cover;
     }
-    .post-user-info {
-      flex: 1;
-    }
-    .post-header h3 {
-      margin: 0;
-      font-size: 15px;
+
+    .post-username {
+      font-weight: 600;
+      font-size: 14px;
       color: var(--text-color);
     }
-    .post-time {
-      font-size: 12px;
-      color: var(--secondary-color);
-      margin-top: 2px;
-    }
-    .post-menu {
-      color: var(--secondary-color);
+
+    .post-more {
+      margin-left: auto;
       cursor: pointer;
     }
-    .post-content {
-      padding: 0 12px 12px;
-      color: var(--text-color);
-    }
-    .post-text {
-      margin: 0 0 12px;
-      line-height: 1.4;
-    }
-    .post-content img {
+
+    .post-image {
       width: 100%;
-      border-radius: 8px;
-      margin-top: 5px;
+      object-fit: cover;
     }
-    .post-stats {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 12px;
-      font-size: 13px;
-      color: var(--secondary-color);
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 10px;
-    }
+
     .post-actions {
-      display: flex;
-      justify-content: space-around;
-      padding: 8px 0;
-    }
-    .post-action {
+      padding: 12px 16px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: var(--secondary-color);
-      font-weight: 500;
-      font-size: 13px;
+    }
+
+    .post-action {
+      margin-right: 16px;
       cursor: pointer;
-      padding: 6px 0;
-      width: 100%;
+      font-size: 24px;
+      color: var(--text-color);
     }
-    .post-action i {
-      margin-right: 6px;
-      font-size: 18px;
+
+    .post-action.save {
+      margin-left: auto;
+      margin-right: 0;
     }
-    .post-action.liked {
-      color: var(--accent-color);
+
+    .post-likes {
+      padding: 0 16px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 8px;
     }
-    /* Bottom/Side Navigation */
+
+    .post-caption {
+      padding: 0 16px;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .post-caption .username {
+      font-weight: 600;
+      margin-right: 5px;
+    }
+
+    .post-time {
+      padding: 0 16px 12px;
+      font-size: 10px;
+      color: var(--secondary-text);
+      text-transform: uppercase;
+    }
+
+    /* Navigation */
     nav {
-      background: var(--post-bg);
-      border-top: 1px solid var(--border-color);
-      padding: 12px 0;
       position: fixed;
       bottom: 0;
+      left: 0;
       width: 100%;
+      height: 60px;
+      background-color: var(--card-bg);
+      border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-around;
-      z-index: 100;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      align-items: center;
+      z-index: 1000;
     }
+
     nav a {
-      color: var(--text-color);
-      text-decoration: none;
-      text-align: center;
-      font-size: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      text-decoration: none;
+      color: var(--text-color);
+      font-size: 24px;
     }
-    nav a:hover, nav a.active {
-      opacity: 1;
+
+    nav a.active {
       color: var(--primary-color);
     }
-    nav i {
-      font-size: 20px;
-      margin-bottom: 4px;
+
+    nav a span {
+      font-size: 12px;
+      margin-top: 4px;
     }
-    /* Desktop Sidebar */
-    @media (min-width: 769px) {
-      body {
-        flex-direction: row;
-      }
-      nav {
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 85px;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 80px;
-        border-right: 1px solid var(--border-color);
-        border-top: none;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-      }
-      nav a {
-        margin: 18px 0;
-        font-size: 13px;
-      }
-      main {
-        margin-left: 85px;
-        width: calc(100% - 85px);
-        padding-bottom: 0;
-      }
-      header {
-        margin-left: 85px;
-        width: calc(100% - 85px);
-      }
-    }
-    /* Theme Auto-Adjust */
-    @media (prefers-color-scheme: dark) {
-      body:not(.light) {
-        --bg-color: #121212;
-        --text-color: #e4e4e4;
-        --post-bg: #1e1e1e;
-        --border-color: #333;
-        --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      }
-    }
-    /* Agreement Modal */
+
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -302,109 +259,98 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0, 0, 0, 0.7);
       justify-content: center;
       align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
+      z-index: 2000;
     }
+
     .modal-content {
-      background: var(--post-bg);
+      background: var(--card-bg);
       padding: 25px;
-      border-radius: 14px;
+      border-radius: 12px;
       text-align: center;
-      max-width: 450px;
+      max-width: 400px;
       width: 90%;
-      color: var(--text-color);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
+
     .modal h2 {
-      margin-top: 0;
-      color: var(--primary-color);
+      margin-bottom: 15px;
+      color: var(--text-color);
     }
+
     .modal p {
-      line-height: 1.5;
       margin-bottom: 20px;
+      color: var(--secondary-text);
+      line-height: 1.5;
     }
+
     .modal-buttons {
       display: flex;
       justify-content: center;
       gap: 12px;
     }
-    .modal button {
+
+    .modal-button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .modal-button.primary {
       background: var(--primary-color);
       color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background-color 0.2s;
     }
-    .modal button#declineButton {
-      background: var(--secondary-color);
+
+    .modal-button.secondary {
+      background: var(--border-color);
+      color: var(--text-color);
     }
-    .modal button:hover {
-      opacity: 0.9;
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      body {
+        padding-bottom: 0;
+      }
+      
+      nav {
+        top: 0;
+        right: 0;
+        left: auto;
+        width: 80px;
+        height: 100%;
+        border-top: none;
+        border-right: 1px solid var(--border-color);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px;
+      }
+      
+      nav a {
+        margin: 15px 0;
+      }
+      
+      .container {
+        margin-right: 80px;
+      }
     }
-    /* Loading indicator */
+
+    /* Loading */
     .loading {
-      display: none;
       text-align: center;
       padding: 20px;
-      color: var(--secondary-color);
+      color: var(--secondary-text);
     }
+
     .loading i {
       animation: spin 1s linear infinite;
     }
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
-    }
-    /* Pro user badge */
-    .pro-badge {
-      background: linear-gradient(45deg, #ffbf00, #ff9900);
-      color: white;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin-left: 8px;
-      font-weight: bold;
-    }
-    /* Notification badge */
-    .notification-badge {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background-color: var(--accent-color);
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .notification-container {
-      position: relative;
-    }
-    /* Toast notifications */
-    .toast {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #333;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .toast.show {
-      opacity: 1;
     }
   </style>
 </head>
@@ -414,169 +360,139 @@
       <i class="fas fa-cat logo-icon"></i>
       <span>Kotweb</span>
     </div>
-    <div class="right-icons">
-      <div class="notification-container">
-        <i class="fa-solid fa-bell" id="notificationsIcon"></i>
-        <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
-      </div>
+    <div class="header-icons">
+      <i class="fa-solid fa-bell" id="notificationsIcon"></i>
       <i class="fa-solid fa-paper-plane" id="messagesIcon"></i>
       <i class="fas fa-moon" id="themeToggle"></i>
     </div>
   </header>
-  <main>
+
+  <div class="container">
     <!-- Stories -->
     <div class="stories-container">
-      <div class="stories-title">Stories</div>
-      <div class="stories">
-        <div class="story your-story">
-          <div class="story-avatar">
-            <img src="https://via.placeholder.com/60" alt="Your story" class="inner" id="userAvatar">
-          </div>
-          <p>Your story</p>
+      <div class="story your-story">
+        <div class="story-avatar">
+          <img src="https://via.placeholder.com/60" alt="Your story" class="inner">
         </div>
-        <div class="story">
-          <div class="story-avatar">
-            <img src="https://via.placeholder.com/60/ff9910/ffffff?text=P" alt="story" class="inner">
-          </div>
-          <p>@pro_user</p>
+        <p>Your story</p>
+      </div>
+      <div class="story">
+        <div class="story-avatar">
+          <img src="https://via.placeholder.com/60/ff9910/ffffff?text=P" alt="story" class="inner">
         </div>
-        <div class="story">
-          <div class="story-avatar">
-            <img src="https://via.placeholder.com/60/3377ff/ffffff?text=N" alt="story" class="inner">
-          </div>
-          <p>@normal_user</p>
+        <p>@pro_user</p>
+      </div>
+      <div class="story">
+        <div class="story-avatar">
+          <img src="https://via.placeholder.com/60/3377ff/ffffff?text=N" alt="story" class="inner">
         </div>
-        <div class="story">
-          <div class="story-avatar">
-            <img src="https://via.placeholder.com/60/33aa44/ffffff?text=U" alt="story" class="inner">
-          </div>
-          <p>@user_123</p>
+        <p>@normal_user</p>
+      </div>
+      <div class="story">
+        <div class="story-avatar">
+          <img src="https://via.placeholder.com/60/33aa44/ffffff?text=U" alt="story" class="inner">
         </div>
-        <div class="story">
-          <div class="story-avatar">
-            <img src="https://via.placeholder.com/60/cc3377/ffffff?text=K" alt="story" class="inner">
-          </div>
-          <p>@kotweb_fan</p>
+        <p>@user_123</p>
+      </div>
+      <div class="story">
+        <div class="story-avatar">
+          <img src="https://via.placeholder.com/60/cc3377/ffffff?text=K" alt="story" class="inner">
         </div>
+        <p>@kotweb_fan</p>
       </div>
     </div>
-    
-    <!-- Feed -->
-    <div class="feed">
-      <!-- Pro Post with Image -->
-      <div class="post">
-        <div class="post-header">
-          <img src="https://via.placeholder.com/40/ff9910/ffffff?text=P" alt="profile">
-          <div class="post-user-info">
-            <h3>@pro_user <span class="pro-badge">PRO</span></h3>
-            <div class="post-time">2 hours ago</div>
-          </div>
-          <div class="post-menu">
-            <i class="fas fa-ellipsis-h"></i>
-          </div>
-        </div>
-        <div class="post-content">
-          <p class="post-text">This is a pro user post with image. Pro users can post longer content and multiple images per post.</p>
-          <img src="https://via.placeholder.com/600x400/3377ff/ffffff?text=Pro+Content" alt="post-img">
-        </div>
-        <div class="post-stats">
-          <span>245 likes</span>
-          <span>36 comments</span>
-        </div>
-        <div class="post-actions">
-          <div class="post-action" id="likeButton1">
-            <i class="fa-regular fa-heart"></i>
-            <span>Like</span>
-          </div>
-          <div class="post-action">
-            <i class="fa-regular fa-comment"></i>
-            <span>Comment</span>
-          </div>
-          <div class="post-action">
-            <i class="fa-solid fa-share"></i>
-            <span>Share</span>
-          </div>
+
+    <!-- Posts -->
+    <div class="post">
+      <div class="post-header">
+        <img src="https://via.placeholder.com/40/ff9910/ffffff?text=P" alt="profile" class="post-avatar">
+        <div class="post-username">pro_user</div>
+        <div class="post-more">
+          <i class="fas fa-ellipsis-h"></i>
         </div>
       </div>
-      
-      <!-- Normal User Text Post -->
-      <div class="post">
-        <div class="post-header">
-          <img src="https://via.placeholder.com/40/3377ff/ffffff?text=N" alt="profile">
-          <div class="post-user-info">
-            <h3>@normal_user</h3>
-            <div class="post-time">5 hours ago</div>
-          </div>
-          <div class="post-menu">
-            <i class="fas fa-ellipsis-h"></i>
-          </div>
-        </div>
-        <div class="post-content">
-          <p class="post-text">Normal user post with text only. Normal users have character limits for their posts.</p>
-        </div>
-        <div class="post-stats">
-          <span>89 likes</span>
-          <span>14 comments</span>
-        </div>
-        <div class="post-actions">
-          <div class="post-action" id="likeButton2">
-            <i class="fa-regular fa-heart"></i>
-            <span>Like</span>
-          </div>
-          <div class="post-action">
-            <i class="fa-regular fa-comment"></i>
-            <span>Comment</span>
-          </div>
-          <div class="post-action">
-            <i class="fa-solid fa-share"></i>
-            <span>Share</span>
-          </div>
-        </div>
+      <img src="https://via.placeholder.com/614/3377ff/ffffff?text=Beautiful+Scene" alt="post image" class="post-image">
+      <div class="post-actions">
+        <div class="post-action"><i class="far fa-heart"></i></div>
+        <div class="post-action"><i class="far fa-comment"></i></div>
+        <div class="post-action"><i class="far fa-paper-plane"></i></div>
+        <div class="post-action save"><i class="far fa-bookmark"></i></div>
       </div>
-      
-      <!-- Loading indicator for more content -->
-      <div class="loading">
-        <i class="fas fa-spinner"></i> Loading more posts...
+      <div class="post-likes">1,234 likes</div>
+      <div class="post-caption">
+        <span class="username">pro_user</span>
+        This is a pro user post with image. Pro users can post longer content and multiple images per post. #kotweb #pro
       </div>
+      <div class="post-time">2 hours ago</div>
     </div>
-  </main>
-  
-  <!-- Bottom/Side Navigation -->
+
+    <div class="post">
+      <div class="post-header">
+        <img src="https://via.placeholder.com/40/3377ff/ffffff?text=N" alt="profile" class="post-avatar">
+        <div class="post-username">normal_user</div>
+        <div class="post-more">
+          <i class="fas fa-ellipsis-h"></i>
+        </div>
+      </div>
+      <div class="post-actions">
+        <div class="post-action"><i class="far fa-heart"></i></div>
+        <div class="post-action"><i class="far fa-comment"></i></div>
+        <div class="post-action"><i class="far fa-paper-plane"></i></div>
+        <div class="post-action save"><i class="far fa-bookmark"></i></div>
+      </div>
+      <div class="post-likes">567 likes</div>
+      <div class="post-caption">
+        <span class="username">normal_user</span>
+        Normal user post with text only. Normal users have character limits for their posts. #kotweb
+      </div>
+      <div class="post-time">5 hours ago</div>
+    </div>
+
+    <div class="loading">
+      <i class="fas fa-spinner"></i> Loading more posts...
+    </div>
+  </div>
+
+  <!-- Navigation -->
   <nav>
-    <a href="home.html" class="active"><i class="fas fa-home"></i>Home</a>
-    <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i>Search</a>
-    <a href="post.html"><i class="fa-solid fa-square-plus"></i>Post</a>
-    <a href="chat.html"><i class="fa-solid fa-comment-dots"></i>Chat</a>
-    <a href="groups.html"><i class="fa-solid fa-users"></i>Groups</a>
-    <a href="notifications.html"><i class="fa-solid fa-bell"></i>Alerts</a>
-    <a href="account.html"><i class="fa-solid fa-user"></i>Profile</a>
+    <a href="home.html" class="active">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="search.html">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span>Search</span>
+    </a>
+    <a href="post.html">
+      <i class="fa-solid fa-square-plus"></i>
+      <span>Post</span>
+    </a>
+    <a href="chat.html">
+      <i class="fa-solid fa-comment-dots"></i>
+      <span>Chat</span>
+    </a>
+    <a href="account.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
   </nav>
-  
-  <!-- Toast notification -->
-  <div class="toast" id="toast"></div>
-  
+
   <!-- Agreement Modal -->
   <div class="modal" id="agreementModal">
     <div class="modal-content">
-      <h2>Additional Settings Agreement</h2>
-      <p>By continuing, you agree to Kotweb's additional settings and defaults for your account. These settings include post limits, image restrictions, and content guidelines.</p>
+      <h2>Welcome to Kotweb</h2>
+      <p>By continuing, you agree to Kotweb's Terms, Privacy Policy, and default settings for your account including post limits and content guidelines.</p>
       <div class="modal-buttons">
-        <button id="declineButton">Decline</button>
-        <button id="agreeButton">Agree & Continue</button>
+        <button class="modal-button secondary" id="declineButton">Decline</button>
+        <button class="modal-button primary" id="agreeButton">Agree</button>
       </div>
     </div>
   </div>
 
-  <!-- Firebase App (core Firebase SDK) -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <!-- Firebase Auth -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <!-- Firebase Firestore -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <!-- Firebase Messaging -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
-  <!-- Firebase Analytics -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
 
   <script>
     // Firebase configuration
@@ -595,8 +511,6 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const messaging = firebase.messaging();
-    const analytics = firebase.analytics();
 
     // Theme management
     function initTheme() {
@@ -623,94 +537,30 @@
     });
 
     // Like button functionality
-    document.getElementById('likeButton1').addEventListener('click', function() {
-      this.classList.toggle('liked');
-      const icon = this.querySelector('i');
-      if (this.classList.contains('liked')) {
-        icon.classList.replace('fa-regular', 'fa-solid');
-        this.querySelector('span').textContent = 'Liked';
-      } else {
-        icon.classList.replace('fa-solid', 'fa-regular');
-        this.querySelector('span').textContent = 'Like';
+    document.querySelectorAll('.post-action').forEach(action => {
+      if (action.querySelector('.fa-heart')) {
+        action.addEventListener('click', function() {
+          const icon = this.querySelector('i');
+          if (icon.classList.contains('far')) {
+            icon.classList.replace('far', 'fas');
+            icon.style.color = '#ed4956';
+          } else {
+            icon.classList.replace('fas', 'far');
+            icon.style.color = '';
+          }
+        });
       }
-    });
-
-    document.getElementById('likeButton2').addEventListener('click', function() {
-      this.classList.toggle('liked');
-      const icon = this.querySelector('i');
-      if (this.classList.contains('liked')) {
-        icon.classList.replace('fa-regular', 'fa-solid');
-        this.querySelector('span').textContent = 'Liked';
-      } else {
-        icon.classList.replace('fa-solid', 'fa-regular');
-        this.querySelector('span').textContent = 'Like';
-      }
-    });
-
-    // Show toast notification
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
       
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
-    // Request notification permission
-    function requestNotificationPermission() {
-      console.log('Requesting permission...');
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          console.log('Notification permission granted.');
-          showToast('Notifications enabled!');
-          // Get registration token for FCM
-          getFCMToken();
-        } else {
-          console.log('Unable to get permission to notify.');
-        }
-      });
-    }
-
-    // Get FCM token
-    function getFCMToken() {
-      messaging.getToken({vapidKey: 'BAaj8oCBnH5cD0siHt2L5BHAFbgExw1g7n3JsGNIFVK2oQYzD71eILHM3B7Umw1mL_2eiHQryN8ApkrdqZYRlz4'}).then((currentToken) => {
-        if (currentToken) {
-          console.log('FCM Token:', currentToken);
-          // Send the token to your server and update the UI if necessary
-          updateUIForNotifications(true);
-        } else {
-          console.log('No registration token available. Request permission to generate one.');
-          updateUIForNotifications(false);
-        }
-      }).catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
-        updateUIForNotifications(false);
-      });
-    }
-
-    // Update UI based on notification status
-    function updateUIForNotifications(enabled) {
-      const badge = document.getElementById('notificationCount');
-      if (enabled) {
-        badge.style.display = 'flex';
-        badge.textContent = '3'; // Example notification count
-      } else {
-        badge.style.display = 'none';
+      if (action.querySelector('.fa-bookmark')) {
+        action.addEventListener('click', function() {
+          const icon = this.querySelector('i');
+          if (icon.classList.contains('far')) {
+            icon.classList.replace('far', 'fas');
+          } else {
+            icon.classList.replace('fas', 'far');
+          }
+        });
       }
-    }
-
-    // Handle incoming messages
-    messaging.onMessage((payload) => {
-      console.log('Message received. ', payload);
-      showToast(payload.notification.title);
-      
-      // Update notification badge
-      const badge = document.getElementById('notificationCount');
-      const currentCount = parseInt(badge.textContent || '0');
-      badge.textContent = currentCount + 1;
-      badge.style.display = 'flex';
     });
 
     // Check auth state and handle agreement
@@ -718,20 +568,12 @@
       if (user) {
         console.log('User is signed in:', user.uid);
         
-        // Set user avatar if available
-        if (user.photoURL) {
-          document.getElementById('userAvatar').src = user.photoURL;
-        }
-        
         const userDocRef = db.collection("users").doc(user.uid);
         const userDoc = await userDocRef.get();
         if (userDoc.exists) {
           const data = userDoc.data();
           if (!data.agreedToSettings) {
             document.getElementById('agreementModal').style.display = 'flex';
-          } else {
-            // User has already agreed, request notification permission
-            requestNotificationPermission();
           }
         } else {
           // If user doc doesn't exist, redirect to complete profile
@@ -753,26 +595,22 @@
             agreedToSettings: true,
             agreedAt: new Date(),
             normalUser: {
-              postText: 80,  // chars max
-              postImages: 0,  // per day
-              openImagePosts: 3  // in 8 hours
+              postText: 80,
+              postImages: 0,
+              openImagePosts: 3
             },
             proUser: {
-              postText: 300,  // chars max
-              postImages: 3,  // per day, multiple per post
-              openImagePosts: 5,  // in 8 hours
-              typeOfPost: 0  // 0: images only, 1: exam posts
+              postText: 300,
+              postImages: 3,
+              openImagePosts: 5,
+              typeOfPost: 0
             }
           }, { merge: true });
           
           document.getElementById('agreementModal').style.display = 'none';
-          showToast('Welcome to Kotweb!');
-          
-          // Request notification permission after agreement
-          requestNotificationPermission();
         } catch (error) {
           console.error("Error updating settings:", error);
-          showToast('Error saving settings. Please try again.');
+          alert('Error saving settings. Please try again.');
         }
       }
     });
@@ -784,19 +622,6 @@
         window.location.href = 'login.html';
       } catch (error) {
         console.error("Error signing out:", error);
-        showToast('Error signing out. Please try again.');
-      }
-    });
-
-    // Navigation active state
-    const currentPage = window.location.pathname.split('/').pop();
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-      const linkPage = link.getAttribute('href');
-      if (currentPage === linkPage) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
       }
     });
 
@@ -805,21 +630,8 @@
 
     // Simulate loading more content
     setTimeout(() => {
-      document.querySelector('.loading').style.display = 'block';
-      
-      setTimeout(() => {
-        document.querySelector('.loading').style.display = 'none';
-      }, 1500);
-    }, 1000);
-
-    // Notification icon click handler
-    document.getElementById('notificationsIcon').addEventListener('click', () => {
-      if (Notification.permission === 'default') {
-        requestNotificationPermission();
-      } else {
-        window.location.href = 'notifications.html';
-      }
-    });
+      document.querySelector('.loading').style.display = 'none';
+    }, 2000);
   </script>
 </body>
 </html>
