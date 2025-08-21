@@ -5,253 +5,308 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kotweb - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-
     :root {
-      --bg-color: #fafafa;
-      --text-color: #262626;
-      --secondary-text: #8e8e8e;
-      --border-color: #dbdbdb;
-      --card-bg: #ffffff;
-      --primary-color: #0095f6;
-      --primary-hover: #1877f2;
-      --story-border: linear-gradient(45deg, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+      --bg-color: #f9f9f9;
+      --text-color: #000;
+      --post-bg: #fff;
+      --border-color: #ddd;
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --accent-color: #e44d3a;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      --transition-speed: 0.3s;
     }
-
     body.dark {
       --bg-color: #121212;
-      --text-color: #f1f1f1;
-      --secondary-text: #a8a8a8;
-      --border-color: #333333;
-      --card-bg: #1a1a1a;
+      --text-color: #e4e4e4;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
-
+    * {
+      box-sizing: border-box;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
     body {
-      background-color: var(--bg-color);
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+      background: var(--bg-color);
       color: var(--text-color);
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
-      padding-top: 60px;
-      padding-bottom: 60px;
+      position: relative;
     }
-
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
     /* Header Styles */
     header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 60px;
-      background-color: var(--card-bg);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 1000;
-    }
-
-    .logo {
-      font-size: 24px;
+      background: var(--post-bg);
+      padding: 12px 15px;
       font-weight: bold;
-      color: var(--text-color);
+      font-size: 22px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
     .logo-icon {
       color: var(--primary-color);
+      font-size: 24px;
     }
-
-    .header-icons {
+    .right-icons {
       display: flex;
-      gap: 20px;
+      gap: 15px;
     }
-
-    .header-icons i {
-      font-size: 22px;
+    .right-icons i {
+      font-size: 20px;
       cursor: pointer;
       color: var(--text-color);
+      transition: transform 0.2s;
     }
-
+    .right-icons i:hover {
+      transform: scale(1.1);
+    }
     /* Main Content */
-    .container {
-      max-width: 614px;
-      margin: 0 auto;
-      padding: 20px 0;
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 60px;
     }
-
     /* Stories */
     .stories-container {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      white-space: nowrap;
+      background: var(--post-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 5px 0 15px;
     }
-
+    .stories-title {
+      padding: 10px 15px 5px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--secondary-color);
+    }
+    .stories {
+      display: flex;
+      overflow-x: auto;
+      padding: 5px 10px;
+      scrollbar-width: none;
+    }
+    .stories::-webkit-scrollbar {
+      display: none;
+    }
     .story {
-      display: inline-block;
+      flex: 0 0 auto;
+      margin: 0 8px;
       text-align: center;
-      margin-right: 15px;
       cursor: pointer;
     }
-
     .story-avatar {
-      width: 66px;
-      height: 66px;
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
       padding: 3px;
-      background: var(--story-border);
-      margin-bottom: 8px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      margin-bottom: 6px;
     }
-
     .story-avatar.inner {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 3px solid var(--card-bg);
+      border: 2px solid var(--post-bg);
       object-fit: cover;
-      display: block;
     }
-
+    .story.your-story .story-avatar {
+      background: var(--border-color);
+    }
     .story p {
       font-size: 12px;
+      margin: 0;
       color: var(--text-color);
       max-width: 74px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .story.your-story .story-avatar {
-      background: none;
-      border: 1px solid var(--border-color);
+    /* Feed */
+    .feed {
+      padding: 10px;
     }
-
-    /* Posts */
     .post {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
+      background: var(--post-bg);
+      border-radius: 12px;
       margin-bottom: 20px;
+      box-shadow: var(--card-shadow);
       overflow: hidden;
     }
-
     .post-header {
       display: flex;
       align-items: center;
-      padding: 14px;
+      padding: 12px;
     }
-
-    .post-avatar {
-      width: 32px;
-      height: 32px;
+    .post-header img {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       margin-right: 12px;
       object-fit: cover;
     }
-
-    .post-username {
-      font-weight: 600;
-      font-size: 14px;
+    .post-user-info {
+      flex: 1;
+    }
+    .post-header h3 {
+      margin: 0;
+      font-size: 15px;
       color: var(--text-color);
     }
-
-    .post-more {
-      margin-left: auto;
+    .post-time {
+      font-size: 12px;
+      color: var(--secondary-color);
+      margin-top: 2px;
+    }
+    .post-menu {
+      color: var(--secondary-color);
       cursor: pointer;
     }
-
-    .post-image {
+    .post-content {
+      padding: 0 12px 12px;
+      color: var(--text-color);
+    }
+    .post-text {
+      margin: 0 0 12px;
+      line-height: 1.4;
+    }
+    .post-content img {
       width: 100%;
+      border-radius: 8px;
+      margin-top: 5px;
       object-fit: cover;
     }
-
-    .post-actions {
-      padding: 12px 16px;
+    .post-stats {
       display: flex;
-      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-size: 13px;
+      color: var(--secondary-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
     }
-
-    .post-action {
-      margin-right: 16px;
-      cursor: pointer;
-      font-size: 24px;
-      color: var(--text-color);
-    }
-
-    .post-action.save {
-      margin-left: auto;
-      margin-right: 0;
-    }
-
-    .post-likes {
-      padding: 0 16px;
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-
-    .post-caption {
-      padding: 0 16px;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-
-    .post-caption .username {
-      font-weight: 600;
-      margin-right: 5px;
-    }
-
-    .post-time {
-      padding: 0 16px 12px;
-      font-size: 10px;
-      color: var(--secondary-text);
-      text-transform: uppercase;
-    }
-
-    /* Navigation */
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 60px;
-      background-color: var(--card-bg);
-      border-top: 1px solid var(--border-color);
+    .post-actions {
       display: flex;
       justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
+      padding: 8px 0;
     }
-
+    .post-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--secondary-color);
+      font-weight: 500;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 6px 0;
+      width: 100%;
+    }
+    .post-action i {
+      margin-right: 6px;
+      font-size: 18px;
+    }
+    .post-action.liked {
+      color: var(--accent-color);
+    }
+    /* Bottom/Side Navigation */
+    nav {
+      background: var(--post-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
     nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      text-align: center;
+      font-size: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-decoration: none;
-      color: var(--text-color);
-      font-size: 24px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
     }
-
-    nav a.active {
+    nav a:hover, nav a.active {
+      opacity: 1;
       color: var(--primary-color);
     }
-
-    nav a span {
-      font-size: 12px;
-      margin-top: 4px;
+    nav i {
+      font-size: 20px;
+      margin-bottom: 4px;
     }
-
-    /* Modal */
+    /* Desktop Sidebar */
+    @media (min-width: 769px) {
+      body {
+        flex-direction: row;
+      }
+      .container {
+        margin-left: 85px;
+        width: calc(100% - 85px);
+      }
+      nav {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 85px;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px;
+        border-right: 1px solid var(--border-color);
+        border-top: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      }
+      nav a {
+        margin: 18px 0;
+        font-size: 13px;
+      }
+      main {
+        padding-bottom: 0;
+      }
+      header {
+        margin-left: 85px;
+        width: calc(100% - 85px);
+      }
+    }
+    /* Theme Auto-Adjust */
+    @media (prefers-color-scheme: dark) {
+      body:not(.light) {
+        --bg-color: #121212;
+        --text-color: #e4e4e4;
+        --post-bg: #1e1e1e;
+        --border-color: #333;
+        --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+    }
+    /* Agreement Modal */
     .modal {
       display: none;
       position: fixed;
@@ -259,241 +314,272 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0,0,0,0.7);
       justify-content: center;
       align-items: center;
-      z-index: 2000;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.3s;
     }
-
     .modal-content {
-      background: var(--card-bg);
+      background: var(--post-bg);
       padding: 25px;
-      border-radius: 12px;
+      border-radius: 14px;
       text-align: center;
-      max-width: 400px;
+      max-width: 450px;
       width: 90%;
-    }
-
-    .modal h2 {
-      margin-bottom: 15px;
       color: var(--text-color);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
-
+    .modal h2 {
+      margin-top: 0;
+      color: var(--primary-color);
+    }
     .modal p {
-      margin-bottom: 20px;
-      color: var(--secondary-text);
       line-height: 1.5;
+      margin-bottom: 20px;
     }
-
     .modal-buttons {
       display: flex;
       justify-content: center;
       gap: 12px;
     }
-
-    .modal-button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .modal-button.primary {
+    .modal button {
       background: var(--primary-color);
       color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
     }
-
-    .modal-button.secondary {
-      background: var(--border-color);
-      color: var(--text-color);
+    .modal button#declineButton {
+      background: var(--secondary-color);
     }
-
-    /* Responsive */
-    @media (min-width: 768px) {
-      body {
-        padding-bottom: 0;
-      }
-      
-      nav {
-        top: 0;
-        right: 0;
-        left: auto;
-        width: 80px;
-        height: 100%;
-        border-top: none;
-        border-right: 1px solid var(--border-color);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 80px;
-      }
-      
-      nav a {
-        margin: 15px 0;
-      }
-      
-      .container {
-        margin-right: 80px;
-      }
+    .modal button:hover {
+      opacity: 0.9;
     }
-
-    /* Loading */
+    /* Loading Indicator */
     .loading {
+      display: none;
       text-align: center;
       padding: 20px;
-      color: var(--secondary-text);
+      color: var(--secondary-color);
     }
-
     .loading i {
       animation: spin 1s linear infinite;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+    /* Pro User Badge */
+    .pro-badge {
+      background: linear-gradient(45deg, #ffbf00, #ff9900);
+      color: white;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+      font-weight: bold;
+    }
+    /* Notification Badge */
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .notification-container {
+      position: relative;
+    }
+    /* Toast Notifications */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">
-      <i class="fas fa-cat logo-icon"></i>
-      <span>Kotweb</span>
-    </div>
-    <div class="header-icons">
-      <i class="fa-solid fa-bell" id="notificationsIcon"></i>
-      <i class="fa-solid fa-paper-plane" id="messagesIcon"></i>
-      <i class="fas fa-moon" id="themeToggle"></i>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-book-open logo-icon" aria-hidden="true"></i>
+        <span>Kotweb</span>
+      </div>
+      <div class="right-icons">
+        <div class="notification-container">
+          <i class="fa-solid fa-bell" id="notificationsIcon" aria-label="Notifications"></i>
+          <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
+        </div>
+        <i class="fa-solid fa-paper-plane" id="messagesIcon" aria-label="Messages"></i>
+        <i class="fas fa-moon" id="themeToggle" aria-label="Toggle theme"></i>
+      </div>
     </div>
   </header>
-
-  <div class="container">
-    <!-- Stories -->
-    <div class="stories-container">
-      <div class="story your-story">
-        <div class="story-avatar">
-          <img src="https://via.placeholder.com/60" alt="Your story" class="inner">
+  <main>
+    <div class="container">
+      <!-- Stories -->
+      <div class="stories-container">
+        <div class="stories-title">Stories</div>
+        <div class="stories" role="region" aria-label="User stories">
+          <div class="story your-story">
+            <div class="story-avatar">
+              <img src="https://via.placeholder.com/60" alt="Your story" class="inner" id="userAvatar">
+            </div>
+            <p>Your story</p>
+          </div>
+          <div class="story">
+            <div class="story-avatar">
+              <img src="https://via.placeholder.com/60/ff9910/ffffff?text=P" alt="@pro_user story" class="inner">
+            </div>
+            <p>@pro_user</p>
+          </div>
+          <div class="story">
+            <div class="story-avatar">
+              <img src="https://via.placeholder.com/60/3377ff/ffffff?text=N" alt="@normal_user story" class="inner">
+            </div>
+            <p>@normal_user</p>
+          </div>
+          <div class="story">
+            <div class="story-avatar">
+              <img src="https://via.placeholder.com/60/33aa44/ffffff?text=U" alt="@user_123 story" class="inner">
+            </div>
+            <p>@user_123</p>
+          </div>
         </div>
-        <p>Your story</p>
       </div>
-      <div class="story">
-        <div class="story-avatar">
-          <img src="https://via.placeholder.com/60/ff9910/ffffff?text=P" alt="story" class="inner">
+      <!-- Feed -->
+      <div class="feed" role="feed" aria-label="Social media feed">
+        <!-- Pro Post with Image -->
+        <article class="post">
+          <div class="post-header">
+            <img src="https://via.placeholder.com/40/ff9910/ffffff?text=P" alt="@pro_user profile">
+            <div class="post-user-info">
+              <h3>@pro_user <span class="pro-badge">PRO</span></h3>
+              <div class="post-time">2 hours ago</div>
+            </div>
+            <div class="post-menu" aria-label="Post options">
+              <i class="fas fa-ellipsis-h"></i>
+            </div>
+          </div>
+          <div class="post-content">
+            <p class="post-text">Check out this cozy student apartment in Antwerp! Perfect for exchange students. 🏠 #KotwebHousing</p>
+            <img src="https://via.placeholder.com/600x400/3377ff/ffffff?text=Apartment" alt="Student apartment" loading="lazy">
+          </div>
+          <div class="post-stats">
+            <span>245 likes</span>
+            <span>36 comments</span>
+          </div>
+          <div class="post-actions">
+            <div class="post-action" id="likeButton1" aria-label="Like post">
+              <i class="fa-regular fa-heart"></i>
+              <span>Like</span>
+            </div>
+            <div class="post-action" id="commentButton1" aria-label="Comment on post">
+              <i class="fa-regular fa-comment"></i>
+              <span>Comment</span>
+            </div>
+            <div class="post-action" id="shareButton1" aria-label="Share post">
+              <i class="fa-solid fa-share"></i>
+              <span>Share</span>
+            </div>
+          </div>
+        </article>
+        <!-- Normal User Text Post -->
+        <article class="post">
+          <div class="post-header">
+            <img src="https://via.placeholder.com/40/3377ff/ffffff?text=N" alt="@normal_user profile">
+            <div class="post-user-info">
+              <h3>@normal_user</h3>
+              <div class="post-time">5 hours ago</div>
+            </div>
+            <div class="post-menu" aria-label="Post options">
+              <i class="fas fa-ellipsis-h"></i>
+            </div>
+          </div>
+          <div class="post-content">
+            <p class="post-text">Studying for finals? Join our study group in Leuven! #KotwebCommunity</p>
+          </div>
+          <div class="post-stats">
+            <span>89 likes</span>
+            <span>14 comments</span>
+          </div>
+          <div class="post-actions">
+            <div class="post-action" id="likeButton2" aria-label="Like post">
+              <i class="fa-regular fa-heart"></i>
+              <span>Like</span>
+            </div>
+            <div class="post-action" id="commentButton2" aria-label="Comment on post">
+              <i class="fa-regular fa-comment"></i>
+              <span>Comment</span>
+            </div>
+            <div class="post-action" id="shareButton2" aria-label="Share post">
+              <i class="fa-solid fa-share"></i>
+              <span>Share</span>
+            </div>
+          </div>
+        </article>
+        <!-- Loading Indicator -->
+        <div class="loading" role="status" aria-live="polite">
+          <i class="fas fa-spinner"></i> Loading more posts...
         </div>
-        <p>@pro_user</p>
-      </div>
-      <div class="story">
-        <div class="story-avatar">
-          <img src="https://via.placeholder.com/60/3377ff/ffffff?text=N" alt="story" class="inner">
-        </div>
-        <p>@normal_user</p>
-      </div>
-      <div class="story">
-        <div class="story-avatar">
-          <img src="https://via.placeholder.com/60/33aa44/ffffff?text=U" alt="story" class="inner">
-        </div>
-        <p>@user_123</p>
-      </div>
-      <div class="story">
-        <div class="story-avatar">
-          <img src="https://via.placeholder.com/60/cc3377/ffffff?text=K" alt="story" class="inner">
-        </div>
-        <p>@kotweb_fan</p>
       </div>
     </div>
-
-    <!-- Posts -->
-    <div class="post">
-      <div class="post-header">
-        <img src="https://via.placeholder.com/40/ff9910/ffffff?text=P" alt="profile" class="post-avatar">
-        <div class="post-username">pro_user</div>
-        <div class="post-more">
-          <i class="fas fa-ellipsis-h"></i>
-        </div>
-      </div>
-      <img src="https://via.placeholder.com/614/3377ff/ffffff?text=Beautiful+Scene" alt="post image" class="post-image">
-      <div class="post-actions">
-        <div class="post-action"><i class="far fa-heart"></i></div>
-        <div class="post-action"><i class="far fa-comment"></i></div>
-        <div class="post-action"><i class="far fa-paper-plane"></i></div>
-        <div class="post-action save"><i class="far fa-bookmark"></i></div>
-      </div>
-      <div class="post-likes">1,234 likes</div>
-      <div class="post-caption">
-        <span class="username">pro_user</span>
-        This is a pro user post with image. Pro users can post longer content and multiple images per post. #kotweb #pro
-      </div>
-      <div class="post-time">2 hours ago</div>
-    </div>
-
-    <div class="post">
-      <div class="post-header">
-        <img src="https://via.placeholder.com/40/3377ff/ffffff?text=N" alt="profile" class="post-avatar">
-        <div class="post-username">normal_user</div>
-        <div class="post-more">
-          <i class="fas fa-ellipsis-h"></i>
-        </div>
-      </div>
-      <div class="post-actions">
-        <div class="post-action"><i class="far fa-heart"></i></div>
-        <div class="post-action"><i class="far fa-comment"></i></div>
-        <div class="post-action"><i class="far fa-paper-plane"></i></div>
-        <div class="post-action save"><i class="far fa-bookmark"></i></div>
-      </div>
-      <div class="post-likes">567 likes</div>
-      <div class="post-caption">
-        <span class="username">normal_user</span>
-        Normal user post with text only. Normal users have character limits for their posts. #kotweb
-      </div>
-      <div class="post-time">5 hours ago</div>
-    </div>
-
-    <div class="loading">
-      <i class="fas fa-spinner"></i> Loading more posts...
-    </div>
-  </div>
-
-  <!-- Navigation -->
-  <nav>
-    <a href="home.html" class="active">
-      <i class="fas fa-home"></i>
-      <span>Home</span>
-    </a>
-    <a href="search.html">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <span>Search</span>
-    </a>
-    <a href="post.html">
-      <i class="fa-solid fa-square-plus"></i>
-      <span>Post</span>
-    </a>
-    <a href="chat.html">
-      <i class="fa-solid fa-comment-dots"></i>
-      <span>Chat</span>
-    </a>
-    <a href="account.html">
-      <i class="fa-solid fa-user"></i>
-      <span>Profile</span>
-    </a>
+  </main>
+  <!-- Bottom/Side Navigation -->
+  <nav aria-label="Main navigation">
+    <a href="home.html" class="active"><i class="fas fa-home" aria-hidden="true"></i>Home</a>
+    <a href="search.html"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Search</a>
+    <a href="post.html"><i class="fa-solid fa-square-plus" aria-hidden="true"></i>Post</a>
+    <a href="chat.html"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>Chat</a>
+    <a href="groups.html"><i class="fa-solid fa-users" aria-hidden="true"></i>Groups</a>
+    <a href="notifications.html"><i class="fa-solid fa-bell" aria-hidden="true"></i>Alerts</a>
+    <a href="account.html"><i class="fa-solid fa-user" aria-hidden="true"></i>Profile</a>
   </nav>
-
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
   <!-- Agreement Modal -->
-  <div class="modal" id="agreementModal">
+  <div class="modal" id="agreementModal" role="dialog" aria-labelledby="modalTitle">
     <div class="modal-content">
-      <h2>Welcome to Kotweb</h2>
-      <p>By continuing, you agree to Kotweb's Terms, Privacy Policy, and default settings for your account including post limits and content guidelines.</p>
+      <h2 id="modalTitle">Additional Settings Agreement</h2>
+      <p>By continuing, you agree to Kotweb's additional settings and defaults for your account, including post limits, image restrictions, and content guidelines tailored for our educational community.</p>
       <div class="modal-buttons">
-        <button class="modal-button secondary" id="declineButton">Decline</button>
-        <button class="modal-button primary" id="agreeButton">Agree</button>
+        <button id="declineButton">Decline</button>
+        <button id="agreeButton">Agree & Continue</button>
       </div>
     </div>
   </div>
-
-  <!-- Firebase SDK -->
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -506,90 +592,113 @@
       appId: "1:91683197015:web:92899ecb0c913dc0a95312",
       measurementId: "G-MQLRPLZZFF"
     };
-
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-
-    // Theme management
+    const messaging = firebase.messaging();
+    // Theme Management
     function initTheme() {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const savedTheme = localStorage.getItem('theme');
-      
       if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
         document.body.classList.add('dark');
         document.getElementById('themeToggle').classList.replace('fa-moon', 'fa-sun');
       }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          document.body.classList.toggle('dark', e.matches);
+          document.getElementById('themeToggle').classList.replace(e.matches ? 'fa-moon' : 'fa-sun', e.matches ? 'fa-sun' : 'fa-moon');
+        }
+      });
     }
-
-    // Toggle theme
     document.getElementById('themeToggle').addEventListener('click', () => {
-      if (document.body.classList.contains('dark')) {
-        document.body.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        document.getElementById('themeToggle').classList.replace('fa-sun', 'fa-moon');
-      } else {
-        document.body.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        document.getElementById('themeToggle').classList.replace('fa-moon', 'fa-sun');
-      }
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeToggle').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
     });
-
-    // Like button functionality
-    document.querySelectorAll('.post-action').forEach(action => {
-      if (action.querySelector('.fa-heart')) {
-        action.addEventListener('click', function() {
-          const icon = this.querySelector('i');
-          if (icon.classList.contains('far')) {
-            icon.classList.replace('far', 'fas');
-            icon.style.color = '#ed4956';
-          } else {
-            icon.classList.replace('fas', 'far');
-            icon.style.color = '';
-          }
-        });
-      }
-      
-      if (action.querySelector('.fa-bookmark')) {
-        action.addEventListener('click', function() {
-          const icon = this.querySelector('i');
-          if (icon.classList.contains('far')) {
-            icon.classList.replace('far', 'fas');
-          } else {
-            icon.classList.replace('fas', 'far');
-          }
-        });
-      }
+    // Toast Notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    // Notification Permission
+    function requestNotificationPermission() {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          showToast('Notifications enabled!');
+          messaging.getToken({ vapidKey: 'BAaj8oCBnH5cD0siHt2L5BHAFbgExw1g7n3JsGNIFVK2oQYzD71eILHM3B7Umw1mL_2eiHQryN8ApkrdqZYRlz4' }).then((token) => {
+            if (token) {
+              console.log('FCM Token:', token);
+              document.getElementById('notificationCount').style.display = 'flex';
+              document.getElementById('notificationCount').textContent = '2'; // Example
+            }
+          }).catch((err) => console.error('FCM Error:', err));
+        }
+      });
+    }
+    messaging.onMessage((payload) => {
+      showToast(payload.notification.title);
+      const badge = document.getElementById('notificationCount');
+      const count = parseInt(badge.textContent || '0') + 1;
+      badge.textContent = count;
+      badge.style.display = 'flex';
     });
-
-    // Check auth state and handle agreement
+    // Like Button Functionality
+    function setupLikeButton(buttonId) {
+      const button = document.getElementById(buttonId);
+      button.addEventListener('click', () => {
+        button.classList.toggle('liked');
+        const icon = button.querySelector('i');
+        const span = button.querySelector('span');
+        if (button.classList.contains('liked')) {
+          icon.classList.replace('fa-regular', 'fa-solid');
+          span.textContent = 'Liked';
+          showToast('Post liked!');
+        } else {
+          icon.classList.replace('fa-solid', 'fa-regular');
+          span.textContent = 'Like';
+          showToast('Post unliked.');
+        }
+      });
+    }
+    setupLikeButton('likeButton1');
+    setupLikeButton('likeButton2');
+    // Comment/Share Actions
+    document.getElementById('commentButton1').addEventListener('click', () => showToast('Comment feature coming soon!'));
+    document.getElementById('commentButton2').addEventListener('click', () => showToast('Comment feature coming soon!'));
+    document.getElementById('shareButton1').addEventListener('click', () => showToast('Shared post!'));
+    document.getElementById('shareButton2').addEventListener('click', () => showToast('Shared post!'));
+    // Auth State and Agreement
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log('User is signed in:', user.uid);
-        
-        const userDocRef = db.collection("users").doc(user.uid);
+        console.log('User signed in:', user.uid);
+        if (user.photoURL) {
+          document.getElementById('userAvatar').src = user.photoURL;
+        }
+        const userDocRef = db.collection('users').doc(user.uid);
         const userDoc = await userDocRef.get();
         if (userDoc.exists) {
           const data = userDoc.data();
           if (!data.agreedToSettings) {
             document.getElementById('agreementModal').style.display = 'flex';
+          } else {
+            requestNotificationPermission();
           }
         } else {
-          // If user doc doesn't exist, redirect to complete profile
-          window.location.href = 'complete-profile.html';
+          window.location.href = 'login.html';
         }
       } else {
-        console.log('User is signed out');
         window.location.href = 'login.html';
       }
     });
-
-    // Agree button handler
     document.getElementById('agreeButton').addEventListener('click', async () => {
       const user = auth.currentUser;
       if (user) {
-        const userDocRef = db.collection("users").doc(user.uid);
+        const userDocRef = db.collection('users').doc(user.uid);
         try {
           await userDocRef.set({
             agreedToSettings: true,
@@ -606,32 +715,50 @@
               typeOfPost: 0
             }
           }, { merge: true });
-          
           document.getElementById('agreementModal').style.display = 'none';
+          showToast('Welcome to Kotweb!');
+          requestNotificationPermission();
         } catch (error) {
-          console.error("Error updating settings:", error);
-          alert('Error saving settings. Please try again.');
+          console.error('Error saving settings:', error);
+          showToast('Error saving settings. Please try again.');
         }
       }
     });
-
-    // Decline button handler
     document.getElementById('declineButton').addEventListener('click', async () => {
       try {
         await auth.signOut();
         window.location.href = 'login.html';
       } catch (error) {
-        console.error("Error signing out:", error);
+        console.error('Error signing out:', error);
+        showToast('Error signing out. Please try again.');
       }
     });
-
-    // Initialize theme
-    initTheme();
-
-    // Simulate loading more content
+    // Navigation Active State
+    const currentPage = window.location.pathname.split('/').pop() || 'home.html';
+    document.querySelectorAll('nav a').forEach(link => {
+      const linkPage = link.getAttribute('href');
+      link.classList.toggle('active', currentPage === linkPage);
+    });
+    // Simulate Dynamic Posts
     setTimeout(() => {
-      document.querySelector('.loading').style.display = 'none';
-    }, 2000);
+      document.querySelector('.loading').style.display = 'block';
+      setTimeout(() => {
+        document.querySelector('.loading').style.display = 'none';
+      }, 1500);
+    }, 1000);
+    // Notification Icon Click
+    document.getElementById('notificationsIcon').addEventListener('click', () => {
+      if (Notification.permission === 'default') {
+        requestNotificationPermission();
+      } else {
+        window.location.href = 'notifications.html';
+      }
+    });
+    document.getElementById('messagesIcon').addEventListener('click', () => {
+      window.location.href = 'chat.html';
+    });
+    // Initialize Theme
+    initTheme();
   </script>
 </body>
 </html>
