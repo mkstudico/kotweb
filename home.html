@@ -1,1171 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kotweb - Educational Social Media</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --success: #4cc9f0;
-            --warning: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --border-radius: 12px;
-            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-        
-        body {
-            background-color: var(--light);
-            color: var(--dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s ease;
-        }
-        
-        body.dark-mode {
-            background-color: #121212;
-            color: var(--light);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--light-gray);
-            position: sticky;
-            top: 0;
-            background-color: var(--light);
-            z-index: 100;
-        }
-        
-        .dark-mode header {
-            background-color: #1e1e1e;
-            border-color: #2d2d2d;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .search-bar {
-            flex: 1;
-            max-width: 400px;
-            margin: 0 20px;
-            position: relative;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px;
-            padding-left: 45px;
-            border-radius: 30px;
-            border: 1px solid var(--light-gray);
-            background-color: var(--light-gray);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        .dark-mode .search-bar input {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: var(--light);
-        }
-        
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-        }
-        
-        .header-icons {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .header-icons button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--dark);
-            position: relative;
-        }
-        
-        .dark-mode .header-icons button {
-            color: var(--light);
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--warning);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .main-content {
-            display: flex;
-            margin-top: 30px;
-            gap: 30px;
-        }
-        
-        .sidebar {
-            width: 250px;
-            position: sticky;
-            top: 80px;
-            height: calc(100vh - 100px);
-            overflow-y: auto;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-        }
-        
-        .sidebar-menu li {
-            margin-bottom: 10px;
-        }
-        
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 15px;
-            text-decoration: none;
-            color: var(--dark);
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        
-        .dark-mode .sidebar-menu a {
-            color: var(--light);
-        }
-        
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background-color: var(--light-gray);
-        }
-        
-        .dark-mode .sidebar-menu a:hover, .dark-mode .sidebar-menu a.active {
-            background-color: #2d2d2d;
-        }
-        
-        .sidebar-menu i {
-            width: 24px;
-            text-align: center;
-        }
-        
-        .content-area {
-            flex: 1;
-        }
-        
-        .content-section {
-            display: none;
-        }
-        
-        .content-section.active {
-            display: block;
-        }
-        
-        .stories-container {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding: 15px 0;
-            margin-bottom: 30px;
-        }
-        
-        .story {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .story-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(45deg, var(--primary), var(--warning));
-            margin-bottom: 8px;
-        }
-        
-        .story-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--light);
-        }
-        
-        .dark-mode .story-avatar img {
-            border-color: #1e1e1e;
-        }
-        
-        .story-username {
-            font-size: 13px;
-            font-weight: 500;
-        }
-        
-        .posts-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .post {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-        }
-        
-        .dark-mode .post {
-            background-color: #1e1e1e;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-        
-        .post-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-        }
-        
-        .post-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .post-user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .post-user-info h3 {
-            font-size: 16px;
-            margin-bottom: 2px;
-        }
-        
-        .post-user-info span {
-            font-size: 13px;
-            color: var(--gray);
-        }
-        
-        .post-more {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            color: var(--dark);
-        }
-        
-        .dark-mode .post-more {
-            color: var(--light);
-        }
-        
-        .post-content {
-            padding: 0 15px;
-            margin-bottom: 15px;
-        }
-        
-        .post-image {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-            margin: 10px 0;
-            border-radius: var(--border-radius);
-        }
-        
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            border-top: 1px solid var(--light-gray);
-            border-bottom: 1px solid var(--light-gray);
-        }
-        
-        .dark-mode .post-actions {
-            border-color: #2d2d2d;
-        }
-        
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            color: var(--dark);
-            transition: var(--transition);
-        }
-        
-        .dark-mode .post-action {
-            color: var(--light);
-        }
-        
-        .post-action:hover {
-            color: var(--primary);
-        }
-        
-        .post-stats {
-            padding: 15px;
-            font-size: 14px;
-            color: var(--gray);
-        }
-        
-        .post-comments {
-            padding: 0 15px 15px;
-        }
-        
-        .post-comment {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .post-comment-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .post-comment-content {
-            flex: 1;
-            background-color: var(--light-gray);
-            padding: 10px;
-            border-radius: 18px;
-            font-size: 14px;
-        }
-        
-        .dark-mode .post-comment-content {
-            background-color: #2d2d2d;
-        }
-        
-        .post-comment-content h4 {
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
-        
-        .add-comment {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            border-top: 1px solid var(--light-gray);
-        }
-        
-        .dark-mode .add-comment {
-            border-color: #2d2d2d;
-        }
-        
-        .add-comment input {
-            flex: 1;
-            padding: 12px 15px;
-            border-radius: 30px;
-            border: 1px solid var(--light-gray);
-            background-color: var(--light-gray);
-            font-size: 14px;
-        }
-        
-        .dark-mode .add-comment input {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: var(--light);
-        }
-        
-        .add-comment button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--primary);
-        }
-        
-        .create-post {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .dark-mode .create-post {
-            background-color: #1e1e1e;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-        
-        .create-post-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .create-post-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .create-post-type {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .post-type-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--light-gray);
-            background: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .post-type-btn.active {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .create-post-text {
-            width: 100%;
-            min-height: 100px;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--light-gray);
-            resize: vertical;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        
-        .dark-mode .create-post-text {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: var(--light);
-        }
-        
-        .create-post-text:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .create-post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .create-post-options {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .create-post-options button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        .create-post-submit {
-            padding: 10px 20px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .create-post-submit:hover {
-            background-color: var(--secondary);
-        }
-        
-        .create-post-submit:disabled {
-            background-color: var(--gray);
-            cursor: not-allowed;
-        }
-        
-        .character-count {
-            font-size: 14px;
-            color: var(--gray);
-            text-align: right;
-            margin-top: 5px;
-        }
-        
-        .character-count.near-limit {
-            color: orange;
-        }
-        
-        .character-count.over-limit {
-            color: red;
-        }
-        
-        .footer {
-            margin-top: 50px;
-            padding: 20px 0;
-            text-align: center;
-            color: var(--gray);
-            font-size: 14px;
-            border-top: 1px solid var(--light-gray);
-        }
-        
-        .dark-mode .footer {
-            border-color: #2d2d2d;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: var(--border-radius);
-            width: 100%;
-            max-width: 500px;
-            overflow: hidden;
-        }
-        
-        .dark-mode .modal-content {
-            background-color: #1e1e1e;
-        }
-        
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .dark-mode .modal-header {
-            border-color: #2d2d2d;
-        }
-        
-        .modal-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        .modal-body {
-            padding: 20px;
-        }
-        
-        .modal-footer {
-            padding: 20px;
-            border-top: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        .dark-mode .modal-footer {
-            border-color: #2d2d2d;
-        }
-        
-        .modal-btn {
-            padding: 10px 20px;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .modal-btn-primary {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-        }
-        
-        .modal-btn-primary:hover {
-            background-color: var(--secondary);
-        }
-        
-        .modal-btn-secondary {
-            background: none;
-            border: 1px solid var(--light-gray);
-            color: var(--dark);
-        }
-        
-        .dark-mode .modal-btn-secondary {
-            color: var(--light);
-            border-color: #3d3d3d;
-        }
-        
-        .online-status {
-            width: 12px;
-            height: 12px;
-            background-color: var(--success);
-            border-radius: 50%;
-            border: 2px solid white;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-        }
-        
-        .dark-mode .online-status {
-            border-color: #1e1e1e;
-        }
-        
-        .avatar-container {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .pro-badge {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background-color: gold;
-            color: var(--dark);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            
-            .search-bar {
-                display: none;
-            }
-            
-            .header-icons {
-                gap: 15px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kotweb - Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #fff;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .right-icons i {
+      font-size: 20px;
+      margin-left: 15px;
+      cursor: pointer;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* Stories */
+    .stories {
+      display: flex;
+      overflow-x: auto;
+      padding: 10px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .story {
+      flex: 0 0 auto;
+      margin-right: 15px;
+      text-align: center;
+    }
+
+    .story img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #007bff;
+      object-fit: cover;
+    }
+
+    .story p {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    /* Feed */
+    .feed {
+      padding: 10px;
+    }
+
+    .post {
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .post-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .post-header h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .post-content {
+      padding: 10px;
+    }
+
+    .post-content img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .post-actions i {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Bottom Navigation */
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      padding: 10px 0;
+      position: sticky;
+      bottom: 0;
+    }
+
+    nav a {
+      color: #555;
+      text-decoration: none;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    nav a.active {
+      color: #007bff;
+    }
+
+    nav i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 3px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Kotweb</span>
-            </div>
-            
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search for people, posts, or groups...">
-            </div>
-            
-            <div class="header-icons">
-                <button>
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                <button id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button>
-                    <i class="fas fa-user"></i>
-                </button>
-            </div>
-        </header>
-        
-        <div class="main-content">
-            <div class="sidebar">
-                <ul class="sidebar-menu">
-                    <li>
-                        <a href="#" class="active" data-section="home">
-                            <i class="fas fa-home"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="post">
-                            <i class="fas fa-plus-square"></i>
-                            <span>Post</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="search">
-                            <i class="fas fa-search"></i>
-                            <span>Search</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="chat">
-                            <i class="fas fa-comment"></i>
-                            <span>Chat</span>
-                            <span class="notification-badge">5</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="groups">
-                            <i class="fas fa-users"></i>
-                            <span>Groups</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="account">
-                            <i class="fas fa-user-circle"></i>
-                            <span>Account</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-bookmark"></i>
-                            <span>Saved</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="content-area">
-                <!-- Home Section -->
-                <div class="content-section active" id="home-section">
-                    <div class="stories-container">
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=5" alt="User">
-                            </div>
-                            <span class="story-username">Your Story</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=1" alt="User">
-                            </div>
-                            <span class="story-username">sarah_edu</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=2" alt="User">
-                            </div>
-                            <span class="story-username">math_prof</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=3" alt="User">
-                            </div>
-                            <span class="story-username">science_club</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=4" alt="User">
-                            </div>
-                            <span class="story-username">history_buff</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=6" alt="User">
-                            </div>
-                            <span class="story-username">code_master</span>
-                        </div>
-                    </div>
-                    
-                    <div class="posts-container">
-                        <div class="post">
-                            <div class="post-header">
-                                <div class="post-user">
-                                    <div class="avatar-container">
-                                        <img src="https://i.pravatar.cc/150?img=7" alt="User" class="post-user-avatar">
-                                        <span class="online-status"></span>
-                                        <span class="pro-badge">P</span>
-                                    </div>
-                                    <div class="post-user-info">
-                                        <h3>Professor Johnson</h3>
-                                        <span>2 hours ago</span>
-                                    </div>
-                                </div>
-                                <button class="post-more">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                            </div>
-                            <div class="post-content">
-                                <p>Just published my new research paper on quantum computing applications in education. Excited to share this with the academic community! #QuantumComputing #EducationInnovation</p>
-                                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Research Paper" class="post-image">
-                            </div>
-                            <div class="post-actions">
-                                <button class="post-action">
-                                    <i class="far fa-heart"></i>
-                                    <span>Like</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-comment"></i>
-                                    <span>Comment</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-bookmark"></i>
-                                    <span>Save</span>
-                                </button>
-                            </div>
-                            <div class="post-stats">
-                                <p>243 likes • 37 comments</p>
-                            </div>
-                            <div class="post-comments">
-                                <div class="post-comment">
-                                    <img src="https://i.pravatar.cc/150?img=8" alt="User" class="post-comment-avatar">
-                                    <div class="post-comment-content">
-                                        <h4>Student_2023</h4>
-                                        <p>This is fascinating! Would love to learn more about the practical applications in classroom settings.</p>
-                                    </div>
-                                </div>
-                                <div class="post-comment">
-                                    <img src="https://i.pravatar.cc/150?img=9" alt="User" class="post-comment-avatar">
-                                    <div class="post-comment-content">
-                                        <h4>TechEducator</h4>
-                                        <p>Great work Professor! This could revolutionize how we approach complex subjects.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="add-comment">
-                                <input type="text" placeholder="Add a comment...">
-                                <button>
-                                    <i class="far fa-smile"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="post">
-                            <div class="post-header">
-                                <div class="post-user">
-                                    <div class="avatar-container">
-                                        <img src="https://i.pravatar.cc/150?img=10" alt="User" class="post-user-avatar">
-                                    </div>
-                                    <div class="post-user-info">
-                                        <h3>StudyGroup_Math</h3>
-                                        <span>5 hours ago</span>
-                                    </div>
-                                </div>
-                                <button class="post-more">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                            </div>
-                            <div class="post-content">
-                                <p>We're organizing a virtual study session for Calculus II this weekend. Anyone interested in joining? Let me know in the comments! #Math #StudyGroup #Calculus</p>
-                            </div>
-                            <div class="post-actions">
-                                <button class="post-action">
-                                    <i class="far fa-heart"></i>
-                                    <span>Like</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-comment"></i>
-                                    <span>Comment</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-bookmark"></i>
-                                    <span>Save</span>
-                                </button>
-                            </div>
-                            <div class="post-stats">
-                                <p>87 likes • 23 comments</p>
-                            </div>
-                            <div class="add-comment">
-                                <input type="text" placeholder="Add a comment...">
-                                <button>
-                                    <i class="far fa-smile"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Post Section -->
-                <div class="content-section" id="post-section">
-                    <div class="create-post">
-                        <div class="create-post-header">
-                            <i class="fas fa-plus-circle"></i>
-                            <h2>Create Post</h2>
-                        </div>
-                        
-                        <div class="create-post-type">
-                            <button class="post-type-btn active">Text</button>
-                            <button class="post-type-btn">Image</button>
-                            <button class="post-type-btn">Video</button>
-                        </div>
-                        
-                        <textarea class="create-post-text" placeholder="Share your educational thoughts, questions, or findings..."></textarea>
-                        <div class="character-count">0/80 characters</div>
-                        
-                        <div class="create-post-actions">
-                            <div class="create-post-options">
-                                <button>
-                                    <i class="fas fa-image"></i>
-                                </button>
-                                <button>
-                                    <i class="fas fa-video"></i>
-                                </button>
-                                <button>
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </button>
-                            </div>
-                            <button class="create-post-submit">Post</button>
-                        </div>
-                    </div>
-                    
-                    <div class="posts-container">
-                        <div class="post">
-                            <div class="post-header">
-                                <div class="post-user">
-                                    <img src="https://i.pravatar.cc/150?img=11" alt="User" class="post-user-avatar">
-                                    <div class="post-user-info">
-                                        <h3>Your Recent Post</h3>
-                                        <span>Yesterday</span>
-                                    </div>
-                                </div>
-                                <button class="post-more">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                            </div>
-                            <div class="post-content">
-                                <p>Just finished my research on the impact of social media on student productivity. The results were quite surprising! #EducationResearch #StudentProductivity</p>
-                            </div>
-                            <div class="post-actions">
-                                <button class="post-action">
-                                    <i class="far fa-heart"></i>
-                                    <span>42</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-comment"></i>
-                                    <span>7</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-bookmark"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Other sections would be here but are hidden initially -->
-                <div class="content-section" id="search-section">
-                    <h2>Search Functionality</h2>
-                    <p>Search for users, posts, and groups would appear here.</p>
-                </div>
-                
-                <div class="content-section" id="chat-section">
-                    <h2>Chat Functionality</h2>
-                    <p>Private messaging interface would appear here.</p>
-                </div>
-                
-                <div class="content-section" id="groups-section">
-                    <h2>Groups Functionality</h2>
-                    <p>Group discovery and management would appear here.</p>
-                </div>
-                
-                <div class="content-section" id="account-section">
-                    <h2>Account Management</h2>
-                    <p>Profile settings and analytics would appear here.</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2023 Kotweb - Educational Social Media Platform. All rights reserved.</p>
-        </div>
+  <header>
+    <div>Kotweb</div>
+    <div class="right-icons">
+      <i class="fa-solid fa-bell"></i>
+      <i class="fa-solid fa-paper-plane"></i>
     </div>
-    
-    <!-- Permission Request Modal -->
-    <div class="modal" id="permissionModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Permissions Request</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>To provide you with the best experience, Kotweb would like to:</p>
-                <ul>
-                    <li>Send you notifications</li>
-                    <li>Access your location for localized content</li>
-                </ul>
-                <p>You can change these permissions anytime in your account settings.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn modal-btn-secondary">Not Now</button>
-                <button class="modal-btn modal-btn-primary">Allow</button>
-            </div>
-        </div>
+  </header>
+
+  <main>
+    <!-- Stories -->
+    <div class="stories">
+      <div class="story">
+        <img src="https://via.placeholder.com/60" alt="story">
+        <p>You</p>
+      </div>
+      <div class="story">
+        <img src="https://via.placeholder.com/60" alt="story">
+        <p>@pro_user</p>
+      </div>
+      <div class="story">
+        <img src="https://via.placeholder.com/60" alt="story">
+        <p>@normal_user</p>
+      </div>
     </div>
-    
-    <script>
-        // DOM Elements
-        const themeToggle = document.getElementById('themeToggle');
-        const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
-        const contentSections = document.querySelectorAll('.content-section');
-        const permissionModal = document.getElementById('permissionModal');
-        const postText = document.querySelector('.create-post-text');
-        const characterCount = document.querySelector('.character-count');
-        const postTypeButtons = document.querySelectorAll('.post-type-btn');
-        
-        // Theme Toggle
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        });
-        
-        // Check system preference for dark mode
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-        
-        // Navigation
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Remove active class from all links
-                sidebarLinks.forEach(l => l.classList.remove('active'));
-                
-                // Add active class to clicked link
-                link.classList.add('active');
-                
-                // Hide all content sections
-                contentSections.forEach(section => section.classList.remove('active'));
-                
-                // Show the corresponding section
-                const sectionId = link.getAttribute('data-section');
-                document.getElementById(`${sectionId}-section`).classList.add('active');
-            });
-        });
-        
-        // Character count for post text
-        postText.addEventListener('input', () => {
-            const length = postText.value.length;
-            characterCount.textContent = `${length}/80 characters`;
-            
-            if (length > 70) {
-                characterCount.classList.add('near-limit');
-            } else {
-                characterCount.classList.remove('near-limit');
-            }
-            
-            if (length > 80) {
-                characterCount.classList.add('over-limit');
-            } else {
-                characterCount.classList.remove('over-limit');
-            }
-        });
-        
-        // Post type buttons
-        postTypeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                postTypeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
-        
-        // Show permission modal after a delay
-        setTimeout(() => {
-            permissionModal.style.display = 'flex';
-        }, 2000);
-        
-        // Close modal
-        document.querySelector('.modal-close').addEventListener('click', () => {
-            permissionModal.style.display = 'none';
-        });
-        
-        document.querySelector('.modal-btn-secondary').addEventListener('click', () => {
-            permissionModal.style.display = 'none';
-        });
-        
-        // Allow permissions
-        document.querySelector('.modal-btn-primary').addEventListener('click', () => {
-            // In a real app, this would request actual permissions
-            alert('Permissions granted!');
-            permissionModal.style.display = 'none';
-        });
-        
-        // Simulate user type (normal or pro)
-        const userType = 'pro'; // This would come from Firebase in a real app
-        
-        // Apply restrictions based on user type
-        if (userType === 'normal') {
-            // Normal users can only post text with 80 character limit
-            const imageButton = postTypeButtons[1];
-            const videoButton = postTypeButtons[2];
-            
-            imageButton.disabled = true;
-            videoButton.disabled = true;
-            
-            imageButton.style.opacity = '0.5';
-            videoButton.style.opacity = '0.5';
-            
-            imageButton.style.cursor = 'not-allowed';
-            videoButton.style.cursor = 'not-allowed';
-        }
-    </script>
+
+    <!-- Feed -->
+    <div class="feed">
+      <!-- Pro Post with Image -->
+      <div class="post">
+        <div class="post-header">
+          <img src="https://via.placeholder.com/40" alt="profile">
+          <h3>@pro_user</h3>
+        </div>
+        <div class="post-content">
+          <p>This is a pro user post with image.</p>
+          <img src="https://via.placeholder.com/300x200" alt="post-img">
+        </div>
+        <div class="post-actions">
+          <i class="fa-regular fa-heart"></i>
+          <i class="fa-regular fa-comment"></i>
+          <i class="fa-solid fa-share"></i>
+        </div>
+      </div>
+
+      <!-- Normal User Text Post -->
+      <div class="post">
+        <div class="post-header">
+          <img src="https://via.placeholder.com/40" alt="profile">
+          <h3>@normal_user</h3>
+        </div>
+        <div class="post-content">
+          <p>Normal user post (80 chars max).</p>
+        </div>
+        <div class="post-actions">
+          <i class="fa-regular fa-heart"></i>
+          <i class="fa-regular fa-comment"></i>
+          <i class="fa-solid fa-share"></i>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav>
+    <a href="post.html"><i class="fa-solid fa-square-plus"></i>Post</a>
+    <a href="account.html"><i class="fa-solid fa-user"></i>Account</a>
+    <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i>Search</a>
+    <a href="chat.html"><i class="fa-solid fa-comment-dots"></i>Chat</a>
+    <a href="groups.html"><i class="fa-solid fa-users"></i>Groups</a>
+  </nav>
+
+  <script>
+    // Ask permission for notifications
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
+    // Ask permission for location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => console.log("Location:", pos.coords),
+        (err) => console.warn("Location blocked:", err)
+      );
+    }
+
+    // Example: Online tracker (placeholder)
+    let onlineStatus = true;
+    console.log("User is online:", onlineStatus);
+  </script>
 </body>
 </html>
