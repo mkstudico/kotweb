@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kotweb - Create Post</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <style>
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #000;
+      --post-bg: #fff;
+      --border-color: #ddd;
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --accent-color: #e44d3a;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      --transition-speed: 0.3s;
+    }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #e4e4e4;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    * {
+      box-sizing: border-box;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+    header {
+      background: var(--post-bg);
+      padding: 12px 15px;
+      font-weight: bold;
+      font-size: 22px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-icon {
+      color: var(--primary-color);
+      font-size: 24px;
+    }
+    .right-icons i {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: transform 0.2s;
+    }
+    .right-icons i:hover {
+      transform: scale(1.1);
+    }
+    nav {
+      background: var(--post-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      text-align: center;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    nav a:hover, nav a.active {
+      opacity: 1;
+      color: var(--primary-color);
+    }
+    nav i {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    @media (min-width: 769px) {
+      body {
+        flex-direction: row;
+      }
+      .container {
+        margin-left: 85px;
+        width: calc(100% - 85px);
+      }
+      nav {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 85px;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px;
+        border-right: 1px solid var(--border-color);
+        border-top: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      }
+      nav a {
+        margin: 18px 0;
+        font-size: 13px;
+      }
+      header {
+        margin-left: 85px;
+        width: calc(100% - 85px);
+      }
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not(.light) {
+        --bg-color: #121212;
+        --text-color: #e4e4e4;
+        --post-bg: #1e1e1e;
+        --border-color: #333;
+        --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+    }
+    .post-form {
+      background: var(--post-bg);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 20px;
+    }
+    .post-form h2 {
+      margin: 0 0 15px;
+      color: var(--primary-color);
+      font-size: 18px;
+    }
+    .post-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    .post-form textarea, .post-form input, .post-form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--post-bg);
+      color: var(--text-color);
+      font-family: inherit;
+    }
+    .post-form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .post-form button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .post-form button:hover {
+      opacity: 0.9;
+    }
+    .post-form .image-upload {
+      display: none;
+    }
+    .post-form .image-upload.pro {
+      display: block;
+    }
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-book-open logo-icon" aria-hidden="true"></i>
+        <span>Kotweb</span>
+      </div>
+      <div class="right-icons">
+        <i class="fas fa-moon" id="themeToggle" aria-label="Toggle theme"></i>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <div class="post-form" role="form" aria-labelledby="postFormTitle">
+        <h2 id="postFormTitle">Create a Post</h2>
+        <form id="postForm">
+          <label for="postType">Post Type</label>
+          <select id="postType" name="postType">
+            <option value="general">General</option>
+            <option value="housing">Housing</option>
+            <option value="exam" disabled>Exam Paper (Pro Only)</option>
+          </select>
+          <label for="postText">Post Content</label>
+          <textarea id="postText" name="postText" maxlength="80" placeholder="What's on your mind? (80 chars max)"></textarea>
+          <div class="image-upload" id="imageUpload">
+            <label for="postImage">Upload Images (Pro Only)</label>
+            <input type="file" id="postImage" name="postImage" accept="image/*" multiple disabled>
+          </div>
+          <div id="housingFields" style="display: none;">
+            <label for="housingPrice">Price (€/month)</label>
+            <input type="number" id="housingPrice" name="housingPrice" placeholder="e.g., 500">
+            <label for="housingLocation">Location</label>
+            <input type="text" id="housingLocation" name="housingLocation" placeholder="e.g., Antwerp, Leuven">
+          </div>
+          <button type="submit">Post</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <nav aria-label="Main navigation">
+    <a href="home.html"><i class="fas fa-home" aria-hidden="true"></i>Home</a>
+    <a href="search.html"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Search</a>
+    <a href="post.html" class="active"><i class="fa-solid fa-square-plus" aria-hidden="true"></i>Post</a>
+    <a href="chat.html"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>Chat</a>
+    <a href="groups.html"><i class="fa-solid fa-users" aria-hidden="true"></i>Groups</a>
+    <a href="notifications.html"><i class="fa-solid fa-bell" aria-hidden="true"></i>Alerts</a>
+    <a href="account.html"><i class="fa-solid fa-user" aria-hidden="true"></i>Profile</a>
+  </nav>
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1FG7OAGIgJqg3bmpStVTpi0RqpI_DctE",
+      authDomain: "music-app-718f4.firebaseapp.com",
+      databaseURL: "https://music-app-718f4-default-rtdb.firebaseio.com",
+      projectId: "music-app-718f4",
+      storageBucket: "music-app-718f4.firebasestorage.app",
+      messagingSenderId: "91683197015",
+      appId: "1:91683197015:web:92899ecb0c913dc0a95312",
+      measurementId: "G-MQLRPLZZFF"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    function initTheme() {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        document.getElementById('themeToggle').classList.replace('fa-moon', 'fa-sun');
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          document.body.classList.toggle('dark', e.matches);
+          document.getElementById('themeToggle').classList.replace(e.matches ? 'fa-moon' : 'fa-sun', e.matches ? 'fa-sun' : 'fa-moon');
+        }
+      });
+    }
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeToggle').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+    });
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const userDocRef = db.collection('users').doc(user.uid);
+        const userDoc = await userDocRef.get();
+        if (userDoc.exists) {
+          const data = userDoc.data();
+          const userType = data.userType || 'NormalUser';
+          const settings = userType === 'ProUser' ? data.proUser : data.normalUser;
+          document.getElementById('postText').setAttribute('maxlength', settings.postText);
+          document.getElementById('postText').placeholder = `What's on your mind? (${settings.postText} chars max)`;
+          if (userType === 'ProUser') {
+            document.getElementById('imageUpload').classList.add('pro');
+            document.getElementById('postImage').disabled = false;
+            document.getElementById('postType').querySelector('option[value="exam"]').disabled = false;
+          }
+        } else {
+          window.location.href = 'login.html';
+        }
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+    document.getElementById('postType').addEventListener('change', (e) => {
+      const housingFields = document.getElementById('housingFields');
+      housingFields.style.display = e.target.value === 'housing' ? 'block' : 'none';
+    });
+    document.getElementById('postForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+      const postType = document.getElementById('postType').value;
+      const postText = document.getElementById('postText').value;
+      const postImage = document.getElementById('postImage').files;
+      const housingPrice = document.getElementById('housingPrice').value;
+      const housingLocation = document.getElementById('housingLocation').value;
+      const userDocRef = db.collection('users').doc(user.uid);
+      const userDoc = await userDocRef.get();
+      const userType = userDoc.data().userType || 'NormalUser';
+      const settings = userType === 'ProUser' ? userDoc.data().proUser : userDoc.data().normalUser;
+      if (postText.length > settings.postText) {
+        showToast(`Post exceeds ${settings.postText} character limit.`);
+        return;
+      }
+      if (postImage.length > 0 && settings.postImages === 0) {
+        showToast('Image posts are not allowed for Normal users.');
+        return;
+      }
+      try {
+        let imageUrls = [];
+        if (postImage.length > 0 && userType === 'ProUser') {
+          for (const file of postImage) {
+            const storageRef = storage.ref(`posts/${user.uid}/${Date.now()}_${file.name}`);
+            await storageRef.put(file);
+            const url = await storageRef.getDownloadURL();
+            imageUrls.push(url);
+          }
+        }
+        const postData = {
+          userId: user.uid,
+          username: userDoc.data().username || 'Anonymous',
+          type: postType,
+          text: postText,
+          images: imageUrls,
+          createdAt: new Date(),
+          likes: 0,
+          comments: 0
+        };
+        if (postType === 'housing') {
+          postData.housing = { price: parseFloat(housingPrice) || 0, location: housingLocation || '' };
+        }
+        await db.collection('posts').add(postData);
+        showToast('Post created successfully!');
+        document.getElementById('postForm').reset();
+        document.getElementById('housingFields').style.display = 'none';
+      } catch (error) {
+        console.error('Error creating post:', error);
+        showToast('Error creating post. Please try again.');
+      }
+    });
+    const currentPage = window.location.pathname.split('/').pop() || 'post.html';
+    document.querySelectorAll('nav a').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === currentPage);
+    });
+    initTheme();
+  </script>
+</body>
+</html>
