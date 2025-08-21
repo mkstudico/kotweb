@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kotweb - Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <style>
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #000;
+      --post-bg: #fff;
+      --border-color: #ddd;
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --accent-color: #e44d3a;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      --transition-speed: 0.3s;
+    }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #e4e4e4;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    * {
+      box-sizing: border-box;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+    header {
+      background: var(--post-bg);
+      padding: 12px 15px;
+      font-weight: bold;
+      font-size: 22px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-icon {
+      color: var(--primary-color);
+      font-size: 24px;
+    }
+    .right-icons i {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: transform 0.2s;
+    }
+    .right-icons i:hover {
+      transform: scale(1.1);
+    }
+    nav {
+      background: var(--post-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      text-align: center;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    nav a:hover, nav a.active {
+      opacity: 1;
+      color: var(--primary-color);
+    }
+    nav i {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    @media (min-width: 769px) {
+      body {
+        flex-direction: row;
+      }
+      .container {
+        margin-left: 85px;
+        width: calc(100% - 85px);
+      }
+      nav {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 85px;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px;
+        border-right: 1px solid var(--border-color);
+        border-top: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      }
+      nav a {
+        margin: 18px 0;
+        font-size: 13px;
+      }
+      header {
+        margin-left: 85px;
+        width: calc(100% - 85px);
+      }
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not(.light) {
+        --bg-color: #121212;
+        --text-color: #e4e4e4;
+        --post-bg: #1e1e1e;
+        --border-color: #333;
+        --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+    }
+    .admin-section {
+      background: var(--post-bg);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 20px;
+    }
+    .admin-section h2 {
+      margin: 0 0 15px;
+      color: var(--primary-color);
+      font-size: 18px;
+    }
+    .user-list, .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .user-item, .post-item {
+      background: var(--post-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .user-item button, .post-item button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .user-item button:hover, .post-item button:hover {
+      opacity: 0.9;
+    }
+    .post-item button.delete {
+      background: var(--accent-color);
+    }
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: var(--secondary-color);
+    }
+    .loading i {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-book-open logo-icon" aria-hidden="true"></i>
+        <span>Kotweb Admin</span>
+      </div>
+      <div class="right-icons">
+        <i class="fas fa-moon" id="themeToggle" aria-label="Toggle theme"></i>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <div class="admin-section" role="region" aria-labelledby="usersTitle">
+        <h2 id="usersTitle">User Management</h2>
+        <div class="user-list" id="userList"></div>
+      </div>
+      <div class="admin-section" role="region" aria-labelledby="postsTitle">
+        <h2 id="postsTitle">Post Moderation</h2>
+        <div class="post-list" id="postList"></div>
+      </div>
+      <div class="loading" role="status" aria-live="polite">
+        <i class="fas fa-spinner"></i> Loading...
+      </div>
+    </div>
+  </main>
+  <nav aria-label="Main navigation">
+    <a href="home.html"><i class="fas fa-home" aria-hidden="true"></i>Home</a>
+    <a href="search.html"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Search</a>
+    <a href="post.html"><i class="fa-solid fa-square-plus" aria-hidden="true"></i>Post</a>
+    <a href="chat.html"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>Chat</a>
+    <a href="groups.html"><i class="fa-solid fa-users" aria-hidden="true"></i>Groups</a>
+    <a href="notifications.html"><i class="fa-solid fa-bell" aria-hidden="true"></i>Alerts</a>
+    <a href="account.html"><i class="fa-solid fa-user" aria-hidden="true"></i>Profile</a>
+  </nav>
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1FG7OAGIgJqg3bmpStVTpi0RqpI_DctE",
+      authDomain: "music-app-718f4.firebaseapp.com",
+      databaseURL: "https://music-app-718f4-default-rtdb.firebaseio.com",
+      projectId: "music-app-718f4",
+      storageBucket: "music-app-718f4.firebasestorage.app",
+      messagingSenderId: "91683197015",
+      appId: "1:91683197015:web:92899ecb0c913dc0a95312",
+      measurementId: "G-MQLRPLZZFF"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    function initTheme() {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        document.getElementById('themeToggle').classList.replace('fa-moon', 'fa-sun');
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          document.body.classList.toggle('dark', e.matches);
+          document.getElementById('themeToggle').classList.replace(e.matches ? 'fa-moon' : 'fa-sun', e.matches ? 'fa-sun' : 'fa-moon');
+        }
+      });
+    }
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeToggle').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+    });
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    async function loadUsers() {
+      const userList = document.getElementById('userList');
+      userList.innerHTML = '';
+      document.querySelector('.loading').style.display = 'block';
+      try {
+        const snapshot = await db.collection('users').get();
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const userType = data.userType || 'NormalUser';
+          const item = document.createElement('div');
+          item.className = 'user-item';
+          item.innerHTML = `
+            <span>${data.username || 'Anonymous'} (${data.email}) - ${userType}</span>
+            <button onclick="upgradeUser('${doc.id}', '${userType}')">${userType === 'NormalUser' ? 'Upgrade to Pro' : 'Downgrade to Normal'}</button>
+          `;
+          userList.appendChild(item);
+        });
+      } catch (error) {
+        console.error('Error loading users:', error);
+        showToast('Error loading users.');
+      }
+      document.querySelector('.loading').style.display = 'none';
+    }
+    async function loadPosts() {
+      const postList = document.getElementById('postList');
+      postList.innerHTML = '';
+      document.querySelector('.loading').style.display = 'block';
+      try {
+        const snapshot = await db.collection('posts').orderBy('createdAt', 'desc').get();
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement('div');
+          item.className = 'post-item';
+          const content = data.text.length > 50 ? data.text.substring(0, 50) + '...' : data.text;
+          item.innerHTML = `
+            <span>${data.username}: ${content} (${data.type})</span>
+            <div>
+              <button onclick="archivePost('${doc.id}')">Archive</button>
+              <button class="delete" onclick="deletePost('${doc.id}')">Delete</button>
+            </div>
+          `;
+          postList.appendChild(item);
+        });
+      } catch (error) {
+        console.error('Error loading posts:', error);
+        showToast('Error loading posts.');
+      }
+      document.querySelector('.loading').style.display = 'none';
+    }
+    window.upgradeUser = async (userId, currentType) => {
+      try {
+        await db.collection('users').doc(userId).update({
+          userType: currentType === 'NormalUser' ? 'ProUser' : 'NormalUser'
+        });
+        showToast(`User ${currentType === 'NormalUser' ? 'upgraded to Pro' : 'downgraded to Normal'}.`);
+        loadUsers();
+      } catch (error) {
+        console.error('Error upgrading user:', error);
+        showToast('Error updating user.');
+      }
+    };
+    window.deletePost = async (postId) => {
+      if (confirm('Delete this post?')) {
+        try {
+          await db.collection('posts').doc(postId).delete();
+          showToast('Post deleted.');
+          loadPosts();
+        } catch (error) {
+          console.error('Error deleting post:', error);
+          showToast('Error deleting post.');
+        }
+      }
+    };
+    window.archivePost = async (postId) => {
+      try {
+        await db.collection('posts').doc(postId).update({ archived: true });
+        showToast('Post archived.');
+        loadPosts();
+      } catch (error) {
+        console.error('Error archiving post:', error);
+        showToast('Error archiving post.');
+      }
+    };
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const userDocRef = db.collection('users').doc(user.uid);
+        const userDoc = await userDocRef.get();
+        if (userDoc.exists && userDoc.data().isAdmin) {
+          loadUsers();
+          loadPosts();
+        } else {
+          showToast('Access denied. Admins only.');
+          window.location.href = 'home.html';
+        }
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+    const currentPage = window.location.pathname.split('/').pop() || 'admin.html';
+    document.querySelectorAll('nav a').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === currentPage);
+    });
+    initTheme();
+  </script>
+</body>
+</html>
