@@ -11,27 +11,39 @@
       --text-color: #000;
       --post-bg: #fff;
       --border-color: #ddd;
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --accent-color: #e44d3a;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      --transition-speed: 0.3s;
     }
     body.dark {
       --bg-color: #121212;
-      --text-color: #fff;
+      --text-color: #e4e4e4;
       --post-bg: #1e1e1e;
       --border-color: #333;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    * {
+      box-sizing: border-box;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
     }
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      min-height: 100vh;
+      position: relative;
     }
+    /* Header Styles */
     header {
       background: var(--post-bg);
-      padding: 15px;
+      padding: 12px 15px;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 22px;
       text-align: center;
       border-bottom: 1px solid var(--border-color);
       position: sticky;
@@ -39,42 +51,89 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 10;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
-    header .right-icons i {
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-icon {
+      color: var(--primary-color);
+      font-size: 24px;
+    }
+    .right-icons {
+      display: flex;
+      gap: 15px;
+    }
+    .right-icons i {
       font-size: 20px;
-      margin-left: 15px;
       cursor: pointer;
       color: var(--text-color);
+      transition: transform 0.2s;
     }
+    .right-icons i:hover {
+      transform: scale(1.1);
+    }
+    /* Main Content */
     main {
       flex: 1;
       overflow-y: auto;
+      padding-bottom: 60px;
     }
     /* Stories */
+    .stories-container {
+      background: var(--post-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 5px 0 15px;
+    }
+    .stories-title {
+      padding: 10px 15px 5px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--secondary-color);
+    }
     .stories {
       display: flex;
       overflow-x: auto;
-      padding: 10px;
-      background: var(--post-bg);
-      border-bottom: 1px solid var(--border-color);
+      padding: 5px 10px;
+      scrollbar-width: none;
+    }
+    .stories::-webkit-scrollbar {
+      display: none;
     }
     .story {
       flex: 0 0 auto;
-      margin-right: 15px;
+      margin: 0 8px;
       text-align: center;
+      cursor: pointer;
     }
-    .story img {
-      width: 60px;
-      height: 60px;
+    .story-avatar {
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
-      border: 2px solid #007bff;
+      padding: 3px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      margin-bottom: 6px;
+    }
+    .story-avatar.inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--post-bg);
       object-fit: cover;
     }
     .story p {
       font-size: 12px;
-      margin-top: 5px;
+      margin: 0;
       color: var(--text-color);
+      max-width: 74px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .story.your-story .story-avatar {
+      background: var(--border-color);
     }
     /* Feed */
     .feed {
@@ -82,71 +141,116 @@
     }
     .post {
       background: var(--post-bg);
-      border-radius: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
     }
     .post-header {
       display: flex;
       align-items: center;
-      padding: 10px;
+      padding: 12px;
     }
     .post-header img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      margin-right: 10px;
+      margin-right: 12px;
+      object-fit: cover;
+    }
+    .post-user-info {
+      flex: 1;
     }
     .post-header h3 {
       margin: 0;
       font-size: 15px;
       color: var(--text-color);
     }
+    .post-time {
+      font-size: 12px;
+      color: var(--secondary-color);
+      margin-top: 2px;
+    }
+    .post-menu {
+      color: var(--secondary-color);
+      cursor: pointer;
+    }
     .post-content {
-      padding: 10px;
+      padding: 0 12px 12px;
       color: var(--text-color);
+    }
+    .post-text {
+      margin: 0 0 12px;
+      line-height: 1.4;
     }
     .post-content img {
       width: 100%;
       border-radius: 8px;
-      margin-top: 10px;
+      margin-top: 5px;
+    }
+    .post-stats {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-size: 13px;
+      color: var(--secondary-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
     }
     .post-actions {
       display: flex;
       justify-content: space-around;
-      padding: 10px;
-      border-top: 1px solid #eee;
+      padding: 8px 0;
     }
-    .post-actions i {
-      font-size: 20px;
+    .post-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--secondary-color);
+      font-weight: 500;
+      font-size: 13px;
       cursor: pointer;
-      color: var(--text-color);
+      padding: 6px 0;
+      width: 100%;
+    }
+    .post-action i {
+      margin-right: 6px;
+      font-size: 18px;
+    }
+    .post-action.liked {
+      color: var(--accent-color);
     }
     /* Bottom/Side Navigation */
     nav {
       background: var(--post-bg);
       border-top: 1px solid var(--border-color);
-      padding: 10px 0;
+      padding: 12px 0;
       position: fixed;
       bottom: 0;
       width: 100%;
       display: flex;
       justify-content: space-around;
-      z-index: 10;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
     }
     nav a {
       color: var(--text-color);
       text-decoration: none;
       text-align: center;
       font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.7;
+      transition: opacity 0.2s;
     }
-    nav a.active {
-      color: #007bff;
+    nav a:hover, nav a.active {
+      opacity: 1;
+      color: var(--primary-color);
     }
     nav i {
       font-size: 20px;
-      display: block;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
     /* Desktop Sidebar */
     @media (min-width: 769px) {
@@ -158,33 +262,36 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 80px;
+        width: 85px;
         flex-direction: column;
         justify-content: flex-start;
-        padding: 20px 0;
+        padding-top: 80px;
         border-right: 1px solid var(--border-color);
         border-top: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
       }
       nav a {
-        margin: 20px 0;
-        font-size: 14px;
+        margin: 18px 0;
+        font-size: 13px;
       }
       main {
-        margin-left: 80px;
-        width: calc(100% - 80px);
+        margin-left: 85px;
+        width: calc(100% - 85px);
+        padding-bottom: 0;
       }
       header {
-        margin-left: 80px;
-        width: calc(100% - 80px);
+        margin-left: 85px;
+        width: calc(100% - 85px);
       }
     }
     /* Theme Auto-Adjust */
     @media (prefers-color-scheme: dark) {
-      body {
+      body:not(.light) {
         --bg-color: #121212;
-        --text-color: #fff;
+        --text-color: #e4e4e4;
         --post-bg: #1e1e1e;
         --border-color: #333;
+        --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
       }
     }
     /* Agreement Modal */
@@ -195,109 +302,233 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.7);
       justify-content: center;
       align-items: center;
-      z-index: 20;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
     }
     .modal-content {
       background: var(--post-bg);
-      padding: 20px;
-      border-radius: 10px;
+      padding: 25px;
+      border-radius: 14px;
       text-align: center;
-      max-width: 400px;
+      max-width: 450px;
+      width: 90%;
       color: var(--text-color);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .modal h2 {
+      margin-top: 0;
+      color: var(--primary-color);
+    }
+    .modal p {
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
     }
     .modal button {
-      background: #007bff;
+      background: var(--primary-color);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 10px 24px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 10px;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    .modal button#declineButton {
+      background: var(--secondary-color);
+    }
+    .modal button:hover {
+      opacity: 0.9;
+    }
+    /* Loading indicator */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: var(--secondary-color);
+    }
+    .loading i {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* Pro user badge */
+    .pro-badge {
+      background: linear-gradient(45deg, #ffbf00, #ff9900);
+      color: white;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <header>
-    <div>Kotweb</div>
+    <div class="logo">
+      <i class="fas fa-cat logo-icon"></i>
+      <span>Kotweb</span>
+    </div>
     <div class="right-icons">
-      <i class="fa-solid fa-bell"></i>
-      <i class="fa-solid fa-paper-plane"></i>
+      <i class="fa-solid fa-bell" id="notificationsIcon"></i>
+      <i class="fa-solid fa-paper-plane" id="messagesIcon"></i>
+      <i class="fas fa-moon" id="themeToggle"></i>
     </div>
   </header>
   <main>
     <!-- Stories -->
-    <div class="stories">
-      <div class="story">
-        <img src="https://via.placeholder.com/60" alt="story">
-        <p>You</p>
-      </div>
-      <div class="story">
-        <img src="https://via.placeholder.com/60" alt="story">
-        <p>@pro_user</p>
-      </div>
-      <div class="story">
-        <img src="https://via.placeholder.com/60" alt="story">
-        <p>@normal_user</p>
+    <div class="stories-container">
+      <div class="stories-title">Stories</div>
+      <div class="stories">
+        <div class="story your-story">
+          <div class="story-avatar">
+            <img src="https://via.placeholder.com/60" alt="Your story" class="inner">
+          </div>
+          <p>Your story</p>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <img src="https://via.placeholder.com/60/ff9910/ffffff?text=P" alt="story" class="inner">
+          </div>
+          <p>@pro_user</p>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <img src="https://via.placeholder.com/60/3377ff/ffffff?text=N" alt="story" class="inner">
+          </div>
+          <p>@normal_user</p>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <img src="https://via.placeholder.com/60/33aa44/ffffff?text=U" alt="story" class="inner">
+          </div>
+          <p>@user_123</p>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <img src="https://via.placeholder.com/60/cc3377/ffffff?text=K" alt="story" class="inner">
+          </div>
+          <p>@kotweb_fan</p>
+        </div>
       </div>
     </div>
+    
     <!-- Feed -->
     <div class="feed">
       <!-- Pro Post with Image -->
       <div class="post">
         <div class="post-header">
-          <img src="https://via.placeholder.com/40" alt="profile">
-          <h3>@pro_user</h3>
+          <img src="https://via.placeholder.com/40/ff9910/ffffff?text=P" alt="profile">
+          <div class="post-user-info">
+            <h3>@pro_user <span class="pro-badge">PRO</span></h3>
+            <div class="post-time">2 hours ago</div>
+          </div>
+          <div class="post-menu">
+            <i class="fas fa-ellipsis-h"></i>
+          </div>
         </div>
         <div class="post-content">
-          <p>This is a pro user post with image.</p>
-          <img src="https://via.placeholder.com/300x200" alt="post-img">
+          <p class="post-text">This is a pro user post with image. Pro users can post longer content and multiple images per post.</p>
+          <img src="https://via.placeholder.com/600x400/3377ff/ffffff?text=Pro+Content" alt="post-img">
+        </div>
+        <div class="post-stats">
+          <span>245 likes</span>
+          <span>36 comments</span>
         </div>
         <div class="post-actions">
-          <i class="fa-regular fa-heart"></i>
-          <i class="fa-regular fa-comment"></i>
-          <i class="fa-solid fa-share"></i>
+          <div class="post-action" id="likeButton1">
+            <i class="fa-regular fa-heart"></i>
+            <span>Like</span>
+          </div>
+          <div class="post-action">
+            <i class="fa-regular fa-comment"></i>
+            <span>Comment</span>
+          </div>
+          <div class="post-action">
+            <i class="fa-solid fa-share"></i>
+            <span>Share</span>
+          </div>
         </div>
       </div>
+      
       <!-- Normal User Text Post -->
       <div class="post">
         <div class="post-header">
-          <img src="https://via.placeholder.com/40" alt="profile">
-          <h3>@normal_user</h3>
+          <img src="https://via.placeholder.com/40/3377ff/ffffff?text=N" alt="profile">
+          <div class="post-user-info">
+            <h3>@normal_user</h3>
+            <div class="post-time">5 hours ago</div>
+          </div>
+          <div class="post-menu">
+            <i class="fas fa-ellipsis-h"></i>
+          </div>
         </div>
         <div class="post-content">
-          <p>Normal user post (80 chars max).</p>
+          <p class="post-text">Normal user post with text only. Normal users have character limits for their posts.</p>
+        </div>
+        <div class="post-stats">
+          <span>89 likes</span>
+          <span>14 comments</span>
         </div>
         <div class="post-actions">
-          <i class="fa-regular fa-heart"></i>
-          <i class="fa-regular fa-comment"></i>
-          <i class="fa-solid fa-share"></i>
+          <div class="post-action" id="likeButton2">
+            <i class="fa-regular fa-heart"></i>
+            <span>Like</span>
+          </div>
+          <div class="post-action">
+            <i class="fa-regular fa-comment"></i>
+            <span>Comment</span>
+          </div>
+          <div class="post-action">
+            <i class="fa-solid fa-share"></i>
+            <span>Share</span>
+          </div>
         </div>
+      </div>
+      
+      <!-- Loading indicator for more content -->
+      <div class="loading">
+        <i class="fas fa-spinner"></i> Loading more posts...
       </div>
     </div>
   </main>
+  
   <!-- Bottom/Side Navigation -->
   <nav>
-    <a href="post.html"><i class="fa-solid fa-square-plus"></i>Post</a>
-    <a href="account.html"><i class="fa-solid fa-user"></i>Account</a>
+    <a href="home.html" class="active"><i class="fas fa-home"></i>Home</a>
     <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i>Search</a>
+    <a href="post.html"><i class="fa-solid fa-square-plus"></i>Post</a>
     <a href="chat.html"><i class="fa-solid fa-comment-dots"></i>Chat</a>
     <a href="groups.html"><i class="fa-solid fa-users"></i>Groups</a>
-    <a href="notifications.html"><i class="fa-solid fa-bell"></i>Notifications</a>
+    <a href="notifications.html"><i class="fa-solid fa-bell"></i>Alerts</a>
+    <a href="account.html"><i class="fa-solid fa-user"></i>Profile</a>
   </nav>
+  
   <!-- Agreement Modal -->
   <div class="modal" id="agreementModal">
     <div class="modal-content">
       <h2>Additional Settings Agreement</h2>
-      <p>By continuing, you agree to Kotweb's additional settings and defaults for your account.</p>
-      <button id="agreeButton">Agree and Continue</button>
+      <p>By continuing, you agree to Kotweb's additional settings and defaults for your account. These settings include post limits, image restrictions, and content guidelines.</p>
+      <div class="modal-buttons">
+        <button id="declineButton">Decline</button>
+        <button id="agreeButton">Agree & Continue</button>
+      </div>
     </div>
   </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -315,6 +546,55 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Theme management
+    function initTheme() {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedTheme = localStorage.getItem('theme');
+      
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        document.getElementById('themeToggle').classList.replace('fa-moon', 'fa-sun');
+      }
+    }
+
+    // Toggle theme
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      if (document.body.classList.contains('dark')) {
+        document.body.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        document.getElementById('themeToggle').classList.replace('fa-sun', 'fa-moon');
+      } else {
+        document.body.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('themeToggle').classList.replace('fa-moon', 'fa-sun');
+      }
+    });
+
+    // Like button functionality
+    document.getElementById('likeButton1').addEventListener('click', function() {
+      this.classList.toggle('liked');
+      const icon = this.querySelector('i');
+      if (this.classList.contains('liked')) {
+        icon.classList.replace('fa-regular', 'fa-solid');
+        this.querySelector('span').textContent = 'Liked';
+      } else {
+        icon.classList.replace('fa-solid', 'fa-regular');
+        this.querySelector('span').textContent = 'Like';
+      }
+    });
+
+    document.getElementById('likeButton2').addEventListener('click', function() {
+      this.classList.toggle('liked');
+      const icon = this.querySelector('i');
+      if (this.classList.contains('liked')) {
+        icon.classList.replace('fa-regular', 'fa-solid');
+        this.querySelector('span').textContent = 'Liked';
+      } else {
+        icon.classList.replace('fa-solid', 'fa-regular');
+        this.querySelector('span').textContent = 'Like';
+      }
+    });
+
     // Check auth state and handle agreement
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -326,8 +606,8 @@
             document.getElementById('agreementModal').style.display = 'flex';
           }
         } else {
-          // Handle if doc doesn't exist (rare, but redirect or error)
-          window.location.href = 'login.html';
+          // If user doc doesn't exist, redirect to complete profile
+          window.location.href = 'complete-profile.html';
         }
       } else {
         window.location.href = 'login.html';
@@ -342,6 +622,7 @@
         try {
           await updateDoc(userDocRef, {
             agreedToSettings: true,
+            agreedAt: new Date(),
             normalUser: {
               postText: 80,  // chars max
               postImages: 0,  // per day
@@ -350,16 +631,37 @@
             proUser: {
               postText: 300,  // chars max
               postImages: 3,  // per day, multiple per post
-              openImagePosts: 5,  // in 8 hours (note: you said 3, but then 5? Adjusted to 5 as per "only 5")
+              openImagePosts: 5,  // in 8 hours
               typeOfPost: 0  // 0: images only, 1: exam posts
             }
-            // Add more defaults if needed, e.g., userType: 'NormalUser'
           });
           document.getElementById('agreementModal').style.display = 'none';
         } catch (error) {
           console.error("Error updating settings:", error);
           alert('Error saving settings. Please try again.');
         }
+      }
+    });
+
+    // Decline button handler
+    document.getElementById('declineButton').addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        window.location.href = 'login.html';
+      } catch (error) {
+        console.error("Error signing out:", error);
+      }
+    });
+
+    // Navigation active state
+    const currentPage = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+      const linkPage = link.getAttribute('href');
+      if (currentPage === linkPage) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
       }
     });
 
@@ -373,8 +675,18 @@
         (err) => console.warn("Location blocked:", err)
       );
     }
-    let onlineStatus = true;
-    console.log("User is online:", onlineStatus);
+
+    // Initialize theme
+    initTheme();
+
+    // Simulate loading more content
+    setTimeout(() => {
+      document.querySelector('.loading').style.display = 'block';
+      
+      setTimeout(() => {
+        document.querySelector('.loading').style.display = 'none';
+      }, 1500);
+    }, 1000);
   </script>
 </body>
 </html>
