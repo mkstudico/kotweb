@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kotweb - Groups</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <style>
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #000;
+      --post-bg: #fff;
+      --border-color: #ddd;
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --accent-color: #e44d3a;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      --transition-speed: 0.3s;
+    }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #e4e4e4;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    * {
+      box-sizing: border-box;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+    }
+    header {
+      background: var(--post-bg);
+      padding: 15px 20px;
+      font-weight: bold;
+      font-size: 24px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      color: var(--primary-color);
+      font-size: 26px;
+    }
+    .right-icons i {
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: transform 0.2s;
+    }
+    .right-icons i:hover {
+      transform: scale(1.1);
+    }
+    nav {
+      background: var(--post-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 15px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      text-align: center;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    nav a:hover, nav a.active {
+      opacity: 1;
+      color: var(--primary-color);
+    }
+    nav i {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+    @media (min-width: 769px) {
+      body {
+        flex-direction: row;
+      }
+      .container {
+        margin-left: 100px;
+        width: calc(100% - 100px);
+        padding: 30px;
+      }
+      nav {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 100px;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 100px;
+        border-right: 1px solid var(--border-color);
+        border-top: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      }
+      nav a {
+        margin: 20px 0;
+        font-size: 14px;
+      }
+      nav i {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      header {
+        margin-left: 100px;
+        width: calc(100% - 100px);
+        padding: 15px 30px;
+      }
+      .search-input {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .group-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not(.light) {
+        --bg-color: #121212;
+        --text-color: #e4e4e4;
+        --post-bg: #1e1e1e;
+        --border-color: #333;
+        --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+    }
+    .search-section {
+      margin-bottom: 20px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--post-bg);
+      color: var(--text-color);
+      font-size: 16px;
+    }
+    .create-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 16px;
+      margin-top: 10px;
+      width: 100%;
+      transition: opacity 0.2s;
+    }
+    .create-button:hover {
+      opacity: 0.9;
+    }
+    .group-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .group-item {
+      background: var(--post-bg);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .group-item:hover {
+      transform: scale(1.02);
+    }
+    .group-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    .group-name {
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .group-status {
+      font-size: 14px;
+      color: var(--secondary-color);
+      margin-top: 5px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: var(--post-bg);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 400px;
+      width: 90%;
+      color: var(--text-color);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .modal h2 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 20px;
+    }
+    .modal label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .modal input, .modal select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--post-bg);
+      color: var(--text-color);
+    }
+    .modal button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .modal button:hover {
+      opacity: 0.9;
+    }
+    .modal .close {
+      background: var(--secondary-color);
+      margin-left: 10px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 16px;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .loading-overlay.show {
+      display: flex;
+    }
+    .loading-spinner {
+      border: 4px solid var(--post-bg);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-book-open logo-icon" aria-hidden="true"></i>
+        <span>Kotweb</span>
+      </div>
+      <div class="right-icons">
+        <i class="fas fa-moon" id="themeToggle" aria-label="Toggle theme"></i>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <div class="search-section">
+        <input type="text" class="search-input" id="groupSearch" placeholder="Search groups...">
+        <button class="create-button" id="createGroupButton">Create Group</button>
+      </div>
+      <div class="group-list" id="groupList">
+        <!-- Groups will be loaded here -->
+      </div>
+    </div>
+  </main>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+  <!-- Create Group Modal -->
+  <div class="modal" id="createGroupModal">
+    <div class="modal-content">
+      <h2>Create New Group</h2>
+      <label for="groupName">Group Name</label>
+      <input type="text" id="groupName" placeholder="Enter group name">
+      <label for="groupImage">Group Image</label>
+      <input type="file" id="groupImage" accept="image/*">
+      <label for="groupStatus">Group Status</label>
+      <select id="groupStatus">
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+      <button id="submitCreateGroup">Create</button>
+      <button class="close" id="closeCreateModal">Cancel</button>
+    </div>
+  </div>
+  <nav aria-label="Main navigation">
+    <a href="home.html"><i class="fas fa-home" aria-hidden="true"></i>Home</a>
+    <a href="search.html"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Search</a>
+    <a href="post.html"><i class="fa-solid fa-square-plus" aria-hidden="true"></i>Post</a>
+    <a href="chat.html"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>Chat</a>
+    <a href="groups.html" class="active"><i class="fa-solid fa-users" aria-hidden="true"></i>Groups</a>
+    <a href="notifications.html"><i class="fa-solid fa-bell" aria-hidden="true"></i>Alerts</a>
+    <a href="account.html"><i class="fa-solid fa-user" aria-hidden="true"></i>Profile</a>
+  </nav>
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1FG7OAGIgJqg3bmpStVTpi0RqpI_DctE",
+      authDomain: "music-app-718f4.firebaseapp.com",
+      databaseURL: "https://music-app-718f4-default-rtdb.firebaseio.com",
+      projectId: "music-app-718f4",
+      storageBucket: "music-app-718f4.firebasestorage.app",
+      messagingSenderId: "91683197015",
+      appId: "1:91683197015:web:92899ecb0c913dc0a95312",
+      measurementId: "G-MQLRPLZZFF"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const messaging = firebase.messaging();
+    let currentUser;
+
+    function initTheme() {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        document.getElementById('themeToggle').classList.replace('fa-moon', 'fa-sun');
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          document.body.classList.toggle('dark', e.matches);
+          document.getElementById('themeToggle').classList.replace(e.matches ? 'fa-moon' : 'fa-sun', e.matches ? 'fa-sun' : 'fa-moon');
+        }
+      });
+    }
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeToggle').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+    });
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    function showLoading(show) {
+      document.getElementById('loadingOverlay').classList.toggle('show', show);
+    }
+    auth.onAuthStateChanged((user) => {
+      currentUser = user;
+      if (user) {
+        loadGroups();
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+    const groups = [
+      { id: '1', name: 'Study Buddies', image: 'https://via.placeholder.com/60/FF0000/FFFFFF?text=SB', status: 'public' },
+      { id: '2', name: 'Antwerp Housing', image: 'https://via.placeholder.com/60/00FF00/FFFFFF?text=AH', status: 'private' },
+      { id: '3', name: 'Leuven Party', image: 'https://via.placeholder.com/60/0000FF/FFFFFF?text=LP', status: 'public' },
+      { id: '4', name: 'Exam Prep', image: 'https://via.placeholder.com/60/FFFF00/FFFFFF?text=EP', status: 'private' },
+      { id: '5', name: 'Kotweb Community', image: 'https://via.placeholder.com/60/FF00FF/FFFFFF?text=KC', status: 'public' }
+    ];
+    function loadGroups(searchTerm = '') {
+      const groupList = document.getElementById('groupList');
+      groupList.innerHTML = '';
+      const filteredGroups = groups.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      filteredGroups.forEach(group => {
+        const item = document.createElement('div');
+        item.className = 'group-item';
+        item.innerHTML = `
+          <img src="${group.image}" alt="${group.name}" class="group-image">
+          <div>
+            <div class="group-name">${group.name}</div>
+            <div class="group-status">${group.status.charAt(0).toUpperCase() + group.status.slice(1)}</div>
+          </div>
+        `;
+        item.addEventListener('click', () => {
+          window.location.href = `groupchat.html?group_id=${group.id}`;
+        });
+        groupList.appendChild(item);
+      });
+    }
+    let searchTimeout;
+    document.getElementById('groupSearch').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => loadGroups(e.target.value), 300);
+    });
+    document.getElementById('createGroupButton').addEventListener('click', () => {
+      document.getElementById('createGroupModal').style.display = 'flex';
+    });
+    document.getElementById('closeCreateModal').addEventListener('click', () => {
+      document.getElementById('createGroupModal').style.display = 'none';
+    });
+    document.getElementById('submitCreateGroup').addEventListener('click', async () => {
+      const groupName = document.getElementById('groupName').value;
+      const groupImage = document.getElementById('groupImage').files[0];
+      const groupStatus = document.getElementById('groupStatus').value;
+      if (!groupName) {
+        showToast('Group name is required.');
+        return;
+      }
+      showLoading(true);
+      try {
+        let imageUrl = '';
+        if (groupImage) {
+          const storageRef = storage.ref(`groups/${Date.now()}_${groupImage.name}`);
+          await storageRef.put(groupImage);
+          imageUrl = await storageRef.getDownloadURL();
+        }
+        const groupData = {
+          name: groupName,
+          image: imageUrl,
+          status: groupStatus,
+          creator: currentUser.uid,
+          members: [currentUser.uid],
+          pending: [],
+          createdAt: firebase.firestore.Timestamp.fromDate(new Date())
+        };
+        const docRef = await db.collection('groups').add(groupData);
+        showToast('Group created successfully!');
+        document.getElementById('createGroupModal').style.display = 'none';
+        loadGroups();
+      } catch (error) {
+        console.error('Error creating group:', error);
+        showToast('Error creating group. Please try again.');
+      } finally {
+        showLoading(false);
+      }
+    });
+    const currentPage = window.location.pathname.split('/').pop() || 'groups.html';
+    document.querySelectorAll('nav a').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === currentPage);
+    });
+    initTheme();
+  </script>
+</body>
+</html>
