@@ -19,11 +19,9 @@
             --primary: #4361ee;
             --secondary: #3a0ca3;
             --success: #4cc9f0;
-            --warning: #f72585;
             --light: #f8f9fa;
             --dark: #212529;
             --gray: #6c757d;
-            --light-gray: #e9ecef;
             --border-radius: 12px;
             --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -53,17 +51,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--light-gray);
-            position: sticky;
-            top: 0;
-            background-color: var(--light);
-            z-index: 100;
-        }
-        
-        .dark-mode header {
-            background-color: #1e1e1e;
-            border-color: #2d2d2d;
+            padding: 20px 0;
         }
         
         .logo {
@@ -75,995 +63,358 @@
             color: var(--primary);
         }
         
-        .search-bar {
-            flex: 1;
-            max-width: 400px;
-            margin: 0 20px;
-            position: relative;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px;
-            padding-left: 45px;
-            border-radius: 30px;
-            border: 1px solid var(--light-gray);
-            background-color: var(--light-gray);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        .dark-mode .search-bar input {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: var(--light);
-        }
-        
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-        }
-        
-        .header-icons {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .header-icons button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--dark);
-            position: relative;
-        }
-        
-        .dark-mode .header-icons button {
-            color: var(--light);
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--warning);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .main-content {
-            display: flex;
-            margin-top: 30px;
-            gap: 30px;
-        }
-        
-        .sidebar {
-            width: 250px;
-            position: sticky;
-            top: 80px;
-            height: calc(100vh - 100px);
-            overflow-y: auto;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-        }
-        
-        .sidebar-menu li {
-            margin-bottom: 10px;
-        }
-        
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 15px;
-            text-decoration: none;
-            color: var(--dark);
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        
-        .dark-mode .sidebar-menu a {
-            color: var(--light);
-        }
-        
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background-color: var(--light-gray);
-        }
-        
-        .dark-mode .sidebar-menu a:hover, .dark-mode .sidebar-menu a.active {
-            background-color: #2d2d2d;
-        }
-        
-        .sidebar-menu i {
-            width: 24px;
-            text-align: center;
-        }
-        
-        .content-area {
-            flex: 1;
-        }
-        
-        .content-section {
-            display: none;
-        }
-        
-        .content-section.active {
-            display: block;
-        }
-        
-        .stories-container {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding: 15px 0;
-            margin-bottom: 30px;
-        }
-        
-        .story {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .story-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(45deg, var(--primary), var(--warning));
-            margin-bottom: 8px;
-        }
-        
-        .story-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--light);
-        }
-        
-        .dark-mode .story-avatar img {
-            border-color: #1e1e1e;
-        }
-        
-        .story-username {
-            font-size: 13px;
-            font-weight: 500;
-        }
-        
-        .posts-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .post {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-        }
-        
-        .dark-mode .post {
-            background-color: #1e1e1e;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-        
-        .post-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-        }
-        
-        .post-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .post-user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .post-user-info h3 {
-            font-size: 16px;
-            margin-bottom: 2px;
-        }
-        
-        .post-user-info span {
-            font-size: 13px;
-            color: var(--gray);
-        }
-        
-        .post-more {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            color: var(--dark);
-        }
-        
-        .dark-mode .post-more {
-            color: var(--light);
-        }
-        
-        .post-content {
-            padding: 0 15px;
-            margin-bottom: 15px;
-        }
-        
-        .post-image {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-            margin: 10px 0;
-            border-radius: var(--border-radius);
-        }
-        
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            border-top: 1px solid var(--light-gray);
-            border-bottom: 1px solid var(--light-gray);
-        }
-        
-        .dark-mode .post-actions {
-            border-color: #2d2d2d;
-        }
-        
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            color: var(--dark);
-            transition: var(--transition);
-        }
-        
-        .dark-mode .post-action {
-            color: var(--light);
-        }
-        
-        .post-action:hover {
-            color: var(--primary);
-        }
-        
-        .post-stats {
-            padding: 15px;
-            font-size: 14px;
-            color: var(--gray);
-        }
-        
-        .post-comments {
-            padding: 0 15px 15px;
-        }
-        
-        .post-comment {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .post-comment-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .post-comment-content {
-            flex: 1;
-            background-color: var(--light-gray);
-            padding: 10px;
-            border-radius: 18px;
-            font-size: 14px;
-        }
-        
-        .dark-mode .post-comment-content {
-            background-color: #2d2d2d;
-        }
-        
-        .post-comment-content h4 {
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
-        
-        .add-comment {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            border-top: 1px solid var(--light-gray);
-        }
-        
-        .dark-mode .add-comment {
-            border-color: #2d2d2d;
-        }
-        
-        .add-comment input {
-            flex: 1;
-            padding: 12px 15px;
-            border-radius: 30px;
-            border: 1px solid var(--light-gray);
-            background-color: var(--light-gray);
-            font-size: 14px;
-        }
-        
-        .dark-mode .add-comment input {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: var(--light);
-        }
-        
-        .add-comment button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--primary);
-        }
-        
-        .create-post {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .dark-mode .create-post {
-            background-color: #1e1e1e;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-        
-        .create-post-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .create-post-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .create-post-type {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .post-type-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--light-gray);
-            background: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .post-type-btn.active {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .create-post-text {
-            width: 100%;
-            min-height: 100px;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--light-gray);
-            resize: vertical;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        
-        .dark-mode .create-post-text {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: var(--light);
-        }
-        
-        .create-post-text:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .create-post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .create-post-options {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .create-post-options button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        .create-post-submit {
-            padding: 10px 20px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .create-post-submit:hover {
-            background-color: var(--secondary);
-        }
-        
-        .create-post-submit:disabled {
-            background-color: var(--gray);
-            cursor: not-allowed;
-        }
-        
-        .character-count {
-            font-size: 14px;
-            color: var(--gray);
-            text-align: right;
-            margin-top: 5px;
-        }
-        
-        .character-count.near-limit {
-            color: orange;
-        }
-        
-        .character-count.over-limit {
-            color: red;
-        }
-        
-        .footer {
-            margin-top: 50px;
-            padding: 20px 0;
-            text-align: center;
-            color: var(--gray);
-            font-size: 14px;
-            border-top: 1px solid var(--light-gray);
-        }
-        
-        .dark-mode .footer {
-            border-color: #2d2d2d;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: var(--border-radius);
-            width: 100%;
-            max-width: 500px;
-            overflow: hidden;
-        }
-        
-        .dark-mode .modal-content {
-            background-color: #1e1e1e;
-        }
-        
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .dark-mode .modal-header {
-            border-color: #2d2d2d;
-        }
-        
-        .modal-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .modal-close {
+        .theme-toggle {
             background: none;
             border: none;
             font-size: 24px;
             cursor: pointer;
-            color: var(--gray);
+            color: var(--dark);
+            transition: var(--transition);
         }
         
-        .modal-body {
-            padding: 20px;
+        .dark-mode .theme-toggle {
+            color: var(--light);
         }
         
-        .modal-footer {
-            padding: 20px;
-            border-top: 1px solid var(--light-gray);
+        .main-content {
             display: flex;
-            justify-content: flex-end;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 40px 0;
         }
         
-        .dark-mode .modal-footer {
+        .auth-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .dark-mode .auth-container {
+            background-color: #1e1e1e;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        
+        .auth-header {
+            padding: 25px 30px 10px;
+            text-align: center;
+        }
+        
+        .auth-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .auth-header p {
+            color: var(--gray);
+            font-size: 16px;
+        }
+        
+        .dark-mode .auth-header p {
+            color: #a0a0a0;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .dark-mode .auth-tabs {
             border-color: #2d2d2d;
         }
         
-        .modal-btn {
-            padding: 10px 20px;
-            border-radius: var(--border-radius);
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 16px;
             font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .dark-mode .auth-tab {
+            color: #a0a0a0;
+        }
+        
+        .dark-mode .auth-tab.active {
+            color: var(--success);
+            border-color: var(--success);
+        }
+        
+        .auth-form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .dark-mode .form-control {
+            background-color: #2d2d2d;
+            border-color: #3d3d3d;
+            color: var(--light);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
         }
         
-        .modal-btn-primary {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-        }
-        
-        .modal-btn-primary:hover {
+        .btn:hover {
             background-color: var(--secondary);
+            transform: translateY(-2px);
         }
         
-        .modal-btn-secondary {
-            background: none;
-            border: 1px solid var(--light-gray);
-            color: var(--dark);
+        .auth-footer {
+            padding: 20px 30px 30px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--gray);
         }
         
-        .dark-mode .modal-btn-secondary {
-            color: var(--light);
-            border-color: #3d3d3d;
+        .dark-mode .auth-footer {
+            color: #a0a0a0;
         }
         
-        .online-status {
-            width: 12px;
-            height: 12px;
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .loading-bar {
+            height: 4px;
+            width: 0;
             background-color: var(--success);
-            border-radius: 50%;
-            border: 2px solid white;
-            position: absolute;
-            bottom: 0;
-            right: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: width 0.4s ease;
         }
         
-        .dark-mode .online-status {
-            border-color: #1e1e1e;
+        .error-message {
+            color: #e63946;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
         }
         
-        .avatar-container {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .pro-badge {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background-color: gold;
-            color: var(--dark);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+        .success-message {
+            color: #2a9d8f;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
         }
         
         @media (max-width: 768px) {
-            .sidebar {
-                display: none;
+            .auth-container {
+                max-width: 100%;
             }
             
-            .search-bar {
-                display: none;
+            .auth-form {
+                padding: 20px;
             }
-            
-            .header-icons {
-                gap: 15px;
-            }
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .password-container {
+            position: relative;
         }
     </style>
 </head>
 <body>
+    <div class="loading-bar" id="loadingBar"></div>
+    
     <div class="container">
         <header>
             <div class="logo">
                 <i class="fas fa-graduation-cap"></i>
                 <span>Kotweb</span>
             </div>
-            
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search for people, posts, or groups...">
-            </div>
-            
-            <div class="header-icons">
-                <button>
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                <button id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button>
-                    <i class="fas fa-user"></i>
-                </button>
-            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
         </header>
         
         <div class="main-content">
-            <div class="sidebar">
-                <ul class="sidebar-menu">
-                    <li>
-                        <a href="#" class="active" data-section="home">
-                            <i class="fas fa-home"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="post">
-                            <i class="fas fa-plus-square"></i>
-                            <span>Post</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="search">
-                            <i class="fas fa-search"></i>
-                            <span>Search</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="chat">
-                            <i class="fas fa-comment"></i>
-                            <span>Chat</span>
-                            <span class="notification-badge">5</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="groups">
-                            <i class="fas fa-users"></i>
-                            <span>Groups</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-section="account">
-                            <i class="fas fa-user-circle"></i>
-                            <span>Account</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-bookmark"></i>
-                            <span>Saved</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="content-area">
-                <!-- Home Section -->
-                <div class="content-section active" id="home-section">
-                    <div class="stories-container">
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=5" alt="User">
-                            </div>
-                            <span class="story-username">Your Story</span>
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>Join Kotweb</h1>
+                    <p>Connect, learn and grow with our educational community</p>
+                </div>
+                
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="loginTab">Login</button>
+                    <button class="auth-tab" id="signupTab">Sign Up</button>
+                </div>
+                
+                <div class="auth-forms">
+                    <!-- Login Form -->
+                    <form class="auth-form" id="loginForm">
+                        <div class="form-group">
+                            <label for="loginEmail">Email or Phone Number</label>
+                            <input type="text" class="form-control" id="loginEmail" placeholder="Enter your email or phone">
+                            <div class="error-message" id="loginEmailError"></div>
                         </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=1" alt="User">
+                        
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <div class="password-container">
+                                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+                                <button type="button" class="password-toggle" id="loginPasswordToggle">
+                                    <i class="far fa-eye"></i>
+                                </button>
                             </div>
-                            <span class="story-username">sarah_edu</span>
+                            <div class="error-message" id="loginPasswordError"></div>
                         </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=2" alt="User">
-                            </div>
-                            <span class="story-username">math_prof</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=3" alt="User">
-                            </div>
-                            <span class="story-username">science_club</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=4" alt="User">
-                            </div>
-                            <span class="story-username">history_buff</span>
-                        </div>
-                        <div class="story">
-                            <div class="story-avatar">
-                                <img src="https://i.pravatar.cc/150?img=6" alt="User">
-                            </div>
-                            <span class="story-username">code_master</span>
-                        </div>
-                    </div>
+                        
+                        <button type="submit" class="btn">Login to Kotweb</button>
+                    </form>
                     
-                    <div class="posts-container">
-                        <div class="post">
-                            <div class="post-header">
-                                <div class="post-user">
-                                    <div class="avatar-container">
-                                        <img src="https://i.pravatar.cc/150?img=7" alt="User" class="post-user-avatar">
-                                        <span class="online-status"></span>
-                                        <span class="pro-badge">P</span>
-                                    </div>
-                                    <div class="post-user-info">
-                                        <h3>Professor Johnson</h3>
-                                        <span>2 hours ago</span>
-                                    </div>
-                                </div>
-                                <button class="post-more">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                            </div>
-                            <div class="post-content">
-                                <p>Just published my new research paper on quantum computing applications in education. Excited to share this with the academic community! #QuantumComputing #EducationInnovation</p>
-                                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Research Paper" class="post-image">
-                            </div>
-                            <div class="post-actions">
-                                <button class="post-action">
-                                    <i class="far fa-heart"></i>
-                                    <span>Like</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-comment"></i>
-                                    <span>Comment</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-bookmark"></i>
-                                    <span>Save</span>
-                                </button>
-                            </div>
-                            <div class="post-stats">
-                                <p>243 likes • 37 comments</p>
-                            </div>
-                            <div class="post-comments">
-                                <div class="post-comment">
-                                    <img src="https://i.pravatar.cc/150?img=8" alt="User" class="post-comment-avatar">
-                                    <div class="post-comment-content">
-                                        <h4>Student_2023</h4>
-                                        <p>This is fascinating! Would love to learn more about the practical applications in classroom settings.</p>
-                                    </div>
-                                </div>
-                                <div class="post-comment">
-                                    <img src="https://i.pravatar.cc/150?img=9" alt="User" class="post-comment-avatar">
-                                    <div class="post-comment-content">
-                                        <h4>TechEducator</h4>
-                                        <p>Great work Professor! This could revolutionize how we approach complex subjects.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="add-comment">
-                                <input type="text" placeholder="Add a comment...">
-                                <button>
-                                    <i class="far fa-smile"></i>
-                                </button>
-                            </div>
+                    <!-- Sign Up Form -->
+                    <form class="auth-form" id="signupForm" style="display: none;">
+                        <div class="form-group">
+                            <label for="signupUsername">Username</label>
+                            <input type="text" class="form-control" id="signupUsername" placeholder="Choose a username">
+                            <div class="error-message" id="signupUsernameError"></div>
                         </div>
                         
-                        <div class="post">
-                            <div class="post-header">
-                                <div class="post-user">
-                                    <div class="avatar-container">
-                                        <img src="https://i.pravatar.cc/150?img=10" alt="User" class="post-user-avatar">
-                                    </div>
-                                    <div class="post-user-info">
-                                        <h3>StudyGroup_Math</h3>
-                                        <span>5 hours ago</span>
-                                    </div>
-                                </div>
-                                <button class="post-more">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                            </div>
-                            <div class="post-content">
-                                <p>We're organizing a virtual study session for Calculus II this weekend. Anyone interested in joining? Let me know in the comments! #Math #StudyGroup #Calculus</p>
-                            </div>
-                            <div class="post-actions">
-                                <button class="post-action">
-                                    <i class="far fa-heart"></i>
-                                    <span>Like</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-comment"></i>
-                                    <span>Comment</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-bookmark"></i>
-                                    <span>Save</span>
-                                </button>
-                            </div>
-                            <div class="post-stats">
-                                <p>87 likes • 23 comments</p>
-                            </div>
-                            <div class="add-comment">
-                                <input type="text" placeholder="Add a comment...">
-                                <button>
-                                    <i class="far fa-smile"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Post Section -->
-                <div class="content-section" id="post-section">
-                    <div class="create-post">
-                        <div class="create-post-header">
-                            <i class="fas fa-plus-circle"></i>
-                            <h2>Create Post</h2>
+                        <div class="form-group">
+                            <label for="signupPhone">Phone Number</label>
+                            <input type="tel" class="form-control" id="signupPhone" placeholder="Enter your phone number">
+                            <div class="error-message" id="signupPhoneError"></div>
                         </div>
                         
-                        <div class="create-post-type">
-                            <button class="post-type-btn active">Text</button>
-                            <button class="post-type-btn">Image</button>
-                            <button class="post-type-btn">Video</button>
+                        <div class="form-group">
+                            <label for="signupEmail">Email Address</label>
+                            <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email">
+                            <div class="error-message" id="signupEmailError"></div>
                         </div>
                         
-                        <textarea class="create-post-text" placeholder="Share your educational thoughts, questions, or findings..."></textarea>
-                        <div class="character-count">0/80 characters</div>
+                        <div class="form-group">
+                            <label for="signupAddress">Home Address</label>
+                            <input type="text" class="form-control" id="signupAddress" placeholder="Enter your home address">
+                            <div class="error-message" id="signupAddressError"></div>
+                        </div>
                         
-                        <div class="create-post-actions">
-                            <div class="create-post-options">
-                                <button>
-                                    <i class="fas fa-image"></i>
-                                </button>
-                                <button>
-                                    <i class="fas fa-video"></i>
-                                </button>
-                                <button>
-                                    <i class="fas fa-map-marker-alt"></i>
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <div class="password-container">
+                                <input type="password" class="form-control" id="signupPassword" placeholder="Create a strong password">
+                                <button type="button" class="password-toggle" id="signupPasswordToggle">
+                                    <i class="far fa-eye"></i>
                                 </button>
                             </div>
-                            <button class="create-post-submit">Post</button>
+                            <div class="error-message" id="signupPasswordError"></div>
                         </div>
-                    </div>
-                    
-                    <div class="posts-container">
-                        <div class="post">
-                            <div class="post-header">
-                                <div class="post-user">
-                                    <img src="https://i.pravatar.cc/150?img=11" alt="User" class="post-user-avatar">
-                                    <div class="post-user-info">
-                                        <h3>Your Recent Post</h3>
-                                        <span>Yesterday</span>
-                                    </div>
-                                </div>
-                                <button class="post-more">
-                                    <i class="fas fa-ellipsis-h"></i>
+                        
+                        <div class="form-group">
+                            <label for="signupConfirmPassword">Confirm Password</label>
+                            <div class="password-container">
+                                <input type="password" class="form-control" id="signupConfirmPassword" placeholder="Confirm your password">
+                                <button type="button" class="password-toggle" id="signupConfirmPasswordToggle">
+                                    <i class="far fa-eye"></i>
                                 </button>
                             </div>
-                            <div class="post-content">
-                                <p>Just finished my research on the impact of social media on student productivity. The results were quite surprising! #EducationResearch #StudentProductivity</p>
-                            </div>
-                            <div class="post-actions">
-                                <button class="post-action">
-                                    <i class="far fa-heart"></i>
-                                    <span>42</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-comment"></i>
-                                    <span>7</span>
-                                </button>
-                                <button class="post-action">
-                                    <i class="far fa-bookmark"></i>
-                                </button>
-                            </div>
+                            <div class="error-message" id="signupConfirmPasswordError"></div>
                         </div>
-                    </div>
+                        
+                        <button type="submit" class="btn">Create Account</button>
+                    </form>
                 </div>
                 
-                <!-- Other sections would be here but are hidden initially -->
-                <div class="content-section" id="search-section">
-                    <h2>Search Functionality</h2>
-                    <p>Search for users, posts, and groups would appear here.</p>
-                </div>
-                
-                <div class="content-section" id="chat-section">
-                    <h2>Chat Functionality</h2>
-                    <p>Private messaging interface would appear here.</p>
-                </div>
-                
-                <div class="content-section" id="groups-section">
-                    <h2>Groups Functionality</h2>
-                    <p>Group discovery and management would appear here.</p>
-                </div>
-                
-                <div class="content-section" id="account-section">
-                    <h2>Account Management</h2>
-                    <p>Profile settings and analytics would appear here.</p>
+                <div class="auth-footer">
+                    <p>By continuing, you agree to Kotweb's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
                 </div>
             </div>
         </div>
+    </div>
+    
+    <script type="module">
+        // Firebase configuration and initialization
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         
-        <div class="footer">
-            <p>© 2023 Kotweb - Educational Social Media Platform. All rights reserved.</p>
-        </div>
-    </div>
-    
-    <!-- Permission Request Modal -->
-    <div class="modal" id="permissionModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Permissions Request</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>To provide you with the best experience, Kotweb would like to:</p>
-                <ul>
-                    <li>Send you notifications</li>
-                    <li>Access your location for localized content</li>
-                </ul>
-                <p>You can change these permissions anytime in your account settings.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn modal-btn-secondary">Not Now</button>
-                <button class="modal-btn modal-btn-primary">Allow</button>
-            </div>
-        </div>
-    </div>
-    
-    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1FG7OAGIgJqg3bmpStVTpi0RqpI_DctE",
+            authDomain: "music-app-718f4.firebaseapp.com",
+            databaseURL: "https://music-app-718f4-default-rtdb.firebaseio.com",
+            projectId: "music-app-718f4",
+            storageBucket: "music-app-718f4.firebasestorage.app",
+            messagingSenderId: "91683197015",
+            appId: "1:91683197015:web:92899ecb0c913dc0a95312",
+            measurementId: "G-MQLRPLZZFF"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
         // DOM Elements
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
         const themeToggle = document.getElementById('themeToggle');
-        const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
-        const contentSections = document.querySelectorAll('.content-section');
-        const permissionModal = document.getElementById('permissionModal');
-        const postText = document.querySelector('.create-post-text');
-        const characterCount = document.querySelector('.character-count');
-        const postTypeButtons = document.querySelectorAll('.post-type-btn');
+        const loadingBar = document.getElementById('loadingBar');
         
         // Theme Toggle
         themeToggle.addEventListener('click', () => {
@@ -1081,90 +432,277 @@
             themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         }
         
-        // Navigation
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Remove active class from all links
-                sidebarLinks.forEach(l => l.classList.remove('active'));
-                
-                // Add active class to clicked link
-                link.classList.add('active');
-                
-                // Hide all content sections
-                contentSections.forEach(section => section.classList.remove('active'));
-                
-                // Show the corresponding section
-                const sectionId = link.getAttribute('data-section');
-                document.getElementById(`${sectionId}-section`).classList.add('active');
-            });
+        // Form Tabs
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('active');
+            signupTab.classList.remove('active');
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
         });
         
-        // Character count for post text
-        postText.addEventListener('input', () => {
-            const length = postText.value.length;
-            characterCount.textContent = `${length}/80 characters`;
+        signupTab.addEventListener('click', () => {
+            signupTab.classList.add('active');
+            loginTab.classList.remove('active');
+            signupForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        });
+        
+        // Password Toggles
+        function setupPasswordToggle(passwordFieldId, toggleButtonId) {
+            const passwordField = document.getElementById(passwordFieldId);
+            const toggleButton = document.getElementById(toggleButtonId);
             
-            if (length > 70) {
-                characterCount.classList.add('near-limit');
-            } else {
-                characterCount.classList.remove('near-limit');
+            toggleButton.addEventListener('click', () => {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    toggleButton.innerHTML = '<i class="far fa-eye-slash"></i>';
+                } else {
+                    passwordField.type = 'password';
+                    toggleButton.innerHTML = '<i class="far fa-eye"></i>';
+                }
+            });
+        }
+        
+        setupPasswordToggle('loginPassword', 'loginPasswordToggle');
+        setupPasswordToggle('signupPassword', 'signupPasswordToggle');
+        setupPasswordToggle('signupConfirmPassword', 'signupConfirmPasswordToggle');
+        
+        // Show loading bar
+        function showLoading() {
+            loadingBar.style.width = '30%';
+            setTimeout(() => {
+                loadingBar.style.width = '70%';
+            }, 300);
+        }
+        
+        // Hide loading bar
+        function hideLoading() {
+            loadingBar.style.width = '100%';
+            setTimeout(() => {
+                loadingBar.style.width = '0';
+            }, 300);
+        }
+        
+        // Validate email format
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Validate phone format
+        function isValidPhone(phone) {
+            const re = /^[+]?[0-9]{10,15}$/;
+            return re.test(phone);
+        }
+        
+        // Check if phone number is already registered
+        async function isPhoneRegistered(phone) {
+            // This would check Firestore in a real implementation
+            // For demo purposes, we'll simulate a check
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // Simulate that number "1234567890" is already taken
+                    resolve(phone === '1234567890');
+                }, 500);
+            });
+        }
+        
+        // Sign Up Form Submission
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const username = document.getElementById('signupUsername').value;
+            const phone = document.getElementById('signupPhone').value;
+            const email = document.getElementById('signupEmail').value;
+            const address = document.getElementById('signupAddress').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            
+            // Reset error messages
+            document.getElementById('signupUsernameError').style.display = 'none';
+            document.getElementById('signupPhoneError').style.display = 'none';
+            document.getElementById('signupEmailError').style.display = 'none';
+            document.getElementById('signupAddressError').style.display = 'none';
+            document.getElementById('signupPasswordError').style.display = 'none';
+            document.getElementById('signupConfirmPasswordError').style.display = 'none';
+            
+            let isValid = true;
+            
+            // Validate form inputs
+            if (username.length < 3) {
+                document.getElementById('signupUsernameError').textContent = 'Username must be at least 3 characters';
+                document.getElementById('signupUsernameError').style.display = 'block';
+                isValid = false;
             }
             
-            if (length > 80) {
-                characterCount.classList.add('over-limit');
-            } else {
-                characterCount.classList.remove('over-limit');
+            if (!isValidPhone(phone)) {
+                document.getElementById('signupPhoneError').textContent = 'Please enter a valid phone number';
+                document.getElementById('signupPhoneError').style.display = 'block';
+                isValid = false;
+            } else if (await isPhoneRegistered(phone)) {
+                document.getElementById('signupPhoneError').textContent = 'This phone number is already registered';
+                document.getElementById('signupPhoneError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValidEmail(email)) {
+                document.getElementById('signupEmailError').textContent = 'Please enter a valid email address';
+                document.getElementById('signupEmailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (address.length < 5) {
+                document.getElementById('signupAddressError').textContent = 'Please enter a valid address';
+                document.getElementById('signupAddressError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (password.length < 6) {
+                document.getElementById('signupPasswordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('signupPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('signupConfirmPasswordError').textContent = 'Passwords do not match';
+                document.getElementById('signupConfirmPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Show loading
+            showLoading();
+            
+            try {
+                // Create user with email and password
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Update user profile with username
+                await updateProfile(user, {
+                    displayName: username
+                });
+                
+                // Store additional user data in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    username: username,
+                    phone: phone,
+                    email: email,
+                    address: address,
+                    createdAt: new Date()
+                });
+                
+                // Simulate successful signup and redirect
+                setTimeout(() => {
+                    hideLoading();
+                    alert('Account created successfully! Redirecting to home page...');
+                    window.location.href = 'home.html';
+                }, 1500);
+                
+            } catch (error) {
+                hideLoading();
+                console.error("Error creating user:", error);
+                
+                // Handle errors
+                if (error.code === 'auth/email-already-in-use') {
+                    document.getElementById('signupEmailError').textContent = 'This email is already registered';
+                    document.getElementById('signupEmailError').style.display = 'block';
+                } else {
+                    alert('Error creating account: ' + error.message);
+                }
             }
         });
         
-        // Post type buttons
-        postTypeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                postTypeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+        // Login Form Submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const emailOrPhone = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Reset error messages
+            document.getElementById('loginEmailError').style.display = 'none';
+            document.getElementById('loginPasswordError').style.display = 'none';
+            
+            let isValid = true;
+            let email = emailOrPhone;
+            
+            // Check if input is phone or email
+            if (isValidPhone(emailOrPhone)) {
+                // This would query Firestore for the phone number to get the associated email
+                // For demo, we'll simulate a lookup
+                try {
+                    // Simulate API call to get email by phone
+                    const userEmail = await getEmailByPhone(emailOrPhone);
+                    if (userEmail) {
+                        email = userEmail;
+                    } else {
+                        document.getElementById('loginEmailError').textContent = 'No account found with this phone number';
+                        document.getElementById('loginEmailError').style.display = 'block';
+                        isValid = false;
+                    }
+                } catch (error) {
+                    document.getElementById('loginEmailError').textContent = 'Error looking up phone number';
+                    document.getElementById('loginEmailError').style.display = 'block';
+                    isValid = false;
+                }
+            } else if (!isValidEmail(emailOrPhone)) {
+                document.getElementById('loginEmailError').textContent = 'Please enter a valid email or phone number';
+                document.getElementById('loginEmailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (password.length < 6) {
+                document.getElementById('loginPasswordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('loginPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Show loading
+            showLoading();
+            
+            try {
+                // Sign in with email and password
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                // Simulate successful login and redirect
+                setTimeout(() => {
+                    hideLoading();
+                    alert('Login successful! Redirecting to home page...');
+                    window.location.href = 'home.html';
+                }, 1500);
+                
+            } catch (error) {
+                hideLoading();
+                console.error("Error signing in:", error);
+                
+                // Handle errors
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    document.getElementById('loginPasswordError').textContent = 'Invalid email/phone or password';
+                    document.getElementById('loginPasswordError').style.display = 'block';
+                } else {
+                    alert('Error signing in: ' + error.message);
+                }
+            }
+        });
+        
+        // Simulate getting email by phone (would query Firestore in real implementation)
+        async function getEmailByPhone(phone) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // Simulate that phone "1234567890" belongs to "test@example.com"
+                    if (phone === '1234567890') {
+                        resolve('test@example.com');
+                    } else {
+                        resolve(null);
+                    }
+                }, 500);
             });
-        });
-        
-        // Show permission modal after a delay
-        setTimeout(() => {
-            permissionModal.style.display = 'flex';
-        }, 2000);
-        
-        // Close modal
-        document.querySelector('.modal-close').addEventListener('click', () => {
-            permissionModal.style.display = 'none';
-        });
-        
-        document.querySelector('.modal-btn-secondary').addEventListener('click', () => {
-            permissionModal.style.display = 'none';
-        });
-        
-        // Allow permissions
-        document.querySelector('.modal-btn-primary').addEventListener('click', () => {
-            // In a real app, this would request actual permissions
-            alert('Permissions granted!');
-            permissionModal.style.display = 'none';
-        });
-        
-        // Simulate user type (normal or pro)
-        const userType = 'pro'; // This would come from Firebase in a real app
-        
-        // Apply restrictions based on user type
-        if (userType === 'normal') {
-            // Normal users can only post text with 80 character limit
-            const imageButton = postTypeButtons[1];
-            const videoButton = postTypeButtons[2];
-            
-            imageButton.disabled = true;
-            videoButton.disabled = true;
-            
-            imageButton.style.opacity = '0.5';
-            videoButton.style.opacity = '0.5';
-            
-            imageButton.style.cursor = 'not-allowed';
-            videoButton.style.cursor = 'not-allowed';
         }
     </script>
 </body>
