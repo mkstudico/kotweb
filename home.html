@@ -6,55 +6,64 @@
   <title>Kotweb - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #000;
+      --post-bg: #fff;
+      --border-color: #ddd;
+    }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #fff;
+      --post-bg: #1e1e1e;
+      --border-color: #333;
+    }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      background: var(--bg-color);
+      color: var(--text-color);
       display: flex;
       flex-direction: column;
       height: 100vh;
     }
-
     header {
-      background: #fff;
+      background: var(--post-bg);
       padding: 15px;
       font-weight: bold;
       font-size: 20px;
       text-align: center;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid var(--border-color);
       position: sticky;
       top: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 10;
     }
-
     header .right-icons i {
       font-size: 20px;
       margin-left: 15px;
       cursor: pointer;
+      color: var(--text-color);
     }
-
     main {
       flex: 1;
       overflow-y: auto;
     }
-
     /* Stories */
     .stories {
       display: flex;
       overflow-x: auto;
       padding: 10px;
-      background: #fff;
-      border-bottom: 1px solid #ddd;
+      background: var(--post-bg);
+      border-bottom: 1px solid var(--border-color);
     }
-
     .story {
       flex: 0 0 auto;
       margin-right: 15px;
       text-align: center;
     }
-
     .story img {
       width: 60px;
       height: 60px;
@@ -62,90 +71,151 @@
       border: 2px solid #007bff;
       object-fit: cover;
     }
-
     .story p {
       font-size: 12px;
       margin-top: 5px;
+      color: var(--text-color);
     }
-
     /* Feed */
     .feed {
       padding: 10px;
     }
-
     .post {
-      background: #fff;
+      background: var(--post-bg);
       border-radius: 10px;
       margin-bottom: 15px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
-
     .post-header {
       display: flex;
       align-items: center;
       padding: 10px;
     }
-
     .post-header img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       margin-right: 10px;
     }
-
     .post-header h3 {
       margin: 0;
       font-size: 15px;
+      color: var(--text-color);
     }
-
     .post-content {
       padding: 10px;
+      color: var(--text-color);
     }
-
     .post-content img {
       width: 100%;
       border-radius: 8px;
       margin-top: 10px;
     }
-
     .post-actions {
       display: flex;
       justify-content: space-around;
       padding: 10px;
       border-top: 1px solid #eee;
     }
-
     .post-actions i {
       font-size: 20px;
       cursor: pointer;
+      color: var(--text-color);
     }
-
-    /* Bottom Navigation */
+    /* Bottom/Side Navigation */
     nav {
+      background: var(--post-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
       display: flex;
       justify-content: space-around;
-      background: #fff;
-      border-top: 1px solid #ddd;
-      padding: 10px 0;
-      position: sticky;
-      bottom: 0;
+      z-index: 10;
     }
-
     nav a {
-      color: #555;
+      color: var(--text-color);
       text-decoration: none;
       text-align: center;
       font-size: 12px;
     }
-
     nav a.active {
       color: #007bff;
     }
-
     nav i {
       font-size: 20px;
       display: block;
       margin-bottom: 3px;
+    }
+    /* Desktop Sidebar */
+    @media (min-width: 769px) {
+      body {
+        flex-direction: row;
+      }
+      nav {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 80px;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 20px 0;
+        border-right: 1px solid var(--border-color);
+        border-top: none;
+      }
+      nav a {
+        margin: 20px 0;
+        font-size: 14px;
+      }
+      main {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+      }
+      header {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+      }
+    }
+    /* Theme Auto-Adjust */
+    @media (prefers-color-scheme: dark) {
+      body {
+        --bg-color: #121212;
+        --text-color: #fff;
+        --post-bg: #1e1e1e;
+        --border-color: #333;
+      }
+    }
+    /* Agreement Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+    .modal-content {
+      background: var(--post-bg);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 400px;
+      color: var(--text-color);
+    }
+    .modal button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -157,7 +227,6 @@
       <i class="fa-solid fa-paper-plane"></i>
     </div>
   </header>
-
   <main>
     <!-- Stories -->
     <div class="stories">
@@ -174,7 +243,6 @@
         <p>@normal_user</p>
       </div>
     </div>
-
     <!-- Feed -->
     <div class="feed">
       <!-- Pro Post with Image -->
@@ -193,7 +261,6 @@
           <i class="fa-solid fa-share"></i>
         </div>
       </div>
-
       <!-- Normal User Text Post -->
       <div class="post">
         <div class="post-header">
@@ -211,31 +278,101 @@
       </div>
     </div>
   </main>
-
-  <!-- Bottom Navigation -->
+  <!-- Bottom/Side Navigation -->
   <nav>
     <a href="post.html"><i class="fa-solid fa-square-plus"></i>Post</a>
     <a href="account.html"><i class="fa-solid fa-user"></i>Account</a>
     <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i>Search</a>
     <a href="chat.html"><i class="fa-solid fa-comment-dots"></i>Chat</a>
     <a href="groups.html"><i class="fa-solid fa-users"></i>Groups</a>
+    <a href="notifications.html"><i class="fa-solid fa-bell"></i>Notifications</a>
   </nav>
+  <!-- Agreement Modal -->
+  <div class="modal" id="agreementModal">
+    <div class="modal-content">
+      <h2>Additional Settings Agreement</h2>
+      <p>By continuing, you agree to Kotweb's additional settings and defaults for your account.</p>
+      <button id="agreeButton">Agree and Continue</button>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-  <script>
-    // Ask permission for notifications
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1FG7OAGIgJqg3bmpStVTpi0RqpI_DctE",
+      authDomain: "music-app-718f4.firebaseapp.com",
+      databaseURL: "https://music-app-718f4-default-rtdb.firebaseio.com",
+      projectId: "music-app-718f4",
+      storageBucket: "music-app-718f4.firebasestorage.app",
+      messagingSenderId: "91683197015",
+      appId: "1:91683197015:web:92899ecb0c913dc0a95312",
+      measurementId: "G-MQLRPLZZFF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Check auth state and handle agreement
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          if (!data.agreedToSettings) {
+            document.getElementById('agreementModal').style.display = 'flex';
+          }
+        } else {
+          // Handle if doc doesn't exist (rare, but redirect or error)
+          window.location.href = 'login.html';
+        }
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+
+    // Agree button handler
+    document.getElementById('agreeButton').addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        try {
+          await updateDoc(userDocRef, {
+            agreedToSettings: true,
+            normalUser: {
+              postText: 80,  // chars max
+              postImages: 0,  // per day
+              openImagePosts: 3  // in 8 hours
+            },
+            proUser: {
+              postText: 300,  // chars max
+              postImages: 3,  // per day, multiple per post
+              openImagePosts: 5,  // in 8 hours (note: you said 3, but then 5? Adjusted to 5 as per "only 5")
+              typeOfPost: 0  // 0: images only, 1: exam posts
+            }
+            // Add more defaults if needed, e.g., userType: 'NormalUser'
+          });
+          document.getElementById('agreementModal').style.display = 'none';
+        } catch (error) {
+          console.error("Error updating settings:", error);
+          alert('Error saving settings. Please try again.');
+        }
+      }
+    });
+
+    // Existing script: Notifications, location, online status
     if ("Notification" in window && Notification.permission !== "granted") {
       Notification.requestPermission();
     }
-
-    // Ask permission for location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => console.log("Location:", pos.coords),
         (err) => console.warn("Location blocked:", err)
       );
     }
-
-    // Example: Online tracker (placeholder)
     let onlineStatus = true;
     console.log("User is online:", onlineStatus);
   </script>
