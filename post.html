@@ -41,13 +41,14 @@
     .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 15px;
+      padding: 20px;
+      flex: 1;
     }
     header {
       background: var(--post-bg);
-      padding: 12px 15px;
+      padding: 15px 20px;
       font-weight: bold;
-      font-size: 22px;
+      font-size: 24px;
       border-bottom: 1px solid var(--border-color);
       position: sticky;
       top: 0;
@@ -64,14 +65,14 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .logo-icon {
       color: var(--primary-color);
-      font-size: 24px;
+      font-size: 26px;
     }
     .right-icons i {
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
       color: var(--text-color);
       transition: transform 0.2s;
@@ -82,7 +83,7 @@
     nav {
       background: var(--post-bg);
       border-top: 1px solid var(--border-color);
-      padding: 12px 0;
+      padding: 15px 0;
       position: fixed;
       bottom: 0;
       width: 100%;
@@ -95,7 +96,7 @@
       color: var(--text-color);
       text-decoration: none;
       text-align: center;
-      font-size: 12px;
+      font-size: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -107,37 +108,49 @@
       color: var(--primary-color);
     }
     nav i {
-      font-size: 20px;
-      margin-bottom: 4px;
+      font-size: 22px;
+      margin-bottom: 5px;
     }
     @media (min-width: 769px) {
       body {
         flex-direction: row;
       }
       .container {
-        margin-left: 85px;
-        width: calc(100% - 85px);
+        margin-left: 100px;
+        width: calc(100% - 100px);
+        padding: 30px;
       }
       nav {
         position: fixed;
         left: 0;
         top: 0;
         bottom: 0;
-        width: 85px;
+        width: 100px;
         flex-direction: column;
         justify-content: flex-start;
-        padding-top: 80px;
+        padding-top: 100px;
         border-right: 1px solid var(--border-color);
         border-top: none;
         box-shadow: 2px 0 10px rgba(0,0,0,0.05);
       }
       nav a {
-        margin: 18px 0;
-        font-size: 13px;
+        margin: 20px 0;
+        font-size: 14px;
+      }
+      nav i {
+        font-size: 24px;
+        margin-bottom: 8px;
       }
       header {
-        margin-left: 85px;
-        width: calc(100% - 85px);
+        margin-left: 100px;
+        width: calc(100% - 100px);
+        padding: 15px 30px;
+      }
+      .post-form {
+        padding: 30px;
+      }
+      .post-form textarea {
+        min-height: 150px;
       }
     }
     @media (prefers-color-scheme: dark) {
@@ -159,7 +172,7 @@
     .post-form h2 {
       margin: 0 0 15px;
       color: var(--primary-color);
-      font-size: 18px;
+      font-size: 20px;
     }
     .post-form label {
       display: block;
@@ -169,30 +182,36 @@
     }
     .post-form textarea, .post-form input, .post-form select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 15px;
       border: 1px solid var(--border-color);
       border-radius: 8px;
       background: var(--post-bg);
       color: var(--text-color);
       font-family: inherit;
+      font-size: 16px;
     }
     .post-form textarea {
       resize: vertical;
-      min-height: 100px;
+      min-height: 120px;
     }
     .post-form button {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 500;
+      font-size: 16px;
       transition: opacity 0.2s;
     }
     .post-form button:hover {
       opacity: 0.9;
+    }
+    .post-form button:disabled {
+      background: var(--secondary-color);
+      cursor: not-allowed;
     }
     .post-form .image-upload {
       display: none;
@@ -202,32 +221,71 @@
     }
     .char-count {
       text-align: right;
-      font-size: 12px;
+      font-size: 14px;
       color: var(--secondary-color);
       margin-top: -10px;
       margin-bottom: 15px;
     }
     .progress-bar {
-      height: 5px;
+      height: 6px;
       background: var(--primary-color);
       width: 0;
-      transition: width 0.3s;
+      transition: width 0.3s ease;
+      border-radius: 3px;
+      margin-bottom: 15px;
+    }
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .loading-overlay.show {
+      display: flex;
+    }
+    .loading-spinner {
+      border: 4px solid var(--post-bg);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     .toast {
       position: fixed;
-      bottom: 80px;
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
       background-color: #333;
       color: white;
-      padding: 12px 20px;
+      padding: 15px 25px;
       border-radius: 8px;
       z-index: 1000;
       opacity: 0;
       transition: opacity 0.3s;
+      font-size: 16px;
     }
     .toast.show {
       opacity: 1;
+    }
+    .error-message {
+      color: var(--accent-color);
+      font-size: 14px;
+      margin-bottom: 15px;
+      display: none;
+    }
+    .error-message.show {
+      display: block;
     }
   </style>
 </head>
@@ -250,8 +308,9 @@
         <form id="postForm">
           <label for="postType">Post Type</label>
           <select id="postType" name="postType">
-            <option value="general">General</option>
-            <option value="exam" disabled>Exam (Image) - Pro Only</option>
+            <option value="text">Text Post</option>
+            <option value="image" disabled>Image Post (Pro Only)</option>
+            <option value="exam" disabled>Past Exam Post (Pro with Permission)</option>
           </select>
           <label for="postText">Post Content</label>
           <textarea id="postText" name="postText" placeholder="What's on your mind?"></textarea>
@@ -261,11 +320,15 @@
             <input type="file" id="postImage" name="postImage" accept="image/*" multiple disabled>
           </div>
           <div class="progress-bar" id="uploadProgress"></div>
-          <button type="submit">Post</button>
+          <div class="error-message" id="errorMessage"></div>
+          <button type="submit" id="submitButton">Post</button>
         </form>
       </div>
     </div>
   </main>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
   <nav aria-label="Main navigation">
     <a href="home.html"><i class="fas fa-home" aria-hidden="true"></i>Home</a>
     <a href="search.html"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Search</a>
@@ -297,12 +360,8 @@
     const MAX_IMAGES_PER_POST = 20;
 
     // Request notification permission
-    if (Notification.permission === 'default') {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          console.log('Notification permission granted.');
-        }
-      });
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
     }
 
     function initTheme() {
@@ -331,6 +390,16 @@
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+      setTimeout(() => errorDiv.classList.remove('show'), 5000);
+    }
+    function showLoading(show) {
+      document.getElementById('loadingOverlay').classList.toggle('show', show);
+      document.getElementById('submitButton').disabled = show;
+    }
     function updateCharCount() {
       const textarea = document.getElementById('postText');
       const countSpan = document.getElementById('charCount');
@@ -354,6 +423,7 @@
             document.getElementById('imageUpload').classList.add('pro');
             document.getElementById('postImage').disabled = false;
             document.getElementById('postImage').setAttribute('max', MAX_IMAGES_PER_POST);
+            document.getElementById('postType').querySelector('option[value="image"]').disabled = false;
             if (data.proUser.typeOfPost === 1) {
               document.getElementById('postType').querySelector('option[value="exam"]').disabled = false;
             }
@@ -366,34 +436,31 @@
       }
     });
     async function uploadToImgBB(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          const base64 = e.target.result.split(',')[1]; // Remove prefix
-          const formData = new FormData();
-          formData.append('image', base64);
-          try {
-            const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMG_BB_KEY}`, {
-              method: 'POST',
-              body: formData
-            });
-            const data = await response.json();
-            if (data.success) {
-              resolve(data.data.url);
-            } else {
-              reject(new Error('Upload failed'));
-            }
-          } catch (error) {
-            reject(error);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
+      const formData = new FormData();
+      formData.append('image', file);
+      try {
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMG_BB_KEY}`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+          return data.data.url;
+        } else {
+          throw new Error('Upload failed');
+        }
+      } catch (error) {
+        throw error;
+      }
     }
     document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      showLoading(true);
       const user = auth.currentUser;
-      if (!user) return;
+      if (!user) {
+        showLoading(false);
+        return;
+      }
       const postType = document.getElementById('postType').value;
       const postText = document.getElementById('postText').value;
       const postImages = document.getElementById('postImage').files;
@@ -405,40 +472,55 @@
       const now = new Date();
       const banUntil = data.banUntil ? new firebase.firestore.Timestamp(data.banUntil.seconds, data.banUntil.nanoseconds).toDate() : new Date(0);
       if (banUntil > now) {
-        showToast(`You are banned from posting until ${banUntil.toLocaleString()}.`);
+        showLoading(false);
+        showError(`You are banned from posting until ${banUntil.toLocaleString()}.`);
         return;
       }
       if (postText.length > settings.postText) {
-        showToast(`Post exceeds ${settings.postText} character limit.`);
+        showLoading(false);
+        showError(`Post exceeds ${settings.postText} character limit.`);
         return;
       }
-      if (postImages.length > 0 && settings.postImages === 0) {
-        showToast('Image posts are not allowed for Normal users.');
+      if ((postType === 'image' || postType === 'exam') && settings.postImages === 0) {
+        showLoading(false);
+        showError('Image posts are not allowed for Normal users.');
         return;
       }
       if (postImages.length > MAX_IMAGES_PER_POST) {
-        showToast(`Maximum ${MAX_IMAGES_PER_POST} images per post.`);
+        showLoading(false);
+        showError(`Maximum ${MAX_IMAGES_PER_POST} images per post.`);
         return;
       }
       if (postType === 'exam') {
         if (userType !== 'ProUser' || data.proUser.typeOfPost !== 1) {
-          showToast('You are not authorized to post Exam content.');
+          showLoading(false);
+          showError('You are not authorized to post Past Exam content.');
           return;
         }
         if (postImages.length === 0) {
-          showToast('Exam posts require at least one image.');
+          showLoading(false);
+          showError('Past Exam posts require at least one image.');
           return;
         }
-      }
-      // Determine collection
-      let collectionName = 'text_post';
-      if (postImages.length > 0) {
-        collectionName = postType === 'exam' ? 'past_papers' : 'image_post';
-      } else if (postType === 'exam') {
-        showToast('Exam posts require images.');
+      } else if (postType === 'image' && postImages.length === 0) {
+        showLoading(false);
+        showError('Image posts require at least one image.');
+        return;
+      } else if (postType === 'text' && postImages.length > 0) {
+        showLoading(false);
+        showError('Text posts cannot include images.');
         return;
       }
-      // Check daily image limit if applicable
+      // Determine collection
+      let collectionName;
+      if (postType === 'text') {
+        collectionName = 'text_post';
+      } else if (postType === 'image') {
+        collectionName = 'image_post';
+      } else if (postType === 'exam') {
+        collectionName = 'past_papers';
+      }
+      // Check daily image limit if image or exam
       if (collectionName === 'image_post' || collectionName === 'past_papers') {
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const startTimestamp = firebase.firestore.Timestamp.fromDate(startOfDay);
@@ -446,7 +528,8 @@
         const pastCount = await db.collection('past_papers').where('userId', '==', user.uid).where('createdAt', '>=', startTimestamp).get().then(snap => snap.size);
         const totalImagesToday = imageCount + pastCount;
         if (totalImagesToday >= settings.postImages) {
-          showToast(`You have reached the daily limit of ${settings.postImages} image posts.`);
+          showLoading(false);
+          showError(`You have reached the daily limit of ${settings.postImages} image posts.`);
           return;
         }
       }
@@ -456,7 +539,8 @@
         const hourTimestamp = firebase.firestore.Timestamp.fromDate(oneHourAgo);
         const textCount = await db.collection('text_post').where('userId', '==', user.uid).where('createdAt', '>=', hourTimestamp).get().then(snap => snap.size);
         if (textCount >= 5) {
-          showToast('Abuse detected. You are banned from posting for 48 hours.');
+          showLoading(false);
+          showError('Abuse detected. You are banned from posting for 48 hours.');
           const banEnd = new Date(now.getTime() + 48 * 3600 * 1000);
           await userDocRef.update({ banUntil: firebase.firestore.Timestamp.fromDate(banEnd) });
           return;
@@ -465,7 +549,7 @@
       try {
         let imageUrls = [];
         const progressBar = document.getElementById('uploadProgress');
-        if (postImages.length > 0 && userType === 'ProUser') {
+        if ((postType === 'image' || postType === 'exam') && userType === 'ProUser') {
           for (let i = 0; i < postImages.length; i++) {
             const url = await uploadToImgBB(postImages[i]);
             imageUrls.push(url);
@@ -493,7 +577,9 @@
         updateCharCount();
       } catch (error) {
         console.error('Error creating post:', error);
-        showToast('Error creating post. Please try again.');
+        showError('Error creating post. Please try again.');
+      } finally {
+        showLoading(false);
       }
     });
     const currentPage = window.location.pathname.split('/').pop() || 'post.html';
